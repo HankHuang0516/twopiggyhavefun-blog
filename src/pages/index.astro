@@ -23,7 +23,7 @@ const recentPosts = posts.slice(0, 12);
             <div class="relative z-20 h-full container mx-auto px-4 flex flex-col justify-end pb-16 text-white">
                 <span class="bg-pink-600 text-xs font-bold px-2 py-1 rounded w-fit mb-4">LATEST</span>
                 <h1 class="text-4xl md:text-6xl font-bold max-w-4xl leading-tight mb-4 drop-shadow-lg">
-                    <a href={`/posts/${recentPosts[0].slug}`} class="hover:underline decoration-pink-500 decoration-4 underline-offset-8">
+                    <a href={`${import.meta.env.BASE_URL}posts/${recentPosts[0].slug}`} class="hover:underline decoration-pink-500 decoration-4 underline-offset-8">
                         {recentPosts[0].data.title}
                     </a>
                 </h1>
@@ -40,7 +40,7 @@ const recentPosts = posts.slice(0, 12);
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 			{recentPosts.slice(1).map((post) => (
 				<article class="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col h-full border border-gray-100 group">
-                    <a href={`/posts/${post.slug}`} class="block overflow-hidden h-56 relative">
+                    <a href={`${import.meta.env.BASE_URL}posts/${post.slug}`} class="block overflow-hidden h-56 relative">
                         <img 
                             src={post.data.cover || '/placeholder.jpg'} 
                             alt={post.data.title}
@@ -53,11 +53,11 @@ const recentPosts = posts.slice(0, 12);
                              <span>{new Date(post.data.date).toLocaleDateString()}</span>
                         </div>
 						<h2 class="text-xl font-bold mb-3 leading-snug text-gray-800 group-hover:text-pink-600 transition-colors">
-							<a href={`/posts/${post.slug}`}>
+							<a href={`${import.meta.env.BASE_URL}posts/${post.slug}`}>
 								{post.data.title}
 							</a>
 						</h2>
-                        <a href={`/posts/${post.slug}`} class="mt-auto text-pink-600 font-medium hover:text-pink-700 inline-flex items-center gap-1 group/btn">
+                        <a href={`${import.meta.env.BASE_URL}posts/${post.slug}`} class="mt-auto text-pink-600 font-medium hover:text-pink-700 inline-flex items-center gap-1 group/btn">
                             Read More <span class="group-hover/btn:translate-x-1 transition-transform">→</span>
                         </a>
 					</div>
