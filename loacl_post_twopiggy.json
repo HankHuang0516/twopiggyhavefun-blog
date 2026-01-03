@@ -1,0 +1,163 @@
+{
+  "name": "local_post_twopiggy",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 3
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1904,
+        -288
+      ],
+      "id": "2c2ceb7f-b5e1-404a-acfe-f79bfed207de",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/app/images/pixnet_articles_db.json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -1680,
+        -288
+      ],
+      "id": "5ac1455e-ddeb-4d49-9986-c8c8be7b27c6",
+      "name": "Read_all_list"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the file content from binary data\nlet articlesData;\n\ntry {\n  // Check if data is in binary format\n  if ($input.first().binary && $input.first().binary.data) {\n    const fileContent = $input.first().binary.data.toString('utf-8');\n    articlesData = JSON.parse(fileContent);\n  } \n  // Check if data is already in JSON format\n  else if ($input.first().json) {\n    articlesData = $input.first().json;\n  }\n  else {\n    throw new Error('Unable to find data in input');\n  }\n} catch (error) {\n  return [{ json: { error: 'Failed to parse JSON: ' + error.message } }];\n}\n\n// Handle if articlesData is an array (wrong format)\nif (Array.isArray(articlesData)) {\n  articlesData = articlesData[0];\n}\n\nconst articles = articlesData.articles || [];\n\nif (articles.length === 0) {\n  return [{ json: { error: 'No articles found in database' } }];\n}\n\n// Extract unique article URLs\nconst uniqueArticles = [...new Set(articles.map(article => article.articleUrl))];\n\nif (uniqueArticles.length === 0) {\n  return [{ json: { error: 'No valid article URLs found' } }];\n}\n\n// Select a random article\nconst randomArticle = uniqueArticles[Math.floor(Math.random() * uniqueArticles.length)];\n\nreturn [{ json: { articleUrl: randomArticle } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1456,
+        -288
+      ],
+      "id": "bcdda54b-1bf5-40f3-a710-5fa5d9f01cd2",
+      "name": "Pixnet Parse Article Links"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.articleUrl }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -1232,
+        -288
+      ],
+      "id": "9b21fbb8-b0af-4817-a478-892113a924bd",
+      "name": "Pixnet Get Article Content"
+    },
+    {
+      "parameters": {
+        "jsCode": "const html = $input.first().json.data;\nconst articleUrl = $input.first().json.articleUrl;\n\n// Simple regex-based parsing (no cheerio needed)\nconst titleMatch = html.match(/<h1[^>]*class=\"[^\"]*article-title[^\"]*\"[^>]*>([^<]+)<\\/h1>/i) || \n                   html.match(/<h1[^>]*>([^<]+)<\\/h1>/i);\nconst title = titleMatch ? titleMatch[1].trim() : 'No title found';\n\n// Extract article content\nconst contentMatch = html.match(/<div[^>]*class=\"[^\"]*article-content[^\"]*\"[^>]*>([\\s\\S]*?)<\\/div>/i) ||\n                     html.match(/<div[^>]*class=\"[^\"]*article-body[^\"]*\"[^>]*>([\\s\\S]*?)<\\/div>/i);\nlet content = '';\nif (contentMatch) {\n  // Remove HTML tags\n  content = contentMatch[1].replace(/<[^>]+>/g, ' ');\n  // Remove extra whitespace\n  content = content.replace(/\\s+/g, ' ').trim();\n}\n\n// Extract 150 characters summary\nconst summary = content.substring(0, 150) + (content.length > 150 ? '...' : '');\n\n// Extract cover image\nlet coverImage = '';\nconst ogImageMatch = html.match(/<meta[^>]*property=\"og:image\"[^>]*content=\"([^\"]+)\"/i);\nif (ogImageMatch) {\n  coverImage = ogImageMatch[1];\n} else {\n  const imgMatch = html.match(/<img[^>]*src=\"([^\"]+)\"/i);\n  if (imgMatch) {\n    coverImage = imgMatch[1];\n    if (!coverImage.startsWith('http')) {\n      coverImage = 'https://lolwarden.pixnet.net' + coverImage;\n    }\n  }\n}\n\nreturn [{\n  json: {\n    articleUrl: articleUrl,\n    title: title,\n    summary: summary,\n    coverImage: coverImage,\n    fullContent: content\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1008,
+        -288
+      ],
+      "id": "d72afa34-7c19-401f-b175-00fcd1569405",
+      "name": "Pixnet Parse Article Data"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/app/images/scraped_article_{{ $now.toFormat('yyyy-MM-dd_HH-mm-ss') }}.json",
+        "data": "={{ JSON.stringify($json, null, 2) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -784,
+        -288
+      ],
+      "id": "f91824e4-a620-4f39-8bb6-ab4f251a5a86",
+      "name": "Save Article Data"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Read_all_list",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read_all_list": {
+      "main": [
+        [
+          {
+            "node": "Pixnet Parse Article Links",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pixnet Parse Article Links": {
+      "main": [
+        [
+          {
+            "node": "Pixnet Get Article Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pixnet Get Article Content": {
+      "main": [
+        [
+          {
+            "node": "Pixnet Parse Article Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pixnet Parse Article Data": {
+      "main": [
+        [
+          {
+            "node": "Save Article Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "61e26fac-8f3e-420c-acd4-0984da9034af",
+  "meta": {
+    "instanceId": "e30973e11329f16679a5da68b10d219031759b8fa3ffe57aee6d3a06154f497c"
+  },
+  "id": "c1ZxP2cTuTb6X3Bg",
+  "tags": []
+}

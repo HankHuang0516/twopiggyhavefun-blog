@@ -1,0 +1,38 @@
+# Project: Pixnet Blog Migration to Astro
+
+## Project Overview
+This project is a static blog migrated from Pixnet to Astro. It uses a "Magazine" style layout with TailwindCSS.
+
+## Core Workflows
+
+### 1. Content Management & Scraping
+- **Scraping**: Use `scrape_pixnet.js` to fetch articles from `pixnet_articles_db.json`.
+- **Images**:
+  - **Flickr**: Do NOT download. Hotlink directly to save space (logic implemented in `repair_images.js`).
+  - **Pixnet**: Download locally to `public/images/posts/` to prevent link rot.
+  - **Repair**: Run `node repair_images.js` to fix broken links or missing images.
+- **Dates**: Run `node fix_dates.js` to ensure frontmatter `date` matches the original Pixnet publish date.
+
+### 2. Business Status Verification
+- **Report**: Maintain `business_status.md` for checking shop statuses.
+- **Automation**: Run `node mark_closed_businesses.js`. This script reads `business_status.md` (identifying "已歇業" status) and automatically injects a "Closed Shop" warning banner into the markdown of articles mentioning closed businesses.
+
+### 3. Deployment (GitHub Pages)
+- **Method**: GitHub Actions (`.github/workflows/deploy.yml`).
+- **Configuration**: Must set `site` and `base` in `astro.config.mjs` correctly.
+  - `site`: `https://<username>.github.io`
+  - `base`: `/<repo-name>`
+- **Common Issues**:
+  - **404 Error**: Ensure GitHub Pages "Source" is set to "GitHub Actions" in Settings.
+  - **Push Failure (500/Timeout)**: Check for large untracked files (e.g., `gen_ai_*`, `node_modules`) that might have been accidentally staged. Use `git push -f` if history gets bloated with garbage objects.
+
+## Technical Stack
+- **Framework**: Astro 5.x
+- **Styling**: TailwindCSS + @tailwindcss/typography
+- **Scripts**: Node.js (Axios, Cheerio)
+- **Content**: Markdown/MDX with Frontmatter
+
+## Rules for AI Agents
+- **Aesthetics**: Maintain the "Magazine" style. Use high-quality images and responsive grids.
+- **Business Logic**: Always verify business status before answering "where to eat" queries based on this content.
+- **Image Strategy**: Prioritize external linking for Flickr; download only when necessary (Pixnet/other).

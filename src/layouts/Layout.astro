@@ -1,0 +1,76 @@
+---
+interface Props {
+	title: string;
+    description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-TW">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="兩隻小豬的好吃好玩日誌 - 分享美食、旅遊、生活與親子育兒的點點滴滴" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title} | 兩隻小豬</title>
+        
+        <!-- SEO & Open Graph -->
+        <meta property="og:title" content={`${title} | 兩隻小豬`} />
+        <meta property="og:description" content="兩隻小豬的好吃好玩日誌 - 分享美食、旅遊、生活與親子育兒的點點滴滴" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="兩隻小豬" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+	</head>
+	<body class="bg-gray-50 text-gray-800 font-sans">
+        <header class="bg-white shadow-sm sticky top-0 z-50">
+            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                <a href="/" class="text-2xl font-bold text-pink-600 tracking-tight flex items-center gap-2">
+                    <span>🐷</span> 兩隻小豬
+                </a>
+                <nav class="hidden md:flex gap-6 font-medium text-gray-600">
+                    <a href="/" class="hover:text-pink-500 transition">首頁</a>
+                    <a href="/category/food" class="hover:text-pink-500 transition">美食</a>
+                    <a href="/category/travel" class="hover:text-pink-500 transition">旅遊</a>
+                    <a href="/category/life" class="hover:text-pink-500 transition">生活</a>
+                </nav>
+            </div>
+        </header>
+
+		<main class="min-h-screen">
+			<slot />
+		</main>
+        
+        <footer class="bg-gray-900 text-gray-300 py-12 mt-12">
+            <div class="container mx-auto px-4 text-center">
+                <p class="mb-4">© 2026 兩隻小豬. All rights reserved.</p>
+                <div class="flex justify-center gap-4 text-sm">
+                    <a href="#" class="hover:text-white">About</a>
+                    <a href="#" class="hover:text-white">Contact</a>
+                </div>
+            </div>
+        </footer>
+	</body>
+</html>
+
+<style is:global>
+	:root {
+		--accent: 136, 58, 234;
+		--accent-light: 224, 204, 250;
+		--accent-dark: 49, 10, 101;
+		--accent-gradient: linear-gradient(
+			45deg,
+			rgb(var(--accent)),
+			rgb(var(--accent-light)) 30%,
+			white 60%
+		);
+	}
+    body {
+        font-family: 'Noto Sans TC', sans-serif;
+    }
+</style>

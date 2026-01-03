@@ -1,0 +1,74 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+// Get all posts
+const posts = await getCollection('posts');
+// Sort by date desc
+posts.sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf());
+
+const recentPosts = posts.slice(0, 12);
+---
+
+<Layout title="首頁">
+    <!-- Hero / Featured Section (First post) -->
+    {recentPosts.length > 0 && (
+        <section class="relative h-[60vh] min-h-[400px] w-full overflow-hidden group">
+             <div class="absolute inset-0 bg-black/40 z-10 transition-opacity group-hover:bg-black/30" />
+             <img 
+                src={recentPosts[0].data.cover || '/placeholder-hero.jpg'} 
+                alt={recentPosts[0].data.title}
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            <div class="relative z-20 h-full container mx-auto px-4 flex flex-col justify-end pb-16 text-white">
+                <span class="bg-pink-600 text-xs font-bold px-2 py-1 rounded w-fit mb-4">LATEST</span>
+                <h1 class="text-4xl md:text-6xl font-bold max-w-4xl leading-tight mb-4 drop-shadow-lg">
+                    <a href={`/posts/${recentPosts[0].slug}`} class="hover:underline decoration-pink-500 decoration-4 underline-offset-8">
+                        {recentPosts[0].data.title}
+                    </a>
+                </h1>
+                <p class="text-gray-200 text-lg md:text-xl max-w-2xl line-clamp-2">
+                    {new Date(recentPosts[0].data.date).toLocaleDateString()}
+                </p>
+            </div>
+        </section>
+    )}
+
+	<div class="container mx-auto px-4 py-12">
+        <h2 class="text-3xl font-bold mb-8 border-l-4 border-pink-500 pl-4">近期文章</h2>
+        
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+			{recentPosts.slice(1).map((post) => (
+				<article class="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col h-full border border-gray-100 group">
+                    <a href={`/posts/${post.slug}`} class="block overflow-hidden h-56 relative">
+                        <img 
+                            src={post.data.cover || '/placeholder.jpg'} 
+                            alt={post.data.title}
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </a>
+					<div class="p-6 flex-1 flex flex-col">
+                        <div class="mb-3 text-sm text-gray-500 flex items-center justify-between">
+                             <span>{new Date(post.data.date).toLocaleDateString()}</span>
+                        </div>
+						<h2 class="text-xl font-bold mb-3 leading-snug text-gray-800 group-hover:text-pink-600 transition-colors">
+							<a href={`/posts/${post.slug}`}>
+								{post.data.title}
+							</a>
+						</h2>
+                        <a href={`/posts/${post.slug}`} class="mt-auto text-pink-600 font-medium hover:text-pink-700 inline-flex items-center gap-1 group/btn">
+                            Read More <span class="group-hover/btn:translate-x-1 transition-transform">→</span>
+                        </a>
+					</div>
+				</article>
+			))}
+		</div>
+
+        {recentPosts.length === 0 && (
+            <div class="text-center py-20 bg-gray-100 rounded-lg">
+                <p class="text-xl text-gray-500">正在努力搬運文章中... 🚚💨</p>
+            </div>
+        )}
+	</div>
+</Layout>
