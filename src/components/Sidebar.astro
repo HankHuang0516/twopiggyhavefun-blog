@@ -1,6 +1,11 @@
 ---
-// Sidebar Component - Pixnet Category Structure
+// Sidebar Component - Complete Pixnet Category Structure
 import { getCollection } from 'astro:content';
+import { 
+    getCategorySlug,
+    PIXNET_CATEGORY_HIERARCHY,
+    regionNames 
+} from '../utils/categories';
 
 const BASE_URL = '/twopiggyhavefun-blog';
 
@@ -14,207 +19,124 @@ function fixImagePath(src: string | undefined): string {
     return src;
 }
 
-// Get all posts
+// Get all posts sorted by date
 const allPosts = await getCollection('posts');
 allPosts.sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf());
 const recentPosts = allPosts.slice(0, 5);
 
-// Region keywords for auto-categorization
-const regionKeywords: Record<string, string[]> = {
-    'taipei': ['台北', '北投', '士林', '天母', '西門', '中山', '信義', '大安', '內湖', '松山', '中正', '萬華'],
-    'newtaipei': ['新北', '板橋', '新莊', '三重', '淡水', '三峽', '中和', '永和', '蘆洲', '林口', '萬里', '瑞芳', '九份', '烏來'],
-    'taoyuan': ['桃園', '大溪', '中壢', '龍潭', '復興'],
-    'yilan': ['宜蘭', '礁溪', '羅東', '頭城', '冬山', '五結', '員山', '三星'],
-    'hsinchu': ['新竹', '竹東'],
-    'miaoli': ['苗栗', '三義', '頭屋', '南庄'],
-    'taichung': ['台中', '逢甲'],
-    'nantou': ['南投', '清境', '日月潭', '埔里'],
-    'changhua': ['彰化', '鹿港'],
-    'chiayi': ['嘉義', '阿里山'],
-    'yunlin': ['雲林'],
-    'tainan': ['台南', '玉井', '赤崁'],
-    'kaohsiung': ['高雄'],
-    'pingtung': ['屏東', '墾丁'],
-    'hualien': ['花蓮'],
-    'taitung': ['台東'],
-    'keelung': ['基隆'],
-};
-
-const contentKeywords: Record<string, string[]> = {
-    'food': ['美食', '餐廳', '小吃', '火鍋', '燒烤', '燒肉', '吃到飽', '早午餐', '咖啡', '甜點', '拉麵', '牛肉麵', '牛排', '居酒屋', '料理', '飲茶', '港點', '義大利麵', '披薩', '韓式', '泰式', '日式', '冰品', '鍋物', '串燒', '鐵板燒', '壽司', '生魚片', '烤肉', '鰻魚', '和牛', '龍蝦', '海鮮', '懶人包', '吃什麼', '早餐', '漢堡', '炸雞', '雞排'],
-    'travel': ['景點', '一日遊', '二日遊', '兩日遊', '旅遊', '行程', '步道', '農場', '博物館', '老街', '公園', '樂園', '打卡', '必逛', '攻略', '遊樂', '耶誕城'],
-    'hotel': ['住宿', '飯店', '民宿', '酒店', '旅館', '旅宿'],
-    'foreign': ['香港', '沖繩', '日本', '東京', '大阪', '京都', '北海道', '九州', '新加坡', '中國'],
-};
-
-// Categorize posts based on title keywords
-function categorizePost(title: string, tags: string[]) {
-    const categories: string[] = [];
-    
-    // Check content type
-    let contentType = '';
-    for (const [type, keywords] of Object.entries(contentKeywords)) {
-        if (keywords.some(kw => title.includes(kw))) {
-            contentType = type;
-            break;
-        }
-    }
-    
-    // Check region
-    let region = '';
-    for (const [reg, keywords] of Object.entries(regionKeywords)) {
-        if (keywords.some(kw => title.includes(kw))) {
-            region = reg;
-            break;
-        }
-    }
-    
-    // Also check tags
-    if (!region) {
-        for (const tag of tags) {
-            if (regionKeywords[tag]) {
-                region = tag;
-                break;
-            }
-        }
-    }
-    
-    return { contentType, region };
-}
-
-// Build category counts
-const categoryStats = {
-    domesticFood: { total: 0, regions: {} as Record<string, any[]> },
-    domesticTravel: { total: 0, regions: {} as Record<string, any[]> },
-    domesticHotel: { total: 0, regions: {} as Record<string, any[]> },
-    foreignTravel: { total: 0, posts: [] as any[] },
-    fashion: { total: 0, posts: [] as any[] },
-    unboxing: { total: 0, posts: [] as any[] },
-    parenting: { total: 0, posts: [] as any[] },
-    wedding: { total: 0, posts: [] as any[] },
-    lifestyle: { total: 0, posts: [] as any[] },
-    other: { total: 0, posts: [] as any[] },
-};
-
-// Region display names
-const regionNames: Record<string, string> = {
-    'taipei': '台北',
-    'newtaipei': '新北市',
-    'keelung': '基隆',
-    'taoyuan': '桃園',
-    'hsinchu': '新竹',
-    'miaoli': '苗栗',
-    'taichung': '台中',
-    'nantou': '南投',
-    'changhua': '彰化',
-    'yunlin': '雲林',
-    'chiayi': '嘉義',
-    'tainan': '台南',
-    'kaohsiung': '高雄',
-    'pingtung': '屏東',
-    'yilan': '宜蘭',
-    'hualien': '花蓮',
-    'taitung': '台東',
-};
-
 // Track seen titles to avoid duplicates
 const seenTitles = new Set<string>();
+
+// Build category stats dynamically from posts
+// Structure: parentCategory -> subcategory -> posts[]
+type CategoryStats = {
+    [parent: string]: {
+        total: number;
+        subcategories: { [sub: string]: any[] };
+    };
+};
+
+const categoryStats: CategoryStats = {};
+
+// Initialize all parent categories from PIXNET_CATEGORY_HIERARCHY
+for (const [parentName, config] of Object.entries(PIXNET_CATEGORY_HIERARCHY)) {
+    categoryStats[parentName] = {
+        total: 0,
+        subcategories: {}
+    };
+    // Initialize all known subcategories
+    for (const sub of config.subcategories) {
+        categoryStats[parentName].subcategories[sub] = [];
+    }
+}
 
 // Categorize all posts
 allPosts.forEach(post => {
     const title = post.data.title || '';
     
-    // Skip duplicates by title (normalize by removing extra spaces)
+    // Skip duplicates by title
     const normalizedTitle = title.replace(/\s+/g, ' ').trim().slice(0, 30);
     if (seenTitles.has(normalizedTitle)) {
         return;
     }
     seenTitles.add(normalizedTitle);
     
-    const tags = post.data.tags || [];
-    const { contentType, region } = categorizePost(title, tags);
-    
-    // Check special categories first (before food/travel)
-    const isUnboxing = title.includes('開箱') || title.includes('團購') || title.includes('保健') ||
-                       title.includes('滋補') || title.includes('宅配') || title.includes('伴手禮') ||
-                       title.includes('鍋具') || title.includes('包款') || title.includes('手錶') ||
-                       title.includes('鞋款') || title.includes('居家好物') || title.includes('軟糖') ||
-                       title.includes('膠原蛋白');
-    
-    const isParenting = title.includes('親子') || title.includes('育兒') || 
-                        title.includes('寶寶') || title.includes('嬰兒') || title.includes('月子') ||
-                        title.includes('哺乳') || title.includes('尿布') || title.includes('奶瓶');
-    
-    // Check if article is about domestic Taiwan locations
-    const hasDomesticKeywords = ['台北', '新北', '桃園', '新竹', '苗栗', '台中', '彰化', '南投', 
-                                  '雲林', '嘉義', '台南', '高雄', '屏東', '宜蘭', '花蓮', '台東',
-                                  '基隆', '板橋', '中和', '永和', '三重', '新莊', '淡水', '內湖',
-                                  '松山', '信義', '大安', '中山', '士林', '北投'].some(kw => title.includes(kw));
-    
-    // Foreign travel ONLY if explicitly foreign and NOT containing domestic keywords
-    const isForeign = !hasDomesticKeywords && (
-                      title.includes('香港自由行') || title.includes('沖繩自由行') || 
-                      title.includes('日本自由行') || title.includes('沖繩親子') ||
-                      title.includes('香港一日遊') || title.includes('北海道') ||
-                      (title.includes('香港') && !title.includes('港點') && !title.includes('港式')) ||
-                      (title.includes('沖繩') && !title.includes('沖繩麵')));
-    
-    if (isForeign) {
-        categoryStats.foreignTravel.total++;
-        categoryStats.foreignTravel.posts.push(post);
-    } else if (isParenting) {
-        categoryStats.parenting.total++;
-        categoryStats.parenting.posts.push(post);
-    } else if (isUnboxing) {
-        categoryStats.unboxing.total++;
-        categoryStats.unboxing.posts.push(post);
-    } else if (title.includes('婚') || title.includes('新娘') || title.includes('婚紗')) {
-        categoryStats.wedding.total++;
-        categoryStats.wedding.posts.push(post);
-    } else if (contentType === 'hotel' && region) {
-        categoryStats.domesticHotel.total++;
-        if (!categoryStats.domesticHotel.regions[region]) {
-            categoryStats.domesticHotel.regions[region] = [];
+    const category = post.data.category || '';
+    if (!category) {
+        // No category - put in 其他/未分類文章
+        categoryStats['其他'].total++;
+        if (!categoryStats['其他'].subcategories['未分類文章']) {
+            categoryStats['其他'].subcategories['未分類文章'] = [];
         }
-        categoryStats.domesticHotel.regions[region].push(post);
-    } else if (contentType === 'food' && region) {
-        categoryStats.domesticFood.total++;
-        if (!categoryStats.domesticFood.regions[region]) {
-            categoryStats.domesticFood.regions[region] = [];
+        categoryStats['其他'].subcategories['未分類文章'].push(post);
+        return;
+    }
+    
+    // Find which parent category this belongs to
+    let foundParent = '';
+    let foundSub = category;
+    
+    for (const [parentName, config] of Object.entries(PIXNET_CATEGORY_HIERARCHY)) {
+        // Check if category is the parent itself
+        if (category === parentName) {
+            foundParent = parentName;
+            foundSub = category;
+            break;
         }
-        categoryStats.domesticFood.regions[region].push(post);
-    } else if (contentType === 'travel' && region) {
-        categoryStats.domesticTravel.total++;
-        if (!categoryStats.domesticTravel.regions[region]) {
-            categoryStats.domesticTravel.regions[region] = [];
-        }
-        categoryStats.domesticTravel.regions[region].push(post);
-    } else {
-        // Fallback: try to categorize by content type alone
-        if (contentType === 'food') {
-            categoryStats.domesticFood.total++;
-            if (!categoryStats.domesticFood.regions['other']) {
-                categoryStats.domesticFood.regions['other'] = [];
-            }
-            categoryStats.domesticFood.regions['other'].push(post);
-        } else if (contentType === 'travel') {
-            categoryStats.domesticTravel.total++;
-            if (!categoryStats.domesticTravel.regions['other']) {
-                categoryStats.domesticTravel.regions['other'] = [];
-            }
-            categoryStats.domesticTravel.regions['other'].push(post);
-        } else {
-            categoryStats.other.total++;
-            categoryStats.other.posts.push(post);
+        // Check if category is a known subcategory
+        if (config.subcategories.includes(category)) {
+            foundParent = parentName;
+            foundSub = category;
+            break;
         }
     }
+    
+    // If not found in known subcategories, use getCategorySlug to find parent
+    if (!foundParent) {
+        const slug = getCategorySlug(category);
+        for (const [parentName, config] of Object.entries(PIXNET_CATEGORY_HIERARCHY)) {
+            if (config.slug === slug) {
+                foundParent = parentName;
+                foundSub = category; // Use original category name as subcategory
+                break;
+            }
+        }
+    }
+    
+    // Default to 其他 if still not found
+    if (!foundParent) {
+        foundParent = '其他';
+    }
+    
+    // Add to stats
+    if (!categoryStats[foundParent]) {
+        categoryStats[foundParent] = { total: 0, subcategories: {} };
+    }
+    categoryStats[foundParent].total++;
+    
+    if (!categoryStats[foundParent].subcategories[foundSub]) {
+        categoryStats[foundParent].subcategories[foundSub] = [];
+    }
+    categoryStats[foundParent].subcategories[foundSub].push(post);
 });
+
+// Helper to get unique posts
+function getUniquePosts(posts: any[]) {
+    return [...new Map(posts.map((p: any) => [p.slug, p])).values()];
+}
 
 // Stats
 const stats = {
     today: Math.floor(Math.random() * 1000) + 500,
     total: 297216779
 };
+
+// Get parent category order (same as Pixnet)
+const parentOrder = [
+    '國內美食', '國內旅遊', '國內住宿', '國外旅遊', '時尚流行', '開箱',
+    '親子育兒', '婚禮大小事', '生活綜合', '股票投資/房地產', 'Arduino應用',
+    '實用的工具網站', '其他'
+];
 ---
 
 <aside class="sidebar w-full lg:w-80 space-y-6">
@@ -230,192 +152,59 @@ const stats = {
         </div>
         
         <div class="dtree text-sm space-y-1">
-            <!-- 國內美食 -->
-            <div class="dtree-node">
-                <div class="flex items-center py-1">
-                    <button class="toggle-btn w-5 text-gray-500" data-target="cat-domestic-food">
-                        <span class="toggle-icon">▶</span>
-                    </button>
-                    <span class="font-medium text-gray-800">國內美食</span>
-                    <span class="text-gray-400 text-xs ml-1">({categoryStats.domesticFood.total})</span>
-                </div>
-                <div class="sub-categories ml-5 border-l border-gray-200 pl-3 hidden" id="cat-domestic-food">
-                    {Object.entries(categoryStats.domesticFood.regions)
-                        .filter(([_, posts]) => posts.length > 0)
-                        .sort((a, b) => b[1].length - a[1].length)
-                        .map(([region, posts]) => {
-                            const uniquePosts = [...new Map(posts.map((p: any) => [p.slug, p])).values()];
-                            return (
-                        <div class="py-0.5">
-                            <div class="flex items-center">
-                                <button class="toggle-btn w-4 text-gray-400 text-xs" data-target={`food-${region}`}>
-                                    <span class="toggle-icon">▶</span>
-                                </button>
-                                <span class="text-blue-600 ml-1">{regionNames[region] || region}美食</span>
-                                <span class="text-gray-400 text-xs ml-1">({uniquePosts.length})</span>
-                            </div>
-                            <div class="sub-posts ml-4 border-l border-gray-100 pl-2 hidden max-h-32 overflow-y-auto" id={`food-${region}`}>
-                                {uniquePosts.slice(0, 8).map((post: any) => (
-                                    <a href={`${BASE_URL}/posts/${post.slug}`} class="block text-blue-500 hover:underline text-xs py-0.5 truncate">
-                                        · {post.data.title}
-                                    </a>
-                                ))}
-                                {uniquePosts.length > 8 && <span class="text-gray-400 text-xs">...還有 {uniquePosts.length - 8} 篇</span>}
-                            </div>
+            {parentOrder.map((parentName) => {
+                const stats = categoryStats[parentName];
+                if (!stats || stats.total === 0) return null;
+                
+                const config = PIXNET_CATEGORY_HIERARCHY[parentName as keyof typeof PIXNET_CATEGORY_HIERARCHY];
+                const parentSlug = config?.slug || 'other';
+                const catId = `cat-${parentSlug}`;
+                
+                // Get subcategories with posts, sorted by count
+                const subsWithPosts = Object.entries(stats.subcategories)
+                    .filter(([_, posts]) => posts.length > 0)
+                    .sort((a, b) => b[1].length - a[1].length);
+                
+                return (
+                    <div class="dtree-node">
+                        <div class="flex items-center py-1">
+                            <button class="toggle-btn w-5 text-gray-500" data-target={catId}>
+                                <span class="toggle-icon">▶</span>
+                            </button>
+                            <a href={`${BASE_URL}/category/${parentSlug}`} class="font-medium text-gray-800 hover:text-blue-600">
+                                {parentName}
+                            </a>
+                            <span class="text-gray-400 text-xs ml-1">({stats.total})</span>
                         </div>
-                        )})}
-                </div>
-            </div>
-
-            <!-- 國內旅遊 -->
-            <div class="dtree-node">
-                <div class="flex items-center py-1">
-                    <button class="toggle-btn w-5 text-gray-500" data-target="cat-domestic-travel">
-                        <span class="toggle-icon">▶</span>
-                    </button>
-                    <span class="font-medium text-gray-800">國內旅遊</span>
-                    <span class="text-gray-400 text-xs ml-1">({categoryStats.domesticTravel.total})</span>
-                </div>
-                <div class="sub-categories ml-5 border-l border-gray-200 pl-3 hidden" id="cat-domestic-travel">
-                    {Object.entries(categoryStats.domesticTravel.regions)
-                        .filter(([_, posts]) => posts.length > 0)
-                        .sort((a, b) => b[1].length - a[1].length)
-                        .map(([region, posts]) => (
-                        <div class="py-0.5">
-                            <div class="flex items-center">
-                                <button class="toggle-btn w-4 text-gray-400 text-xs" data-target={`travel-${region}`}>
-                                    <span class="toggle-icon">▶</span>
-                                </button>
-                                <span class="text-blue-600 ml-1">{regionNames[region] || region}景點</span>
-                                <span class="text-gray-400 text-xs ml-1">({posts.length})</span>
-                            </div>
-                            <div class="sub-posts ml-4 border-l border-gray-100 pl-2 hidden max-h-32 overflow-y-auto" id={`travel-${region}`}>
-                                {posts.slice(0, 8).map((post: any) => (
-                                    <a href={`${BASE_URL}/posts/${post.slug}`} class="block text-blue-500 hover:underline text-xs py-0.5 truncate">
-                                        · {post.data.title}
-                                    </a>
-                                ))}
-                                {posts.length > 8 && <span class="text-gray-400 text-xs">...還有 {posts.length - 8} 篇</span>}
-                            </div>
+                        <div class="sub-categories ml-5 border-l border-gray-200 pl-3 hidden" id={catId}>
+                            {subsWithPosts.map(([subName, posts]) => {
+                                const uniquePosts = getUniquePosts(posts);
+                                const subId = `sub-${parentSlug}-${subName.replace(/[^\w\u4e00-\u9fff]/g, '')}`;
+                                
+                                return (
+                                    <div class="py-0.5">
+                                        <div class="flex items-center">
+                                            <button class="toggle-btn w-4 text-gray-400 text-xs" data-target={subId}>
+                                                <span class="toggle-icon">▶</span>
+                                            </button>
+                                            <span class="text-blue-600 ml-1">{subName}</span>
+                                            <span class="text-gray-400 text-xs ml-1">({uniquePosts.length})</span>
+                                        </div>
+                                        <div class="sub-posts ml-4 border-l border-gray-100 pl-2 hidden max-h-32 overflow-y-auto" id={subId}>
+                                            {uniquePosts.slice(0, 8).map((post: any) => (
+                                                <a href={`${BASE_URL}/posts/${post.slug}`} class="block text-blue-500 hover:underline text-xs py-0.5 truncate">
+                                                    · {post.data.title}
+                                                </a>
+                                            ))}
+                                            {uniquePosts.length > 8 && <span class="text-gray-400 text-xs">...還有 {uniquePosts.length - 8} 篇</span>}
+                                        </div>
+                                    </div>
+                                );
+                            })}
                         </div>
-                    ))}
-                </div>
-            </div>
-
-            <!-- 國內住宿 -->
-            {categoryStats.domesticHotel.total > 0 && (
-            <div class="dtree-node">
-                <div class="flex items-center py-1">
-                    <button class="toggle-btn w-5 text-gray-500" data-target="cat-domestic-hotel">
-                        <span class="toggle-icon">▶</span>
-                    </button>
-                    <span class="font-medium text-gray-800">國內住宿</span>
-                    <span class="text-gray-400 text-xs ml-1">({categoryStats.domesticHotel.total})</span>
-                </div>
-                <div class="sub-categories ml-5 border-l border-gray-200 pl-3 hidden" id="cat-domestic-hotel">
-                    {Object.entries(categoryStats.domesticHotel.regions)
-                        .filter(([_, posts]) => posts.length > 0)
-                        .map(([region, posts]) => (
-                        <div class="py-0.5">
-                            <div class="flex items-center">
-                                <button class="toggle-btn w-4 text-gray-400 text-xs" data-target={`hotel-${region}`}>
-                                    <span class="toggle-icon">▶</span>
-                                </button>
-                                <span class="text-blue-600 ml-1">{regionNames[region] || region}住宿</span>
-                                <span class="text-gray-400 text-xs ml-1">({posts.length})</span>
-                            </div>
-                            <div class="sub-posts ml-4 border-l border-gray-100 pl-2 hidden max-h-32 overflow-y-auto" id={`hotel-${region}`}>
-                                {posts.slice(0, 8).map((post: any) => (
-                                    <a href={`${BASE_URL}/posts/${post.slug}`} class="block text-blue-500 hover:underline text-xs py-0.5 truncate">
-                                        · {post.data.title}
-                                    </a>
-                                ))}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-            )}
-
-            <!-- 國外旅遊 -->
-            {categoryStats.foreignTravel.total > 0 && (
-            <div class="dtree-node">
-                <div class="flex items-center py-1">
-                    <button class="toggle-btn w-5 text-gray-500" data-target="cat-foreign-travel">
-                        <span class="toggle-icon">▶</span>
-                    </button>
-                    <span class="font-medium text-gray-800">國外旅遊</span>
-                    <span class="text-gray-400 text-xs ml-1">({categoryStats.foreignTravel.total})</span>
-                </div>
-                <div class="sub-posts ml-5 border-l border-gray-200 pl-3 hidden max-h-40 overflow-y-auto" id="cat-foreign-travel">
-                    {categoryStats.foreignTravel.posts.map((post: any) => (
-                        <a href={`${BASE_URL}/posts/${post.slug}`} class="block text-blue-500 hover:underline text-xs py-0.5 truncate">
-                            · {post.data.title}
-                        </a>
-                    ))}
-                </div>
-            </div>
-            )}
-
-            <!-- 親子育兒 -->
-            {categoryStats.parenting.total > 0 && (
-            <div class="dtree-node">
-                <div class="flex items-center py-1">
-                    <button class="toggle-btn w-5 text-gray-500" data-target="cat-parenting">
-                        <span class="toggle-icon">▶</span>
-                    </button>
-                    <span class="font-medium text-gray-800">親子育兒</span>
-                    <span class="text-gray-400 text-xs ml-1">({categoryStats.parenting.total})</span>
-                </div>
-                <div class="sub-posts ml-5 border-l border-gray-200 pl-3 hidden max-h-40 overflow-y-auto" id="cat-parenting">
-                    {categoryStats.parenting.posts.map((post: any) => (
-                        <a href={`${BASE_URL}/posts/${post.slug}`} class="block text-blue-500 hover:underline text-xs py-0.5 truncate">
-                            · {post.data.title}
-                        </a>
-                    ))}
-                </div>
-            </div>
-            )}
-
-            <!-- 開箱 -->
-            {categoryStats.unboxing.total > 0 && (
-            <div class="dtree-node">
-                <div class="flex items-center py-1">
-                    <button class="toggle-btn w-5 text-gray-500" data-target="cat-unboxing">
-                        <span class="toggle-icon">▶</span>
-                    </button>
-                    <span class="font-medium text-gray-800">開箱推薦</span>
-                    <span class="text-gray-400 text-xs ml-1">({categoryStats.unboxing.total})</span>
-                </div>
-                <div class="sub-posts ml-5 border-l border-gray-200 pl-3 hidden max-h-40 overflow-y-auto" id="cat-unboxing">
-                    {categoryStats.unboxing.posts.map((post: any) => (
-                        <a href={`${BASE_URL}/posts/${post.slug}`} class="block text-blue-500 hover:underline text-xs py-0.5 truncate">
-                            · {post.data.title}
-                        </a>
-                    ))}
-                </div>
-            </div>
-            )}
-
-            <!-- 其他 -->
-            {categoryStats.other.total > 0 && (
-            <div class="dtree-node">
-                <div class="flex items-center py-1">
-                    <button class="toggle-btn w-5 text-gray-500" data-target="cat-other">
-                        <span class="toggle-icon">▶</span>
-                    </button>
-                    <span class="font-medium text-gray-800">其他</span>
-                    <span class="text-gray-400 text-xs ml-1">({categoryStats.other.total})</span>
-                </div>
-                <div class="sub-posts ml-5 border-l border-gray-200 pl-3 hidden max-h-40 overflow-y-auto" id="cat-other">
-                    {categoryStats.other.posts.map((post: any) => (
-                        <a href={`${BASE_URL}/posts/${post.slug}`} class="block text-blue-500 hover:underline text-xs py-0.5 truncate">
-                            · {post.data.title}
-                        </a>
-                    ))}
-                </div>
-            </div>
-            )}
+                    </div>
+                );
+            })}
 
             <!-- 全部文章 -->
             <div class="dtree-node mt-2 pt-2 border-t border-gray-200">
@@ -427,11 +216,12 @@ const stats = {
                     <span class="text-gray-400 text-xs ml-1">({allPosts.length})</span>
                 </div>
                 <div class="sub-posts ml-5 border-l border-gray-200 pl-3 hidden max-h-60 overflow-y-auto" id="cat-all">
-                    {allPosts.map((post) => (
+                    {allPosts.slice(0, 20).map((post) => (
                         <a href={`${BASE_URL}/posts/${post.slug}`} class="block text-blue-500 hover:underline text-xs py-0.5 truncate">
                             · {post.data.title}
                         </a>
                     ))}
+                    {allPosts.length > 20 && <span class="text-gray-400 text-xs">...還有 {allPosts.length - 20} 篇</span>}
                 </div>
             </div>
         </div>

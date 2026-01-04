@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Sidebar from '../../components/Sidebar.astro';
 import BusinessStatus from '../../components/BusinessStatus.astro';
+import { getCategorySlug, SIDEBAR_CATEGORIES } from '../../utils/categories';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
@@ -22,6 +23,8 @@ const formattedDate = new Date(post.data.date).toLocaleDateString('zh-TW', {
 
 // Share URLs
 const currentUrl = `https://hankhuang0516.github.io/twopiggyhavefun-blog/posts/${post.slug}`;
+const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
+const lineShareUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(currentUrl)}`;
 ---
 
 <Layout title={post.data.title}>
@@ -65,9 +68,18 @@ const currentUrl = `https://hankhuang0516.github.io/twopiggyhavefun-blog/posts/$
                     </h1>
                     <div class="flex flex-wrap items-center gap-3 text-sm text-gray-500 mb-4">
                         <span>{formattedDate}</span>
-                        {post.data.tags?.map(tag => (
-                            <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">{tag}</span>
-                        ))}
+						{post.data.tags && post.data.tags.length > 0 && (
+							<>
+								<span class="text-gray-300">|</span>
+								<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+								{post.data.tags.map(tag => (
+									<a href={`/twopiggyhavefun-blog/category/${tag}`} class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs hover:bg-gray-200 transition">
+										{tag}
+									</a>
+								))}
+							</>
+						)}
+
                     </div>
 
                     <!-- Business Status -->
@@ -89,7 +101,9 @@ const currentUrl = `https://hankhuang0516.github.io/twopiggyhavefun-blog/posts/$
                 {post.data.cover && (
                     <div class="mb-8">
                         <img 
-                            src={post.data.cover} 
+                            src={post.data.cover.startsWith('/') && !post.data.cover.startsWith('/twopiggyhavefun-blog') 
+                                ? `/twopiggyhavefun-blog${post.data.cover}` 
+                                : post.data.cover} 
                             alt={post.data.title}
                             class="w-full h-auto max-h-[500px] object-cover"
                         />
@@ -100,6 +114,19 @@ const currentUrl = `https://hankhuang0516.github.io/twopiggyhavefun-blog/posts/$
                 <div class="prose prose-lg max-w-none pixnet-content bg-white p-6 md:p-8 border border-gray-200">
                     <Content />
                 </div>
+
+                <!-- Personal Category Link -->
+                {post.data.category && (
+                    <div class="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                        <span class="text-gray-600 text-sm">個人分類：</span>
+                        <a 
+                            href={`/twopiggyhavefun-blog/category/${getCategorySlug(post.data.category)}`}
+                            class="text-blue-600 hover:underline font-medium"
+                        >
+                            {post.data.category}
+                        </a>
+                    </div>
+                )}
 
                 <!-- Mobile Share Buttons -->
                 <div class="lg:hidden flex justify-center gap-4 mt-8 py-4 border-t border-gray-200">
@@ -144,3 +171,18 @@ const currentUrl = `https://hankhuang0516.github.io/twopiggyhavefun-blog/posts/$
         text-decoration: underline;
     }
 </style>
+
+<script>
+    // Fix content images client-side to handle base URL
+    document.addEventListener('DOMContentLoaded', () => {
+        const baseUrl = '/twopiggyhavefun-blog';
+        const contentImages = document.querySelectorAll('.pixnet-content img');
+        
+        contentImages.forEach(img => {
+            const src = img.getAttribute('src');
+            if (src && src.startsWith('/') && !src.startsWith(baseUrl)) {
+                img.src = `${baseUrl}${src}`;
+            }
+        });
+    });
+</script>

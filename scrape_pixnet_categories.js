@@ -2,6 +2,7 @@
  * scrape_pixnet_categories.js
  * Scrapes Pixnet blog to extract article categories and business hours
  * Then updates local markdown files with proper categorization
+ * Includes: Incremental Saving, Skipping, Tag Extraction
  */
 
 const axios = require('axios');
@@ -175,11 +176,20 @@ async function scrapeArticleCategory(articleUrl) {
             });
         }
 
-        // If still empty, try breadcrumb but be careful of sidebar
+        // Match tags by URL if class selector fails or as addition
+        const tags = [];
+        $('a[href*="/tag/"]').each((i, el) => {
+            const tag = $(el).text().trim();
+            if (tag && !tags.includes(tag)) {
+                tags.push(tag);
+            }
+        });
+
+        // Match categories by URL if standard selectors fail
         if (categories.length === 0) {
-            $('#article-area .breadcrumb a, .main .breadcrumb a').each((i, el) => {
+            $('a[href*="/category/"]').each((i, el) => {
                 const text = $(el).text().trim();
-                if (text && !['首頁', 'HOME'].includes(text) && !categories.includes(text)) {
+                if (text && !['All', 'Top', '不分類'].includes(text) && !categories.includes(text)) {
                     categories.push(text);
                 }
             });
@@ -202,26 +212,58 @@ async function scrapeArticleCategory(articleUrl) {
         const isPermanentlyClosed = title.includes('已歇業') || title.includes('已停業') ||
             content.includes('已歇業') || content.includes('店家已停業');
 
-        return { categories, businessHours, isPermanentlyClosed };
+        return { categories, businessHours, isPermanentlyClosed, tags };
     } catch (error) {
-        return { categories: [], businessHours: null, isPermanentlyClosed: false };
+        return { categories: [], businessHours: null, isPermanentlyClosed: false, tags: [] };
     }
 }
 
 async function main() {
     console.log('═'.repeat(60));
-    console.log('📂 Pixnet Category Scraper');
+    console.log('📂 Pixnet Category Scraper (Incremental)');
     console.log('═'.repeat(60) + '\n');
 
-    // Read existing posts
+    // Read existing categories to skip/merge
+    let existingData = [];
+    if (fs.existsSync(CATEGORY_DB)) {
+        try {
+            const json = JSON.parse(fs.readFileSync(CATEGORY_DB, 'utf-8'));
+            existingData = json.articles || [];
+        } catch (e) {
+            console.error('Error reading existing DB:', e.message);
+        }
+    }
+
+    // Map for quick lookup
+    const dataMap = new Map();
+    existingData.forEach(a => dataMap.set(a.id, a));
+
+    // Read local posts
     const posts = fs.readdirSync(POSTS_DIR).filter(f => f.endsWith('.md'));
     console.log(`Found ${posts.length} local posts\n`);
 
     const categoryData = [];
     let progress = 0;
 
+    // Sort posts to process new ones first? Or just iterate.
+    // Iteration order is filesystem dependent.
+
     for (const file of posts) {
         const id = file.replace('.md', '');
+
+        // Check if we already have valid data (tags or categories)
+        const existing = dataMap.get(id);
+        if (existing && ((existing.pixnetTags && existing.pixnetTags.length > 0) || (existing.pixnetCategories && existing.pixnetCategories.length > 0))) {
+            // Already scraped successfully
+            categoryData.push(existing);
+            if (progress % 50 === 0) console.log(`Skipping ${id} (Done)`);
+            progress++;
+            continue;
+        } else if (existing && existing.scrapedAt) {
+            // Scraped but maybe empty? Retry if it was recent? 
+            // For now, let's retry if empty.
+        }
+
         const content = fs.readFileSync(path.join(POSTS_DIR, file), 'utf-8');
 
         // Extract originalUrl from frontmatter
@@ -231,38 +273,56 @@ async function main() {
         progress++;
         console.log(`[${progress}/${posts.length}] Scraping ${id}...`);
 
-        const { categories, businessHours, isPermanentlyClosed } = await scrapeArticleCategory(originalUrl);
+        const { categories, businessHours, isPermanentlyClosed, tags } = await scrapeArticleCategory(originalUrl);
 
-        categoryData.push({
+        // Merge or create new
+        const record = {
             id,
             originalUrl,
-            pixnetCategories: categories,
-            businessHours,
-            isPermanentlyClosed,
+            pixnetCategories: categories.length > 0 ? categories : (existing?.pixnetCategories || []),
+            pixnetTags: tags,
+            businessHours: businessHours || existing?.businessHours || null,
+            isPermanentlyClosed: isPermanentlyClosed || existing?.isPermanentlyClosed || false,
             scrapedAt: new Date().toISOString()
-        });
+        };
+
+        categoryData.push(record);
+        dataMap.set(id, record); // Update map
+
+        // Incremental save every 20 items
+        if (progress % 20 === 0) {
+            fs.writeFileSync(CATEGORY_DB, JSON.stringify({
+                lastUpdated: new Date().toISOString(),
+                categoryStructure: CATEGORY_STRUCTURE,
+                articles: Array.from(dataMap.values())
+            }, null, 2));
+            console.log(`💾 Saved progress (${dataMap.size} records)`);
+        }
 
         // Small delay to be polite
-        await new Promise(r => setTimeout(r, 300));
+        await new Promise(r => setTimeout(r, 200));
     }
 
-    // Save category data
+    // Final Save
     fs.writeFileSync(CATEGORY_DB, JSON.stringify({
         lastUpdated: new Date().toISOString(),
         categoryStructure: CATEGORY_STRUCTURE,
-        articles: categoryData
+        articles: Array.from(dataMap.values())
     }, null, 2));
 
     console.log(`\n✅ Saved category data to pixnet_categories.json`);
 
     // Summary
-    const withCategories = categoryData.filter(a => a.pixnetCategories.length > 0).length;
-    const withHours = categoryData.filter(a => a.businessHours).length;
-    const closed = categoryData.filter(a => a.isPermanentlyClosed).length;
+    const finalArticles = Array.from(dataMap.values());
+    const withCategories = finalArticles.filter(a => a.pixnetCategories && a.pixnetCategories.length > 0).length;
+    const withTags = finalArticles.filter(a => a.pixnetTags && a.pixnetTags.length > 0).length;
+    const withHours = finalArticles.filter(a => a.businessHours).length;
+    const closed = finalArticles.filter(a => a.isPermanentlyClosed).length;
 
     console.log('\n📊 Summary');
-    console.log(`Total articles:     ${categoryData.length}`);
+    console.log(`Total articles:     ${finalArticles.length}`);
     console.log(`With categories:    ${withCategories}`);
+    console.log(`With tags:          ${withTags}`);
     console.log(`With business hrs:  ${withHours}`);
     console.log(`Permanently closed: ${closed}`);
 }

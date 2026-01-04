@@ -11,29 +11,13 @@ const POSTS_DIR = path.join(__dirname, 'src/content/posts');
 const PIXNET_DATA = path.join(__dirname, 'pixnet_categories.json');
 
 // Parse various business hours formats
+// Clean up business hours string but keep raw format
 function normalizeBusinessHours(hoursStr) {
     if (!hoursStr) return null;
-
-    // Clean up the string
     let cleaned = hoursStr.trim();
-
-    // Extract time range patterns
-    const timeRangePatterns = [
-        // 11:30-21:00 or 11:30～21:00
-        /(\d{1,2}:\d{2})\s*[-~～]\s*(\d{1,2}:\d{2})/,
-        // 11:30至21:00
-        /(\d{1,2}:\d{2})\s*至\s*(\d{1,2}:\d{2})/,
-    ];
-
-    for (const pattern of timeRangePatterns) {
-        const match = cleaned.match(pattern);
-        if (match) {
-            return `${match[1]}-${match[2]}`;
-        }
-    }
-
-    // Return original if can't normalize
-    return cleaned.length < 100 ? cleaned : null;
+    // Remove invisible characters or excessive spacing if needed, 
+    // but keep the full text structure (e.g. "週一～週五 11:00-14:00")
+    return cleaned.length > 0 ? cleaned : null;
 }
 
 function updateFrontmatter(filePath, updates) {
@@ -70,6 +54,45 @@ function updateFrontmatter(filePath, updates) {
     if (updates.pixnetCategory && !frontmatter.includes('pixnetCategory:')) {
         frontmatter += `\npixnetCategory: "${updates.pixnetCategory}"`;
         modified = true;
+    }
+
+    // Merge pixnetCategories into tags
+    if (updates.pixnetCategories && updates.pixnetCategories.length > 0) {
+        // Extract existing tags
+        const tagsMatch = frontmatter.match(/tags:\s*\[(.*?)\]/s);
+        let existingTags = [];
+        if (tagsMatch) {
+            try {
+                // Parse existing JSON array or simple list
+                // If simple list, might be quoted or not. Best to assume strict JSON-like or quoted strings
+                // But let's simple split by comma and clean
+                const inner = tagsMatch[1];
+                if (inner.trim()) {
+                    existingTags = inner.split(',').map(t => t.trim().replace(/^['"]|['"]$/g, ''));
+                }
+            } catch (e) { }
+        }
+
+        // Merge
+        const newTags = updates.pixnetCategories;
+        const combined = [...new Set([...existingTags, ...newTags])];
+
+        // Remove "unread" if other tags exist? Maybe not, allow "unread" for now unless user wants it gone.
+        // But user said "Sync Article Source Tags". Usually implies source is truth.
+        // Let's keep existing tags (like local manual ones) and add new ones.
+
+        // Check if different
+        const isDifferent = JSON.stringify(existingTags.sort()) !== JSON.stringify(combined.sort());
+
+        if (isDifferent) {
+            const newTagsStr = `[${combined.map(t => `"${t}"`).join(', ')}]`;
+            if (tagsMatch) {
+                frontmatter = frontmatter.replace(/tags:\s*\[.*?\]/s, `tags: ${newTagsStr}`);
+            } else {
+                frontmatter += `\ntags: ${newTagsStr}`;
+            }
+            modified = true;
+        }
     }
 
     if (modified) {
@@ -129,16 +152,19 @@ function main() {
             withClosed++;
         }
 
-        // Try to extract main category from pixnetCategories
-        if (articleData.pixnetCategories && articleData.pixnetCategories.length > 0) {
-            // Find the category with the most specific match (not all sidebar categories)
-            // For now, skip as the scraper returns all sidebar categories
+        // Sync pixnetCategories AND pixnetTags to tags
+        const sourceTags = [];
+        if (articleData.pixnetCategories) sourceTags.push(...articleData.pixnetCategories);
+        if (articleData.pixnetTags) sourceTags.push(...articleData.pixnetTags);
+
+        if (sourceTags.length > 0) {
+            updates.pixnetCategories = [...new Set(sourceTags)];
         }
 
         if (Object.keys(updates).length > 0) {
             const result = updateFrontmatter(path.join(POSTS_DIR, file), updates);
             if (result.modified) {
-                console.log(`✅ Updated: ${file} - hours: ${updates.businessHours || 'N/A'}`);
+                console.log(`✅ Updated: ${file} - tags synced: ${!!updates.pixnetCategories}`);
                 updated++;
             }
         }

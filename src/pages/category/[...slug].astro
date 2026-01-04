@@ -1,0 +1,192 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Sidebar from '../../components/Sidebar.astro';
+import { getCollection } from 'astro:content';
+import { 
+    categorizePost, 
+    isForeignTravel, 
+    isParenting, 
+    isUnboxing, 
+    isWedding, 
+    regionNames,
+    regionKeywords 
+} from '../../utils/categories';
+
+export async function getStaticPaths() {
+    const allPosts = await getCollection('posts');
+    const categories = new Set<string>();
+    
+    // Always include main categories
+    const mainCategories = [
+        'domestic-food', 'domestic-travel', 'domestic-hotel', 
+        'foreign-travel', 'parenting', 'unboxing', 'wedding', 'other'
+    ];
+    mainCategories.forEach(c => categories.add(c));
+
+    // Calculate dynamic subcategories
+    allPosts.forEach(post => {
+        const title = post.data.title || '';
+        const tags = post.data.tags || [];
+        const { contentType, region } = categorizePost(title, tags);
+        
+        if (contentType && region) {
+            // e.g. taipei-food, yilan-travel
+            categories.add(`${region}-${contentType}`);
+        }
+    });
+
+    return Array.from(categories).map(slug => ({
+        params: { slug },
+        props: { slug }
+    }));
+}
+
+const { slug } = Astro.props;
+const allPosts = await getCollection('posts');
+allPosts.sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf());
+
+// Filter logic
+let categoryTitle = '';
+let filteredPosts: typeof allPosts = [];
+
+const [part1, part2] = slug.split('-');
+
+// 1. Check Special Categories
+if (slug === 'foreign-travel') {
+    categoryTitle = '國外旅遊';
+    filteredPosts = allPosts.filter(post => isForeignTravel(post.data.title || ''));
+} else if (slug === 'parenting') {
+    categoryTitle = '親子育兒';
+    filteredPosts = allPosts.filter(post => isParenting(post.data.title || ''));
+} else if (slug === 'unboxing') {
+    categoryTitle = '開箱推薦';
+    filteredPosts = allPosts.filter(post => isUnboxing(post.data.title || ''));
+} else if (slug === 'wedding') {
+    categoryTitle = '婚禮大小事';
+    filteredPosts = allPosts.filter(post => isWedding(post.data.title || ''));
+} else if (slug === 'other') {
+    categoryTitle = '其他';
+    filteredPosts = allPosts.filter(post => {
+        const title = post.data.title || '';
+        const tags = post.data.tags || [];
+        const { contentType, region } = categorizePost(title, tags);
+        if (isForeignTravel(title) || isParenting(title) || isUnboxing(title) || isWedding(title)) return false;
+        if ((contentType === 'food' || contentType === 'travel' || contentType === 'hotel') && region) return false;
+        // Check fallback logic matches Sidebar's "other"
+        if (contentType === 'food' || contentType === 'travel') return false; 
+        return true;
+    });
+} 
+// 2. Check Domestic Main Categories
+else if (slug === 'domestic-food') {
+    categoryTitle = '國內美食';
+    filteredPosts = allPosts.filter(post => {
+        const title = post.data.title || '';
+        const tags = post.data.tags || [];
+        const { contentType, region } = categorizePost(title, tags);
+        return contentType === 'food' && (region || true); // Include fallback "food" in domestic main?
+        // Sidebar logic: domesticFood includes categorized by region + fallback 'other' region food
+        // So yes, all food that isn't Foreign.
+        // But categorizePost separates based on keywords. 
+        // Sidebar logic: if contentType === 'food', it counts towards domesticFood.
+    });
+} else if (slug === 'domestic-travel') {
+    categoryTitle = '國內旅遊';
+    filteredPosts = allPosts.filter(post => {
+        const title = post.data.title || '';
+        const tags = post.data.tags || [];
+        const { contentType } = categorizePost(title, tags);
+        return contentType === 'travel';
+    });
+} else if (slug === 'domestic-hotel') {
+    categoryTitle = '國內住宿';
+    filteredPosts = allPosts.filter(post => {
+        const title = post.data.title || '';
+        const tags = post.data.tags || [];
+        const { contentType } = categorizePost(title, tags);
+        return contentType === 'hotel';
+    });
+}
+// 3. Subcategories (e.g. taipei-food)
+else if (part2 && (part2 === 'food' || part2 === 'travel' || part2 === 'hotel')) {
+    const regionKey = part1;
+    const typeKey = part2;
+    const regionName = regionNames[regionKey] || regionKey;
+    
+    if (typeKey === 'food') categoryTitle = `${regionName}美食`;
+    if (typeKey === 'travel') categoryTitle = `${regionName}景點`;
+    if (typeKey === 'hotel') categoryTitle = `${regionName}住宿`;
+
+    filteredPosts = allPosts.filter(post => {
+        const title = post.data.title || '';
+        const tags = post.data.tags || [];
+        const { contentType, region } = categorizePost(title, tags);
+        return contentType === typeKey && region === regionKey;
+    });
+}
+
+// Pagination or just show all? 
+// For now, simple list.
+const BASE_URL = '/twopiggyhavefun-blog';
+
+function fixImagePath(src: string | undefined): string {
+    if (!src) return `${BASE_URL}/placeholder.jpg`;
+    if (src.startsWith('http')) return src;
+    if (src.startsWith('/') && !src.startsWith(BASE_URL)) {
+        return `${BASE_URL}${src}`;
+    }
+    return src;
+}
+---
+
+<Layout title={`${categoryTitle} - 兩隻小豬`}>
+    <main class="container mx-auto max-w-7xl p-4 flex flex-col lg:flex-row gap-8">
+        <!-- Content Area -->
+        <div class="flex-1">
+            <header class="mb-8 border-b border-gray-200 pb-4">
+                <h1 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
+                    <span class="text-blue-600">📂</span> {categoryTitle}
+                </h1>
+                <p class="text-gray-500 mt-2">共 {filteredPosts.length} 篇文章</p>
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {filteredPosts.map((post) => (
+                    <article class="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition overflow-hidden">
+                        <a href={`${BASE_URL}/posts/${post.slug}`} class="block h-full">
+                            <div class="aspect-w-16 aspect-h-9 bg-gray-100 relative h-48">
+                                <img 
+                                    src={fixImagePath(post.data.cover)} 
+                                    alt={post.data.title}
+                                    class="w-full h-full object-cover transition duration-300 hover:scale-105"
+                                    loading="lazy"
+                                />
+                            </div>
+                            <div class="p-4">
+                                <h2 class="text-lg font-bold text-gray-800 mb-2 line-clamp-2 hover:text-blue-600">
+                                    {post.data.title}
+                                </h2>
+                                <div class="flex flex-wrap gap-2 text-xs text-gray-500 mb-3">
+                                    <span>📅 {new Date(post.data.date).toLocaleDateString('zh-TW')}</span>
+                                    {post.data.tags && post.data.tags.slice(0, 3).map((tag: string) => (
+                                        <span class="bg-gray-100 px-2 py-0.5 rounded">{tag}</span>
+                                    ))}
+                                </div>
+                            </div>
+                        </a>
+                    </article>
+                ))}
+            </div>
+
+            {filteredPosts.length === 0 && (
+                <div class="text-center py-20 text-gray-500">
+                    <p class="text-xl">此分類目前沒有文章。</p>
+                    <a href={BASE_URL} class="text-blue-500 hover:underline mt-4 inline-block">返回首頁</a>
+                </div>
+            )}
+        </div>
+
+        <!-- Sidebar -->
+        <Sidebar />
+    </main>
+</Layout>

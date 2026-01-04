@@ -63,37 +63,89 @@ const REGIONS = {
     keelung: ['基隆']
 };
 
-function categorizePost(title, content) {
-    const tags = new Set(['pixnet']); // Always include pixnet tag
-    const text = title;
+const regionNames = {
+    'taipei': '台北', 'newtaipei': '新北', 'keelung': '基隆', 'taoyuan': '桃園',
+    'hsinchu': '新竹', 'miaoli': '苗栗', 'taichung': '台中', 'nantou': '南投',
+    'changhua': '彰化', 'yunlin': '雲林', 'chiayi': '嘉義', 'tainan': '台南',
+    'kaohsiung': '高雄', 'pingtung': '屏東', 'yilan': '宜蘭', 'hualien': '花蓮',
+    'taitung': '台東'
+};
 
-    // Detect region
+function categorizePost(title, content, existingTags = []) {
+    const tags = new Set(['pixnet']); // Always include pixnet tag
+    // Use title and a portion of content for keyword matching (to avoid noise from footer/sidebar if present)
+    // Taking first 3000 chars of content should cover the intro where keywords usually appear.
+    // Fix Generic Titles or Broken Titles (starting with &nbsp;)
+    let newTitle = title;
+    if (title.trim() === '兩隻小豬' || title.trim() === 'Uncategorized' || title.includes('&nbsp;') || title.match(/^&[a-z]+;/)) {
+        // Strip frontmatter first
+        const bodyContent = content.replace(/^---[\s\S]+?---\s*/, '');
+        // Remove HTML tags and entities
+        const plainText = bodyContent
+            .replace(/<[^>]+>/g, ' ')
+            .replace(/&nbsp;/g, ' ')
+            .replace(/&[a-zA-Z0-9#]+;/g, ' ') // Remove other entities
+            .replace(/\s+/g, ' ')
+            .trim();
+
+        if (plainText.length > 0) {
+            let extracted = plainText.substring(0, 50);
+            // Ensure we don't cut words or sentences weirdly? Just simple truncate for now.
+            if (plainText.length > 50) extracted += '...';
+            newTitle = extracted;
+        }
+    }
+
+    // Determine category based on NEW title + content + tags
+    // Use title and a portion of content for keyword matching (to avoid noise from footer/sidebar if present)
+    // Taking first 3000 chars of content should cover the intro where keywords usually appear.
+    const text = newTitle + ' ' + (content || '').substring(0, 3000);
+
+    // Combine title and existing tags for keyword search
+    const searchTerms = [newTitle, ...existingTags];
+
+    // Detect region (Tags priority, then Title)
     for (const [region, keywords] of Object.entries(REGIONS)) {
-        for (const keyword of keywords) {
-            if (text.includes(keyword)) {
-                tags.add(region);
-                break;
+        // Check tags first
+        if (existingTags.some(t => keywords.includes(t) || t.includes(regionNames[region] || ''))) {
+            tags.add(region);
+        }
+        // Then Check Title
+        else {
+            for (const keyword of keywords) {
+                if (text.includes(keyword)) {
+                    tags.add(region);
+                    break;
+                }
             }
         }
     }
 
-    // Check for foreign first (priority)
-    const hasDomesticKeywords = Object.values(REGIONS).flat().some(kw => text.includes(kw));
+    // Check for foreign (Specific logic)
+    const hasDomesticKeywords = Object.values(REGIONS).flat().some(kw => text.includes(kw)) ||
+        existingTags.some(t => Object.values(REGIONS).flat().includes(t));
 
     if (!hasDomesticKeywords) {
         for (const kw of CATEGORIES.foreign.keywords) {
-            if (text.includes(kw)) {
+            if (text.includes(kw) || existingTags.includes(kw)) {
                 tags.add('foreign');
-                return Array.from(tags);
+                // return Array.from(tags); // Don't return early, allowing multi-cat
             }
         }
     }
 
-    // Check for specific categories (priority order)
+    // Check for specific categories
     const priorityOrder = ['unboxing', 'parenting', 'wedding', 'hotel', 'food', 'travel'];
 
     for (const catKey of priorityOrder) {
         const cat = CATEGORIES[catKey];
+        // Check Tags
+        if (existingTags.some(t => cat.keywords.includes(t) || t === cat.tag || t === catKey)) {
+            tags.add(cat.tag);
+            continue;
+        }
+
+        // Check Title
         for (const keyword of cat.keywords) {
             if (text.includes(keyword)) {
                 tags.add(cat.tag);
@@ -102,68 +154,72 @@ function categorizePost(title, content) {
         }
     }
 
-    return Array.from(tags);
+    return { tags: Array.from(tags), newTitle };
 }
 
-function processPost(filePath) {
-    let content = fs.readFileSync(filePath, 'utf-8');
 
-    // Extract title
-    const titleMatch = content.match(/title:\s*["']?(.+?)["']?\s*\n/);
-    if (!titleMatch) return { modified: false };
-
-    const title = titleMatch[1];
-
-    // Get current tags
-    const tagsMatch = content.match(/tags:\s*\[(.+?)\]/);
-    const currentTags = tagsMatch
-        ? tagsMatch[1].split(',').map(t => t.trim().replace(/["']/g, ''))
-        : ['pixnet'];
-
-    // Calculate new tags
-    const newTags = categorizePost(title, content);
-
-    // Merge tags (keep existing, add new)
-    const mergedTags = [...new Set([...currentTags, ...newTags])];
-
-    // Check if tags changed
-    if (JSON.stringify(currentTags.sort()) === JSON.stringify(mergedTags.sort())) {
-        return { modified: false, tags: currentTags };
-    }
-
-    // Update tags in frontmatter
-    const newTagsStr = mergedTags.map(t => `"${t}"`).join(', ');
-
-    if (tagsMatch) {
-        content = content.replace(/tags:\s*\[.+?\]/, `tags: [${newTagsStr}]`);
-    } else {
-        // Add tags after date line
-        content = content.replace(/(date:\s*.+?\n)/, `$1tags: [${newTagsStr}]\n`);
-    }
-
-    fs.writeFileSync(filePath, content);
-    return { modified: true, tags: mergedTags, title };
-}
 
 function main() {
-    console.log('═'.repeat(50));
-    console.log('📂 Auto-Categorize Posts (Enhanced)');
-    console.log('═'.repeat(50) + '\n');
+    console.log('══════════════════════════════════════════════════');
+    console.log('📂 Auto-Categorize & Fix Titles');
+    console.log('══════════════════════════════════════════════════\n');
 
     const files = fs.readdirSync(POSTS_DIR).filter(f => f.endsWith('.md'));
     let modifiedCount = 0;
     const categorized = { food: 0, travel: 0, hotel: 0, unboxing: 0, parenting: 0, foreign: 0, wedding: 0 };
 
     for (const file of files) {
-        const result = processPost(path.join(POSTS_DIR, file));
-        if (result.modified) {
-            console.log(`✅ ${file.slice(0, 20)}...: ${result.tags.join(', ')}`);
+        const filePath = path.join(POSTS_DIR, file);
+        let content = fs.readFileSync(filePath, 'utf-8');
+
+        // Parse frontmatter
+        const titleMatch = content.match(/title:\s*["']?(.+?)["']?\s*\n/);
+        const title = titleMatch ? titleMatch[1] : '';
+
+        // Extract tags to pass to function
+        const tagsMatch = content.match(/tags:\s*\[(.*?)\]/s);
+        let currentTags = [];
+        if (tagsMatch) {
+            currentTags = tagsMatch[1].split(',').map(t => t.trim().replace(/^['"]|['"]$/g, ''));
+        }
+
+        const { tags: newTags, newTitle } = categorizePost(title, content, currentTags);
+
+        // Merge tags
+        const mergedTags = [...new Set([...currentTags, ...newTags])];
+        const isTagsChanged = JSON.stringify(currentTags.sort()) !== JSON.stringify(mergedTags.sort());
+        const isTitleChanged = newTitle !== title;
+
+        if (isTagsChanged || isTitleChanged) {
+            if (isTitleChanged) {
+                content = content.replace(/title:\s*["'].+?["']?(\s*\n)/, `title: "${newTitle.replace(/"/g, '\\"')}"$1`);
+            }
+
+            if (isTagsChanged) {
+                const newTagsStr = mergedTags.map(t => `"${t}"`).join(', ');
+                if (content.match(/tags:\s*\[.*?\]/s)) {
+                    content = content.replace(/tags:\s*\[.*?\]/s, `tags: [${newTagsStr}]`);
+                } else {
+                    // Find the end of the frontmatter (second '---')
+                    const frontmatterEndIndex = content.indexOf('---', 3);
+                    if (frontmatterEndIndex !== -1) {
+                        // Insert tags before the closing '---'
+                        content = content.slice(0, frontmatterEndIndex) + `tags: [${newTagsStr}]\n` + content.slice(frontmatterEndIndex);
+                    } else {
+                        // Fallback if no closing '---' found, add after date if present
+                        content = content.replace(/(date:\s*.+?\n)/, `$1tags: [${newTagsStr}]\n`);
+                    }
+                }
+            }
+
+            fs.writeFileSync(filePath, content, 'utf-8');
+            console.log(`✅ ${file.slice(0, 20)}...: Title: ${isTitleChanged ? newTitle : '(same)'}, Tags: ${newTags.join(', ')}`);
             modifiedCount++;
         }
 
-        // Count categories
-        if (result.tags) {
-            for (const tag of result.tags) {
+        // Count categories for summary
+        if (newTags) {
+            for (const tag of newTags) {
                 if (categorized.hasOwnProperty(tag)) {
                     categorized[tag]++;
                 }

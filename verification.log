@@ -1,0 +1,40 @@
+════════════════════════════════════════════════════════════
+🔍 Regression Verification
+════════════════════════════════════════════════════════════
+
+Checking 5 random posts:
+
+📄 [12222758691] Verifying...
+
+   --- Results for 12222758691 ---
+   [PASS] Tags Sync: OK
+   [PASS] Creation Date: OK
+   [PASS] Business Status: Captured
+📄 [12189650512] Verifying...
+
+   --- Results for 12189650512 ---
+   [PASS] Tags Sync: OK
+   [PASS] Creation Date: OK
+   [PASS] Business Status: N/A
+📄 [12223826625] Verifying...
+
+   --- Results for 12223826625 ---
+   [PASS] Tags Sync: OK
+   [PASS] Creation Date: OK
+   [PASS] Business Status: Captured
+📄 [12220612710] Verifying...
+
+   --- Results for 12220612710 ---
+   [PASS] Tags Sync: OK
+   [PASS] Creation Date: OK
+   [PASS] Business Status: Captured
+📄 [12223224609] Verifying...
+
+   --- Results for 12223224609 ---
+   [PASS] Tags Sync: OK
+   [PASS] Creation Date: OK
+   [PASS] Business Status: Captured
+
+════════════════════════════════════════════════════════════
+✅ Verification Complete: 5/5 passed all checks.
+════════════════════════════════════════════════════════════

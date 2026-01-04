@@ -6,6 +6,7 @@ const posts = defineCollection({
         date: z.string().or(z.date()),
         cover: z.string().optional(),
         tags: z.array(z.string()).optional(),
+        category: z.string().optional(), // 個人分類 from Pixnet
         originalUrl: z.string().optional(),
     }),
 });

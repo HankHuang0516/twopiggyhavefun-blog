@@ -39,6 +39,9 @@
             "type": "string"
           }
         },
+        "category": {
+          "type": "string"
+        },
         "originalUrl": {
           "type": "string"
         },

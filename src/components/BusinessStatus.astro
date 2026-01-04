@@ -1,175 +1,231 @@
 ---
-// BusinessStatus.astro - Dynamic business status component
+// BusinessStatus.astro - Dynamic business status component with raw string parsing
 interface Props {
     businessName?: string;
-    status?: 'open' | 'closed' | 'unknown';
-    hours?: {
-        mon?: string;
-        tue?: string;
-        wed?: string;
-        thu?: string;
-        fri?: string;
-        sat?: string;
-        sun?: string;
-    };
     rawHours?: string;
     permanentlyClosed?: boolean;
 }
 
-const { businessName, status, hours: propHours, rawHours, permanentlyClosed } = Astro.props;
-
-// Process rawHours if provided
-let hours = propHours;
-if (!hours && rawHours) {
-    hours = {
-        mon: rawHours,
-        tue: rawHours,
-        wed: rawHours,
-        thu: rawHours,
-        fri: rawHours,
-        sat: rawHours,
-        sun: rawHours
-    };
-}
-
-// Get current day
-const dayNames = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+const { businessName, rawHours, permanentlyClosed } = Astro.props;
 ---
 
 {permanentlyClosed ? (
-    <div class="business-status closed-permanently bg-red-100 border-l-4 border-red-500 p-4 my-4">
+    <div class="business-status closed-permanently bg-red-100 border-l-4 border-red-500 p-4 my-4 font-sans">
         <div class="flex items-center">
-            <span class="text-2xl mr-2">🚫</span>
+            <span class="text-2xl mr-3">🚫</span>
             <div>
-                <p class="font-bold text-red-700">已歇業</p>
-                <p class="text-red-600 text-sm">此店家目前已不再營業</p>
+                <p class="font-bold text-red-700 text-lg">已歇業</p>
+                <p class="text-red-600">此店家目前已不再營業</p>
             </div>
         </div>
     </div>
-) : hours ? (
-    <div class="business-status bg-gray-50 border border-gray-200 p-4 my-4 rounded" id="business-hours-widget">
-        <h4 class="font-bold text-gray-800 mb-2 flex items-center">
-            <span class="mr-2">🕐</span>
-            {businessName ? `${businessName} 營業時間` : '營業時間'}
-        </h4>
-        
-        <div class="grid grid-cols-2 gap-1 text-sm mb-3">
-            <div class="flex justify-between px-2 py-1 bg-white rounded">
-                <span>週一</span>
-                <span class="text-gray-600">{hours.mon || '未知'}</span>
-            </div>
-            <div class="flex justify-between px-2 py-1 bg-white rounded">
-                <span>週二</span>
-                <span class="text-gray-600">{hours.tue || '未知'}</span>
-            </div>
-            <div class="flex justify-between px-2 py-1 bg-white rounded">
-                <span>週三</span>
-                <span class="text-gray-600">{hours.wed || '未知'}</span>
-            </div>
-            <div class="flex justify-between px-2 py-1 bg-white rounded">
-                <span>週四</span>
-                <span class="text-gray-600">{hours.thu || '未知'}</span>
-            </div>
-            <div class="flex justify-between px-2 py-1 bg-white rounded">
-                <span>週五</span>
-                <span class="text-gray-600">{hours.fri || '未知'}</span>
-            </div>
-            <div class="flex justify-between px-2 py-1 bg-white rounded">
-                <span>週六</span>
-                <span class="text-gray-600">{hours.sat || '未知'}</span>
-            </div>
-            <div class="flex justify-between px-2 py-1 bg-white rounded col-span-2">
-                <span>週日</span>
-                <span class="text-gray-600">{hours.sun || '未知'}</span>
+) : rawHours ? (
+    <div class="business-status bg-white border border-gray-200 shadow-sm p-5 my-6 rounded-lg font-sans" id="business-hours-widget">
+        <div class="flex justify-between items-start mb-3">
+            <h4 class="font-bold text-gray-800 text-lg flex items-center">
+                <span class="mr-2 text-xl">🕐</span>
+                {businessName ? `${businessName} 營業時間` : '營業資訊'}
+            </h4>
+            <!-- Dynamic Status Badge -->
+            <div id="status-badge" class="px-3 py-1 rounded-full text-sm font-bold bg-gray-100 text-gray-500">
+                讀取中...
             </div>
         </div>
         
-        <!-- Dynamic status badge (updated by JS) -->
-        <div id="current-status" class="flex items-center justify-center py-2 rounded font-medium">
-            <span class="status-icon mr-2"></span>
-            <span class="status-text">檢查營業狀態中...</span>
+        <!-- Raw Hours Display -->
+        <div class="text-gray-600 text-base leading-relaxed p-3 bg-gray-50 rounded border border-gray-100">
+            {rawHours.split(/[,，;；]/).map(segment => (
+                <div class="mb-1 last:mb-0">{segment.trim()}</div>
+            ))}
         </div>
+        
+        <!-- Detailed Status Message -->
+        <p id="status-message" class="text-sm text-gray-500 mt-2 text-right opacity-80"></p>
+
+        <div id="raw-hours-data" style="display:none;" data-hours={rawHours}></div>
     </div>
     
-    <script define:vars={{ hours }}>
+    <script>
+        // Client-side parsing logic for Chinese business hours
         function parseTime(timeStr) {
-            if (!timeStr || timeStr === '休息' || timeStr === '已歇業') return null;
-            const [h, m] = timeStr.split(':').map(Number);
-            return h * 60 + m;
+            if (!timeStr) return null;
+            // Clean string and handle 24h/12h separation if basic parsing fails
+            // Basic format: HH:mm
+            const match = timeStr.match(/(\d{1,2})[:：](\d{2})/);
+            if (!match) return null;
+            return parseInt(match[1]) * 60 + parseInt(match[2]);
         }
-        
-        function getBusinessStatus() {
+
+        function getCurrentDayType() {
+            const day = new Date().getDay(); // 0 = Sun, 1 = Mon...
+            if (day === 0 || day === 6) return 'weekend';
+            return 'weekday';
+        }
+
+        function getCurrentDayChar() {
+            const days = ['日', '一', '二', '三', '四', '五', '六'];
+            return days[new Date().getDay()];
+        }
+
+        function checkStatus(rawHours) {
             const now = new Date();
-            const dayNames = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-            const day = dayNames[now.getDay()];
-            const todayHours = hours[day];
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+            const currentDayChar = getCurrentDayChar();
             
-            if (!todayHours || todayHours === '休息' || todayHours === '公休') {
-                return { status: 'closed-today', message: '今日休息', color: 'bg-gray-200 text-gray-700' };
+            // Patterns
+            // 1. "週一～週五 11:00-14:00"
+            // 2. "每日 10:00-22:00"
+            // 3. "11:00-21:00 (週三公休)"
+            
+            let isClosedDay = false;
+            
+            // Check for explicit closed days first
+            // regex for "週X公休", "周X公休"
+            const closedMatch = rawHours.match(/週([一二三四五六日])\s*公休/g) || rawHours.match(/周([一二三四五六日])\s*公休/g);
+            if (closedMatch) {
+                closedMatch.forEach(m => {
+                    if (m.includes(`週${currentDayChar}`) || m.includes(`周${currentDayChar}`)) {
+                        isClosedDay = true;
+                    }
+                });
             }
             
-            if (todayHours === '已歇業') {
-                return { status: 'permanently-closed', message: '已歇業', color: 'bg-red-200 text-red-700' };
+            if (isClosedDay) return { state: 'closed-day', msg: '今日公休' };
+
+            // Extract all time ranges found in the string
+            // Looking for HH:mm-HH:mm or HH:mm~HH:mm
+            const rangeRegex = /(\d{1,2}[:：]\d{2})\s*[-~～]\s*(\d{1,2}[:：]\d{2})/g;
+            const ranges = [];
+            let match;
+            
+            // Very basic extraction: grab all time ranges. 
+            // Improvement: associate ranges with day specifiers if possible.
+            // For now, if the string implies different times for different days, this simple logic might be ambiguous.
+            // But usually "Weekdays A, Weekends B" format is separable.
+            
+            // Refined strategy: Split by day-grouping if possible, but that's complex.
+            // Global search for now: check if ANY extracted range covers current time.
+            // BUT, if it says "Weekdays 9-5, Weekends 10-6", we shouldn't match the 9am on a Sunday.
+            
+            // Let's try to detect if we fall into a specific segment
+            let relevantText = rawHours;
+            
+            // If text contains "假日" or "週六日" or "六日", and today is weekend, prioritize that segment?
+            const isWeekend = (new Date().getDay() === 0 || new Date().getDay() === 6);
+            
+            if (rawHours.includes('假日') || rawHours.includes('六日') || rawHours.includes('週六日')) {
+                 // Try to split logic roughly? Too risky for regex.
+                 // Fallback: Just look for ALL ranges. If NOW is inside ANY range, we tentatively say Open.
+                 // Unless we are sure it's a closed day.
+            }
+
+            // Improved logic: Parse all ranges then decide
+            let allRanges = [];
+            while ((match = rangeRegex.exec(rawHours)) !== null) {
+                const s = parseTime(match[1]);
+                const e = parseTime(match[2]);
+                if (s !== null && e !== null) {
+                    let effectiveEnd = e;
+                    if (e < s) effectiveEnd += 24 * 60; // Overnight
+                    allRanges.push({ start: s, end: effectiveEnd, rawStart: match[1], rawEnd: match[2] });
+                }
             }
             
-            const parts = todayHours.split('-');
-            if (parts.length !== 2) {
-                return { status: 'unknown', message: '營業時間未知', color: 'bg-gray-200 text-gray-600' };
+            allRanges.sort((a, b) => a.start - b.start);
+
+            if (allRanges.length === 0) return { state: 'unknown', msg: '請查看營業時間' };
+
+            // Check State
+            for (let i = 0; i < allRanges.length; i++) {
+                const r = allRanges[i];
+                // Check Open
+                if (currentMinutes >= r.start && currentMinutes < r.end) {
+                     return { 
+                         state: 'open', 
+                         msg: `營業中 (直到 ${r.rawEnd})`,
+                         endTime: r.end
+                     };
+                }
+                // Check Opening Soon (within 60m)
+                if (currentMinutes < r.start && (r.start - currentMinutes) <= 60) {
+                     return {
+                         state: 'opening-soon',
+                         msg: `即將營業 (${r.rawStart} 開門)`,
+                         startTime: r.start
+                     };
+                }
             }
+
+            // If not open, check if there's a next range TODAY
+            // Filter ranges that start after now
+            const nextRange = allRanges.find(r => r.start > currentMinutes);
             
-            const [openStr, closeStr] = parts;
-            const openTime = parseTime(openStr);
-            const closeTime = parseTime(closeStr);
-            const nowTime = now.getHours() * 60 + now.getMinutes();
-            
-            if (openTime === null || closeTime === null) {
-                return { status: 'unknown', message: '營業時間格式錯誤', color: 'bg-gray-200 text-gray-600' };
-            }
-            
-            if (nowTime >= openTime && nowTime < closeTime) {
-                const remaining = closeTime - nowTime;
-                const hours = Math.floor(remaining / 60);
-                const mins = remaining % 60;
+            if (nextRange) {
+                // Resting between shifts
+                // Calculate hours diff
+                const diffMins = nextRange.start - currentMinutes;
+                const diffHrs = Math.floor(diffMins / 60);
+                // const diffRestMins = diffMins % 60;
+                
                 return { 
-                    status: 'open', 
-                    message: `營業中 (還有 ${hours}h ${mins}m 打烊)`, 
-                    color: 'bg-green-200 text-green-700' 
-                };
-            } else if (nowTime < openTime) {
-                const diff = openTime - nowTime;
-                const hours = Math.floor(diff / 60);
-                const mins = diff % 60;
-                return { 
-                    status: 'opening-soon', 
-                    message: `休息中 (${hours}小時${mins}分後開門)`, 
-                    color: 'bg-yellow-200 text-yellow-700' 
+                    state: 'closed', 
+                    msg: '休息中', 
+                    nextOpen: nextRange.rawStart 
                 };
             } else {
-                return { 
-                    status: 'closed', 
-                    message: '今日已打烊', 
-                    color: 'bg-gray-200 text-gray-700' 
-                };
+                // No more ranges today
+                return { state: 'closed-day', msg: '今日營業已結束' };
             }
         }
-        
-        function updateStatus() {
-            const statusEl = document.getElementById('current-status');
-            if (!statusEl) return;
+
+        function updateWidget() {
+            const el = document.getElementById('raw-hours-data');
+            if (!el) return;
+            const hoursStr = el.dataset.hours;
+            const badge = document.getElementById('status-badge');
+            const msgEl = document.getElementById('status-message');
             
-            const { status, message, color } = getBusinessStatus();
+            const result = checkStatus(hoursStr);
             
-            const icon = status === 'open' ? '🟢' : 
-                         status === 'opening-soon' ? '🟡' : 
-                         status === 'permanently-closed' ? '🚫' : '🔴';
+                if (result.state === 'open') {
+                    // 營業中
+                    badge.className = 'px-3 py-1 rounded-full text-sm font-bold bg-green-100 text-green-700 border border-green-200';
+                    badge.textContent = '● 營業中';
+                } else if (result.state === 'closed-day') {
+                    // 公休
+                    badge.className = 'px-3 py-1 rounded-full text-sm font-bold bg-gray-200 text-gray-600 border border-gray-300';
+                    badge.textContent = '今日公休';
+                } else if (result.state === 'opening-soon') {
+                    // 即將營業
+                     badge.className = 'px-3 py-1 rounded-full text-sm font-bold bg-yellow-100 text-yellow-700 border border-yellow-200';
+                    badge.textContent = '即將營業';
+                } else if (result.state === 'closed') {
+                    // 休息中 (但今日還有營業時段)
+                    // Show "Resting (Open at XX:XX)" or "Resting (in X hours)"
+                    // Priority: Prominent Badge with meaningful info
+                    badge.className = 'px-3 py-1 rounded-full text-sm font-bold bg-orange-100 text-orange-700 border border-orange-200';
+                    if (result.nextOpen) {
+                        badge.textContent = `休息中 (${result.nextOpen} 開門)`;
+                    } else {
+                        badge.textContent = '休息中';
+                    }
+                } else {
+                    badge.className = 'px-3 py-1 rounded-full text-sm font-bold bg-gray-100 text-gray-500';
+                    badge.textContent = '查看詳情';
+                }
+            }
             
-            statusEl.className = `flex items-center justify-center py-2 rounded font-medium ${color}`;
-            statusEl.innerHTML = `<span class="mr-2">${icon}</span><span>${message}</span>`;
+            if (msgEl && result.msg) {
+                // Formatting message with next open time if available
+                if (result.state === 'closed' && result.nextOpen) {
+                     msgEl.textContent = `休息中 (預計 ${result.nextOpen} 開門)`;
+                } else {
+                    msgEl.textContent = result.msg;
+                }
+            }
         }
-        
-        // Update immediately
-        updateStatus();
-        // Update every minute
-        setInterval(updateStatus, 60000);
+
+        updateWidget();
+        setInterval(updateWidget, 60000);
     </script>
 ) : null}

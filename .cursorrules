@@ -3,6 +3,8 @@
 ## Project Overview
 This project is a static blog migrated from Pixnet to Astro. It uses a "Magazine" style layout with TailwindCSS.
 
+## 隨時使用中文回報/溝通
+
 ## Core Workflows
 
 ### 1. Content Management & Scraping
@@ -68,3 +70,24 @@ This project is a static blog migrated from Pixnet to Astro. It uses a "Magazine
   - 這是安全機制，不是 Bug。即使 `npm` 在 Allow List 中也一樣。
   - ❌ 無法自動執行: `npm install -g @railway/cli`
   - ✅ 可以自動執行: `npm install express` (專案內安裝)
+
+- ** 文章歸類(網頁右邊分類區)
+  - 同步文章來源的"文章標籤(語言要一致)"並顯示"文章標籤"在頂部 (flex flex-wrap items-center gap-3 text-sm text-gray-500 mb-4)
+  - 同步文章來源的"個人分類"並顯示"個人分類"在底部 
+  - 文章根據"個人分類"來自動分類到右邊分類區
+  ![alt text](image.png)
+  - 新增新的文章要可以根據"個人分類"自動分類
+  - 所有文章都應該要進行分類，如果找不到個人分類，請歸類為其他
+  - Regresion test: 隨機挑5篇文章，驗證文章標籤、文章應出現在合適的分類區
+
+- ** 文章動態營業狀態lable顯示
+  - 要根據"目前時間"比對"文章內的營業時間(如果有)"用動態顯示營業狀態
+    - 營業狀態: 已歇業、營業中、休息中(距離幾小時後開門 or 今日未營業)
+    - 要使用lable標籤來顯示
+  - Regresion test: 隨機挑5篇文章，根據目前裝置時間，驗證文章是否顯示正確的營業狀態
+
+- ** 文章的創建時間要與原文章一致
+  - Regresion test: 隨機挑5篇文章，驗證文章的創建時間是否與原文章一致
+
+- ** 確保網頁所有的按鈕都要能運作
+  - Regresion test: 隨機挑10個非重複功能的按鈕，驗證按鈕是否能運作，且與按鈕目標一致
