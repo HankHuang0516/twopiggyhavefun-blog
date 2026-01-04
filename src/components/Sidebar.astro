@@ -1,0 +1,88 @@
+---
+// Sidebar Component - Bobowin Style
+import { getCollection } from 'astro:content';
+
+// Get recent posts for sidebar
+const posts = await getCollection('posts');
+posts.sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf());
+const recentPosts = posts.slice(0, 5);
+
+// Category counts
+const categories = [
+    { name: '美食', slug: 'food', icon: '🍽️' },
+    { name: '旅遊', slug: 'travel', icon: '✈️' },
+    { name: '生活', slug: 'life', icon: '🏠' },
+];
+---
+
+<aside class="sidebar w-full lg:w-80 space-y-6">
+    <!-- Social Banners -->
+    <div class="bg-white border border-gray-200 p-4">
+        <h3 class="text-lg font-bold mb-4 border-l-4 border-blue-500 pl-3">追蹤我們</h3>
+        <div class="space-y-3">
+            <a href="https://www.facebook.com/twopiggyhavefun" target="_blank" 
+               class="flex items-center gap-3 p-3 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                <span class="text-xl">📘</span>
+                <span class="font-medium">Facebook 粉絲專頁</span>
+            </a>
+            <a href="https://www.instagram.com/twopiggyhavefun" target="_blank"
+               class="flex items-center gap-3 p-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded hover:opacity-90 transition">
+                <span class="text-xl">📷</span>
+                <span class="font-medium">Instagram</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Search -->
+    <div class="bg-white border border-gray-200 p-4">
+        <h3 class="text-lg font-bold mb-4 border-l-4 border-blue-500 pl-3">搜尋文章</h3>
+        <form action="/search" method="get" class="flex">
+            <input type="text" name="q" placeholder="輸入關鍵字..." 
+                   class="flex-1 border border-gray-300 px-3 py-2 focus:outline-none focus:border-blue-500" />
+            <button type="submit" class="bg-black text-white px-4 py-2 hover:bg-gray-800 transition">
+                搜尋
+            </button>
+        </form>
+    </div>
+
+    <!-- Recent Posts -->
+    <div class="bg-white border border-gray-200 p-4">
+        <h3 class="text-lg font-bold mb-4 border-l-4 border-blue-500 pl-3">近期文章</h3>
+        <ul class="space-y-3">
+            {recentPosts.map((post) => (
+                <li>
+                    <a href={`/twopiggyhavefun-blog/posts/${post.slug}`} 
+                       class="flex gap-3 group">
+                        <img src={post.data.cover || '/placeholder.jpg'} 
+                             alt={post.data.title}
+                             class="w-16 h-16 object-cover flex-shrink-0" />
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm text-gray-800 group-hover:text-blue-600 line-clamp-2 transition">
+                                {post.data.title}
+                            </p>
+                            <span class="text-xs text-gray-400">
+                                {new Date(post.data.date).toLocaleDateString('zh-TW')}
+                            </span>
+                        </div>
+                    </a>
+                </li>
+            ))}
+        </ul>
+    </div>
+
+    <!-- Categories -->
+    <div class="bg-white border border-gray-200 p-4">
+        <h3 class="text-lg font-bold mb-4 border-l-4 border-blue-500 pl-3">文章分類</h3>
+        <ul class="space-y-2">
+            {categories.map((cat) => (
+                <li>
+                    <a href={`/twopiggyhavefun-blog/category/${cat.slug}`}
+                       class="flex items-center gap-2 p-2 hover:bg-gray-100 transition rounded">
+                        <span>{cat.icon}</span>
+                        <span class="text-gray-700 hover:text-blue-600">{cat.name}</span>
+                    </a>
+                </li>
+            ))}
+        </ul>
+    </div>
+</aside>

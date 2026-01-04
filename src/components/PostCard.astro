@@ -1,0 +1,56 @@
+---
+// PostCard Component - Bobowin Style
+interface Props {
+    title: string;
+    slug: string;
+    date: string;
+    cover?: string;
+    tags?: string[];
+}
+
+const { title, slug, date, cover, tags = [] } = Astro.props;
+const formattedDate = new Date(date).toLocaleDateString('zh-TW', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+});
+---
+
+<article class="post-card bg-white border border-gray-200 mb-8">
+    <!-- Featured Image -->
+    <a href={`/twopiggyhavefun-blog/posts/${slug}`} class="block">
+        <img 
+            src={cover || '/placeholder.jpg'} 
+            alt={title}
+            class="w-full h-64 md:h-80 object-cover hover:opacity-90 transition"
+            loading="lazy"
+        />
+    </a>
+    
+    <!-- Content -->
+    <div class="p-6">
+        <!-- Title -->
+        <h2 class="text-xl md:text-2xl font-bold mb-3">
+            <a href={`/twopiggyhavefun-blog/posts/${slug}`} 
+               class="text-gray-900 hover:text-blue-600 transition">
+                {title}
+            </a>
+        </h2>
+        
+        <!-- Meta: Date + Tags -->
+        <div class="flex flex-wrap items-center gap-2 mb-4 text-sm">
+            <span class="text-gray-500">{formattedDate}</span>
+            {tags.map((tag) => (
+                <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">
+                    {tag}
+                </span>
+            ))}
+        </div>
+        
+        <!-- Read More Button -->
+        <a href={`/twopiggyhavefun-blog/posts/${slug}`}
+           class="inline-block bg-black text-white px-6 py-2 text-sm font-medium hover:bg-gray-800 transition">
+            READ MORE
+        </a>
+    </div>
+</article>
