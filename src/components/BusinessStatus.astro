@@ -12,10 +12,25 @@ interface Props {
         sat?: string;
         sun?: string;
     };
+    rawHours?: string;
     permanentlyClosed?: boolean;
 }
 
-const { businessName, status, hours, permanentlyClosed } = Astro.props;
+const { businessName, status, hours: propHours, rawHours, permanentlyClosed } = Astro.props;
+
+// Process rawHours if provided
+let hours = propHours;
+if (!hours && rawHours) {
+    hours = {
+        mon: rawHours,
+        tue: rawHours,
+        wed: rawHours,
+        thu: rawHours,
+        fri: rawHours,
+        sat: rawHours,
+        sun: rawHours
+    };
+}
 
 // Get current day
 const dayNames = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];

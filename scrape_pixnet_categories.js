@@ -157,13 +157,33 @@ async function scrapeArticleCategory(articleUrl) {
         const $ = cheerio.load(data);
         const categories = [];
 
-        // Try different selectors for category
-        $('.article-categories a, .breadcrumb a, .category a, a[href*="/blog/categories/"]').each((i, el) => {
-            const text = $(el).text().trim();
-            if (text && text !== '首頁' && text !== 'HOME' && !categories.includes(text)) {
-                categories.push(text);
-            }
-        });
+        // Try different selectors for category, prioritizing article header
+        const categorySelectors = [
+            '.article-head .publish a', // Common Pixnet theme
+            '.refer-link a',            // Another common theme
+            '.article-category a',      // Standard class
+            '.title .category a'        // Some themes
+        ];
+
+        for (const selector of categorySelectors) {
+            $(selector).each((i, el) => {
+                const text = $(el).text().trim();
+                // Filter out common non-category links
+                if (text && !['首頁', 'HOME', '留言', '引用'].includes(text) && !categories.includes(text)) {
+                    categories.push(text);
+                }
+            });
+        }
+
+        // If still empty, try breadcrumb but be careful of sidebar
+        if (categories.length === 0) {
+            $('#article-area .breadcrumb a, .main .breadcrumb a').each((i, el) => {
+                const text = $(el).text().trim();
+                if (text && !['首頁', 'HOME'].includes(text) && !categories.includes(text)) {
+                    categories.push(text);
+                }
+            });
+        }
 
         // Extract business hours from content
         const content = $('.article-content, .article-content-inner, .entry-content').text();

@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Sidebar from '../../components/Sidebar.astro';
+import BusinessStatus from '../../components/BusinessStatus.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
@@ -21,8 +22,6 @@ const formattedDate = new Date(post.data.date).toLocaleDateString('zh-TW', {
 
 // Share URLs
 const currentUrl = `https://hankhuang0516.github.io/twopiggyhavefun-blog/posts/${post.slug}`;
-const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
-const lineShareUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(currentUrl)}`;
 ---
 
 <Layout title={post.data.title}>
@@ -70,6 +69,14 @@ const lineShareUrl = `https://social-plugins.line.me/lineit/share?url=${encodeUR
                             <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">{tag}</span>
                         ))}
                     </div>
+
+                    <!-- Business Status -->
+                    <BusinessStatus 
+                        businessName={post.data.title}
+                        rawHours={post.data.businessHours}
+                        permanentlyClosed={post.data.isPermanentlyClosed}
+                    />
+
                     {post.data.originalUrl && (
                         <a href={post.data.originalUrl} target="_blank" rel="noopener noreferrer" 
                            class="text-blue-600 text-sm hover:underline">
