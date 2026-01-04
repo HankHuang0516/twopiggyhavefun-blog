@@ -1,105 +1,161 @@
+/**
+ * mark_closed_businesses.js
+ * Reads business_status.md and injects warning banners into articles
+ * mentioning closed businesses.
+ */
+
 const fs = require('fs');
 const path = require('path');
 
-const BUSINESS_STATUS_FILE = 'C:/Users/z004rx2h/.gemini/antigravity/brain/b623c93d-fd04-4b4c-ad62-5be35b7b78e6/business_status.md';
-const BUSINESS_LIST_FILE = 'business_list.json';
-const POSTS_DIR = 'src/content/posts';
+const BUSINESS_STATUS_FILE = path.join(__dirname, 'business_status.md');
+const POSTS_DIR = path.join(__dirname, 'src/content/posts');
 
-// Helper to parse the MD table (very basic)
-function getClosedBusinesses() {
+// Warning banner to inject (HTML format for markdown)
+const CLOSED_BANNER_HTML = `
+<div class="closed-business-warning" style="background: #fff3cd; border: 1px solid #ffc107; border-left: 4px solid #ff6b6b; padding: 16px; margin: 16px 0; border-radius: 4px;">
+  <p style="margin: 0; color: #856404; font-weight: bold;">
+    ⚠️ 注意：此店家已歇業/停業
+  </p>
+  <p style="margin: 8px 0 0 0; color: #856404; font-size: 14px;">
+    本文僅供參考，店家目前已不再營業。
+  </p>
+</div>
+
+`;
+
+function parseBusinessStatus() {
+    if (!fs.existsSync(BUSINESS_STATUS_FILE)) {
+        console.log('❌ business_status.md not found');
+        return [];
+    }
+
     const content = fs.readFileSync(BUSINESS_STATUS_FILE, 'utf-8');
     const lines = content.split('\n');
-    const closedList = [];
+    const closedBusinesses = [];
 
-    console.log(`Read ${lines.length} lines.`);
-
+    let inTable = false;
     for (const line of lines) {
-        // Skip empty lines or non-table lines efficiently
-        if (!line.trim().startsWith('|')) continue;
-
-        // Skip header or separator
-        if (line.includes('店家名稱') || line.includes('---')) continue;
-
-        const parts = line.split('|').map(p => p.trim());
-        // parts[0] is empty (because line starts with |), [1] is name, [2] is status
-        // parts[0] is empty, [1] is name, [2] is status, [3] is note
-        if (parts.length < 4) continue;
-
-        const name = parts[1].replace(/\*\*/g, '').trim();
-        const status = parts[2].replace(/\*\*/g, '').trim();
-
-        console.log(`Checking: ${name} / Status: ${status}`);
-
-        if (status.includes('歇業') || status.includes('停業') || status.includes('已關閉')) {
-            closedList.push({ name, status, note: parts[3] });
+        if (line.includes('商家名稱') && line.includes('狀態')) {
+            inTable = true;
+            continue;
         }
-    }
-    return closedList;
-}
-
-function processFiles() {
-    const closedBusinesses = getClosedBusinesses();
-    const businessList = JSON.parse(fs.readFileSync(BUSINESS_LIST_FILE, 'utf-8'));
-
-    console.log('Found closed businesses:', closedBusinesses.map(b => b.name));
-
-    for (const biz of closedBusinesses) {
-        // Find which file contains this business.
-        // The business_list.json maps file -> list of names, but our status report uses a specific name.
-        // We simplified the status report to use the name from the checklist. 
-        // But we need to map back to the file.
-        // Actually, the user wants "precision", but our list in business_status.md has simplified names.
-        // Let's try to find partial matches in business_list.json or just scan files for the name.
-
-        // Strategy: 
-        // 1. Identify keywords from the closed business name (e.g., "点心道").
-        // 2. Find files in business_list.json that match this name.
-
-        const keyword = biz.name.split(' ')[0].split('(')[0]; // "点心道"
-
-        const targets = businessList.filter(item => {
-            // item.name is what we extracted originally. 
-            // biz.name is what we wrote in the MD file.
-            return biz.name.includes(item.name) || item.title.includes(keyword) || item.name.includes(keyword);
-        });
-
-        for (const target of targets) {
-            const filePath = path.join(POSTS_DIR, target.file);
-            if (!fs.existsSync(filePath)) continue;
-
-            let content = fs.readFileSync(filePath, 'utf-8');
-
-            // Check if already marked
-            if (content.includes('warn-closed')) {
-                console.log(`[Skip] Already marked: ${target.file}`);
-                continue;
-            }
-
-            const warningBlock = `
-<div class="warn-closed p-4 bg-red-100 border-l-4 border-red-500 text-red-700 mb-4 rounded shadow-md">
-    <p class="font-bold flex items-center">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-        </svg>
-        注意：店家已歇業 / Note: This business is permanently closed.
-    </p>
-    <p>文章中提及的 <strong>${biz.name}</strong> 經確認已停止營業，請勿前往。</p>
-</div>
-`;
-            // Insert after frontmatter (--- ... ---)
-            const parts = content.split('---');
+        if (inTable && line.startsWith('|---')) {
+            continue;
+        }
+        if (inTable && line.startsWith('|')) {
+            const parts = line.split('|').map(p => p.trim()).filter(Boolean);
             if (parts.length >= 3) {
-                // parts[0] is empty, parts[1] is frontmatter, parts[2...] is content
-                // We want to insert at the beginning of content
-                const frontmatter = parts[1];
-                const cleanContent = parts.slice(2).join('---');
+                const [name, status, articleId] = parts;
+                if (status === '已歇業' || status === '已停業') {
+                    closedBusinesses.push({
+                        name,
+                        status,
+                        articleId: articleId.trim(),
+                    });
+                }
+            }
+        } else if (inTable && !line.startsWith('|')) {
+            inTable = false;
+        }
+    }
 
-                const newContent = `---${frontmatter}---\n${warningBlock}${cleanContent}`;
-                fs.writeFileSync(filePath, newContent, 'utf-8');
-                console.log(`[Marked] Added warning to ${target.file} for ${biz.name}`);
+    return closedBusinesses;
+}
+
+function markClosedBusinesses() {
+    console.log('🔍 Parsing business_status.md...');
+    const closedBusinesses = parseBusinessStatus();
+
+    if (closedBusinesses.length === 0) {
+        console.log('No closed businesses found in status file.');
+        return;
+    }
+
+    console.log(`Found ${closedBusinesses.length} closed businesses:`);
+    closedBusinesses.forEach(b => console.log(`  - ${b.name} (${b.status})`));
+
+    let modifiedCount = 0;
+
+    for (const business of closedBusinesses) {
+        const articlePath = path.join(POSTS_DIR, `${business.articleId}.md`);
+
+        if (!fs.existsSync(articlePath)) {
+            console.log(`⚠️ Article ${business.articleId}.md not found, skipping...`);
+            continue;
+        }
+
+        let content = fs.readFileSync(articlePath, 'utf-8');
+
+        if (content.includes('店家已歇業') || content.includes('closed-business-warning')) {
+            console.log(`✓ ${business.articleId}.md already has warning`);
+            continue;
+        }
+
+        const frontmatterEnd = content.indexOf('---', 3);
+        if (frontmatterEnd === -1) {
+            console.log(`⚠️ ${business.articleId}.md has invalid frontmatter`);
+            continue;
+        }
+
+        const insertPosition = frontmatterEnd + 3;
+        const before = content.substring(0, insertPosition);
+        const after = content.substring(insertPosition);
+
+        content = before + '\n\n' + CLOSED_BANNER_HTML + after;
+
+        fs.writeFileSync(articlePath, content);
+        console.log(`✅ Added warning to ${business.articleId}.md (${business.name})`);
+        modifiedCount++;
+    }
+
+    console.log(`\n📝 Modified ${modifiedCount} articles from business_status.md`);
+}
+
+function scanForClosedInTitles() {
+    console.log('\n🔍 Scanning for articles with 已歇業/已停業 in title...');
+
+    const files = fs.readdirSync(POSTS_DIR).filter(f => f.endsWith('.md'));
+    const found = [];
+    let autoMarked = 0;
+
+    for (const file of files) {
+        const content = fs.readFileSync(path.join(POSTS_DIR, file), 'utf-8');
+        const titleMatch = content.match(/title:\s*["']?(.+?)["']?\s*\n/);
+
+        if (titleMatch) {
+            const title = titleMatch[1];
+            if (title.includes('已歇業') || title.includes('已停業')) {
+                const id = file.replace('.md', '');
+                found.push({ id, title });
+
+                if (!content.includes('店家已歇業') && !content.includes('closed-business-warning')) {
+                    const frontmatterEnd = content.indexOf('---', 3);
+                    if (frontmatterEnd !== -1) {
+                        const insertPosition = frontmatterEnd + 3;
+                        const newContent = content.substring(0, insertPosition) + '\n\n' + CLOSED_BANNER_HTML + content.substring(insertPosition);
+                        fs.writeFileSync(path.join(POSTS_DIR, file), newContent);
+                        console.log(`✅ Auto-marked: ${file}`);
+                        autoMarked++;
+                    }
+                }
             }
         }
     }
+
+    if (found.length > 0) {
+        console.log(`Found ${found.length} articles with closed status in title:`);
+        found.forEach(f => console.log(`  - [${f.id}] ${f.title}`));
+    }
+
+    console.log(`\n📝 Auto-marked ${autoMarked} articles from title scan`);
 }
 
-processFiles();
+// Main
+console.log('═'.repeat(50));
+console.log('🏪 Closed Business Marker');
+console.log('═'.repeat(50) + '\n');
+
+markClosedBusinesses();
+scanForClosedInTitles();
+
+console.log('\n✅ Done!');
