@@ -4,6 +4,17 @@ import Sidebar from '../components/Sidebar.astro';
 import PostCard from '../components/PostCard.astro';
 import { getCollection } from 'astro:content';
 
+// Helper to fix image paths
+const BASE_URL = '/twopiggyhavefun-blog';
+function fixImagePath(src: string | undefined): string {
+    if (!src) return `${BASE_URL}/placeholder.jpg`;
+    if (src.startsWith('http')) return src;
+    if (src.startsWith('/') && !src.startsWith(BASE_URL)) {
+        return `${BASE_URL}${src}`;
+    }
+    return src;
+}
+
 // Get all posts
 const posts = await getCollection('posts');
 // Sort by date desc
@@ -21,7 +32,7 @@ const recentPosts = posts.slice(0, 12);
                 <div class={`slide absolute inset-0 transition-opacity duration-700 ${index === 0 ? 'opacity-100' : 'opacity-0'}`} 
                      data-index={index}>
                     <img 
-                        src={post.data.cover || '/placeholder.jpg'} 
+                        src={fixImagePath(post.data.cover)} 
                         alt={post.data.title}
                         class="w-full h-full object-cover"
                     />

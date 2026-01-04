@@ -14,13 +14,24 @@ const formattedDate = new Date(date).toLocaleDateString('zh-TW', {
     month: 'long',
     day: 'numeric'
 });
+
+// Helper to fix image paths
+const BASE_URL = '/twopiggyhavefun-blog';
+function fixImagePath(src: string | undefined): string {
+    if (!src) return `${BASE_URL}/placeholder.jpg`;
+    if (src.startsWith('http')) return src;
+    if (src.startsWith('/') && !src.startsWith(BASE_URL)) {
+        return `${BASE_URL}${src}`;
+    }
+    return src;
+}
 ---
 
 <article class="post-card bg-white border border-gray-200 mb-8">
     <!-- Featured Image -->
     <a href={`/twopiggyhavefun-blog/posts/${slug}`} class="block">
         <img 
-            src={cover || '/placeholder.jpg'} 
+            src={fixImagePath(cover)} 
             alt={title}
             class="w-full h-64 md:h-80 object-cover hover:opacity-90 transition"
             loading="lazy"
