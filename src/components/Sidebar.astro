@@ -133,9 +133,19 @@ allPosts.forEach(post => {
                         title.includes('寶寶') || title.includes('嬰兒') || title.includes('月子') ||
                         title.includes('哺乳') || title.includes('尿布') || title.includes('奶瓶');
     
-    const isForeign = contentType === 'foreign' || title.includes('香港') || title.includes('沖繩') || 
-                      title.includes('日本') || title.includes('北海道') || title.includes('東京') ||
-                      title.includes('大阪') || title.includes('京都') || title.includes('自由行');
+    // Check if article is about domestic Taiwan locations
+    const hasDomesticKeywords = ['台北', '新北', '桃園', '新竹', '苗栗', '台中', '彰化', '南投', 
+                                  '雲林', '嘉義', '台南', '高雄', '屏東', '宜蘭', '花蓮', '台東',
+                                  '基隆', '板橋', '中和', '永和', '三重', '新莊', '淡水', '內湖',
+                                  '松山', '信義', '大安', '中山', '士林', '北投'].some(kw => title.includes(kw));
+    
+    // Foreign travel ONLY if explicitly foreign and NOT containing domestic keywords
+    const isForeign = !hasDomesticKeywords && (
+                      title.includes('香港自由行') || title.includes('沖繩自由行') || 
+                      title.includes('日本自由行') || title.includes('沖繩親子') ||
+                      title.includes('香港一日遊') || title.includes('北海道') ||
+                      (title.includes('香港') && !title.includes('港點') && !title.includes('港式')) ||
+                      (title.includes('沖繩') && !title.includes('沖繩麵')));
     
     if (isForeign) {
         categoryStats.foreignTravel.total++;
@@ -221,25 +231,27 @@ const stats = {
                     {Object.entries(categoryStats.domesticFood.regions)
                         .filter(([_, posts]) => posts.length > 0)
                         .sort((a, b) => b[1].length - a[1].length)
-                        .map(([region, posts]) => (
+                        .map(([region, posts]) => {
+                            const uniquePosts = [...new Map(posts.map((p: any) => [p.slug, p])).values()];
+                            return (
                         <div class="py-0.5">
                             <div class="flex items-center">
                                 <button class="toggle-btn w-4 text-gray-400 text-xs" data-target={`food-${region}`}>
                                     <span class="toggle-icon">▶</span>
                                 </button>
                                 <span class="text-blue-600 ml-1">{regionNames[region] || region}美食</span>
-                                <span class="text-gray-400 text-xs ml-1">({posts.length})</span>
+                                <span class="text-gray-400 text-xs ml-1">({uniquePosts.length})</span>
                             </div>
                             <div class="sub-posts ml-4 border-l border-gray-100 pl-2 hidden max-h-32 overflow-y-auto" id={`food-${region}`}>
-                                {posts.slice(0, 8).map((post: any) => (
+                                {uniquePosts.slice(0, 8).map((post: any) => (
                                     <a href={`${BASE_URL}/posts/${post.slug}`} class="block text-blue-500 hover:underline text-xs py-0.5 truncate">
                                         · {post.data.title}
                                     </a>
                                 ))}
-                                {posts.length > 8 && <span class="text-gray-400 text-xs">...還有 {posts.length - 8} 篇</span>}
+                                {uniquePosts.length > 8 && <span class="text-gray-400 text-xs">...還有 {uniquePosts.length - 8} 篇</span>}
                             </div>
                         </div>
-                    ))}
+                        )})}
                 </div>
             </div>
 
