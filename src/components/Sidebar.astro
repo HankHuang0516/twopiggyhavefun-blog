@@ -123,9 +123,38 @@ allPosts.forEach(post => {
     const tags = post.data.tags || [];
     const { contentType, region } = categorizePost(title, tags);
     
-    if (contentType === 'foreign' || title.includes('香港') || title.includes('沖繩') || title.includes('日本')) {
+    // Check special categories first (before food/travel)
+    const isUnboxing = title.includes('開箱') || title.includes('團購') || title.includes('保健') ||
+                       title.includes('滋補') || title.includes('宅配') || title.includes('伴手禮') ||
+                       title.includes('鍋具') || title.includes('包款') || title.includes('手錶') ||
+                       title.includes('鞋款') || title.includes('居家好物');
+    
+    const isParenting = tags.includes('life') || title.includes('親子') || title.includes('育兒') || 
+                        title.includes('寶寶') || title.includes('嬰兒') || title.includes('月子') ||
+                        title.includes('孕') || title.includes('哺乳') || title.includes('尿布');
+    
+    const isForeign = contentType === 'foreign' || title.includes('香港') || title.includes('沖繩') || 
+                      title.includes('日本') || title.includes('北海道') || title.includes('東京') ||
+                      title.includes('大阪') || title.includes('京都') || title.includes('自由行');
+    
+    if (isForeign) {
         categoryStats.foreignTravel.total++;
         categoryStats.foreignTravel.posts.push(post);
+    } else if (isParenting) {
+        categoryStats.parenting.total++;
+        categoryStats.parenting.posts.push(post);
+    } else if (isUnboxing) {
+        categoryStats.unboxing.total++;
+        categoryStats.unboxing.posts.push(post);
+    } else if (title.includes('婚') || title.includes('新娘') || title.includes('婚紗')) {
+        categoryStats.wedding.total++;
+        categoryStats.wedding.posts.push(post);
+    } else if (contentType === 'hotel' && region) {
+        categoryStats.domesticHotel.total++;
+        if (!categoryStats.domesticHotel.regions[region]) {
+            categoryStats.domesticHotel.regions[region] = [];
+        }
+        categoryStats.domesticHotel.regions[region].push(post);
     } else if (contentType === 'food' && region) {
         categoryStats.domesticFood.total++;
         if (!categoryStats.domesticFood.regions[region]) {
@@ -138,23 +167,8 @@ allPosts.forEach(post => {
             categoryStats.domesticTravel.regions[region] = [];
         }
         categoryStats.domesticTravel.regions[region].push(post);
-    } else if (contentType === 'hotel' && region) {
-        categoryStats.domesticHotel.total++;
-        if (!categoryStats.domesticHotel.regions[region]) {
-            categoryStats.domesticHotel.regions[region] = [];
-        }
-        categoryStats.domesticHotel.regions[region].push(post);
-    } else if (tags.includes('life') || title.includes('親子') || title.includes('育兒') || title.includes('寶寶')) {
-        categoryStats.parenting.total++;
-        categoryStats.parenting.posts.push(post);
-    } else if (title.includes('婚') || title.includes('新娘')) {
-        categoryStats.wedding.total++;
-        categoryStats.wedding.posts.push(post);
-    } else if (title.includes('開箱') || title.includes('推薦') || title.includes('團購')) {
-        categoryStats.unboxing.total++;
-        categoryStats.unboxing.posts.push(post);
     } else {
-        // Still try to categorize by content type or region
+        // Fallback: try to categorize by content type alone
         if (contentType === 'food') {
             categoryStats.domesticFood.total++;
             if (!categoryStats.domesticFood.regions['other']) {
