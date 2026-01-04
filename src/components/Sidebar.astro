@@ -129,9 +129,9 @@ allPosts.forEach(post => {
                        title.includes('鍋具') || title.includes('包款') || title.includes('手錶') ||
                        title.includes('鞋款') || title.includes('居家好物');
     
-    const isParenting = tags.includes('life') || title.includes('親子') || title.includes('育兒') || 
+    const isParenting = title.includes('親子') || title.includes('育兒') || 
                         title.includes('寶寶') || title.includes('嬰兒') || title.includes('月子') ||
-                        title.includes('孕') || title.includes('哺乳') || title.includes('尿布');
+                        title.includes('哺乳') || title.includes('尿布') || title.includes('奶瓶');
     
     const isForeign = contentType === 'foreign' || title.includes('香港') || title.includes('沖繩') || 
                       title.includes('日本') || title.includes('北海道') || title.includes('東京') ||
