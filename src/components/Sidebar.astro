@@ -41,7 +41,7 @@ const regionKeywords: Record<string, string[]> = {
 };
 
 const contentKeywords: Record<string, string[]> = {
-    'food': ['美食', '餐廳', '小吃', '火鍋', '燒烤', '燒肉', '吃到飽', '早午餐', '咖啡', '甜點', '拉麵', '牛肉麵', '牛排', '居酒屋', '料理', '飲茶', '港點', '義大利麵', '披薩', '韓式', '泰式', '日式', '冰品', '鍋物', '串燒'],
+    'food': ['美食', '餐廳', '小吃', '火鍋', '燒烤', '燒肉', '吃到飽', '早午餐', '咖啡', '甜點', '拉麵', '牛肉麵', '牛排', '居酒屋', '料理', '飲茶', '港點', '義大利麵', '披薩', '韓式', '泰式', '日式', '冰品', '鍋物', '串燒', '鐵板燒', '壽司', '生魚片', '烤肉', '鰻魚', '和牛', '龍蝦', '海鮮'],
     'travel': ['景點', '一日遊', '二日遊', '兩日遊', '旅遊', '行程', '步道', '農場', '博物館', '老街', '公園', '樂園', '打卡'],
     'hotel': ['住宿', '飯店', '民宿', '酒店', '旅館', '旅宿'],
     'foreign': ['香港', '沖繩', '日本', '東京', '大阪', '京都', '北海道', '九州', '新加坡', '中國'],
@@ -117,9 +117,20 @@ const regionNames: Record<string, string> = {
     'taitung': '台東',
 };
 
+// Track seen titles to avoid duplicates
+const seenTitles = new Set<string>();
+
 // Categorize all posts
 allPosts.forEach(post => {
     const title = post.data.title || '';
+    
+    // Skip duplicates by title (normalize by removing extra spaces)
+    const normalizedTitle = title.replace(/\s+/g, ' ').trim().slice(0, 30);
+    if (seenTitles.has(normalizedTitle)) {
+        return;
+    }
+    seenTitles.add(normalizedTitle);
+    
     const tags = post.data.tags || [];
     const { contentType, region } = categorizePost(title, tags);
     
@@ -127,7 +138,8 @@ allPosts.forEach(post => {
     const isUnboxing = title.includes('開箱') || title.includes('團購') || title.includes('保健') ||
                        title.includes('滋補') || title.includes('宅配') || title.includes('伴手禮') ||
                        title.includes('鍋具') || title.includes('包款') || title.includes('手錶') ||
-                       title.includes('鞋款') || title.includes('居家好物');
+                       title.includes('鞋款') || title.includes('居家好物') || title.includes('軟糖') ||
+                       title.includes('膠原蛋白');
     
     const isParenting = title.includes('親子') || title.includes('育兒') || 
                         title.includes('寶寶') || title.includes('嬰兒') || title.includes('月子') ||
