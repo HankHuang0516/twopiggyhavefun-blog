@@ -1,5 +1,5 @@
 ---
-// Sidebar Component - Bobowin Style
+// Sidebar Component - Bobowin Style with Expandable Categories
 import { getCollection } from 'astro:content';
 
 // Get recent posts for sidebar
@@ -7,47 +7,139 @@ const posts = await getCollection('posts');
 posts.sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf());
 const recentPosts = posts.slice(0, 5);
 
-// Category counts
-const categories = [
-    { name: '美食', slug: 'food', icon: '🍽️' },
-    { name: '旅遊', slug: 'travel', icon: '✈️' },
-    { name: '生活', slug: 'life', icon: '🏠' },
+// Detailed category structure (expandable)
+const articleCategories = [
+    { 
+        name: '越南北越 沙壩', 
+        slug: 'vietnam',
+        children: []
+    },
+    { 
+        name: '台灣好玩好吃趴趴走', 
+        slug: 'taiwan-travel',
+        children: [
+            { name: '北部景點', slug: 'north' },
+            { name: '中部景點', slug: 'central' },
+            { name: '南部景點', slug: 'south' },
+            { name: '東部景點', slug: 'east' },
+        ]
+    },
+    { 
+        name: '親子趴趴走', 
+        slug: 'family',
+        children: []
+    },
+    { 
+        name: '攝影相關', 
+        slug: 'photography',
+        children: []
+    },
+    { 
+        name: '生活相關', 
+        slug: 'life',
+        children: []
+    },
+    { 
+        name: '專題旅遊', 
+        slug: 'featured',
+        children: []
+    },
 ];
+
+// Taiwan day trips
+const taiwanTrips = [
+    { name: '宜蘭一日遊', slug: 'yilan-1day' },
+    { name: '宜蘭兩日遊', slug: 'yilan-2day' },
+    { name: '宜蘭頭城一日遊', slug: 'toucheng-1day' },
+    { name: '宜蘭礁溪一日遊', slug: 'jiaoxi-1day' },
+    { name: '宜蘭員山一日遊', slug: 'yuanshan-1day' },
+    { name: '宜蘭五結壯圍一日遊', slug: 'wujie-1day' },
+    { name: '宜蘭冬山一日遊', slug: 'dongshan-1day' },
+    { name: '基隆一日遊', slug: 'keelung-1day' },
+    { name: '台北捷運一日遊路線', slug: 'taipei-mrt-1day' },
+    { name: '九份瑞芳景點一日遊', slug: 'jiufen-1day' },
+];
+
+// Simulated stats (can be replaced with real analytics)
+const stats = {
+    today: Math.floor(Math.random() * 1000) + 500,
+    total: 297216779
+};
 ---
 
 <aside class="sidebar w-full lg:w-80 space-y-6">
-    <!-- Social Banners -->
+    <!-- Article Categories (Expandable) -->
     <div class="bg-white border border-gray-200 p-4">
-        <h3 class="text-lg font-bold mb-4 border-l-4 border-blue-500 pl-3">追蹤我們</h3>
-        <div class="space-y-3">
-            <a href="https://www.facebook.com/twopiggyhavefun" target="_blank" 
-               class="flex items-center gap-3 p-3 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-                <span class="text-xl">📘</span>
-                <span class="font-medium">Facebook 粉絲專頁</span>
-            </a>
-            <a href="https://www.instagram.com/twopiggyhavefun" target="_blank"
-               class="flex items-center gap-3 p-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded hover:opacity-90 transition">
-                <span class="text-xl">📷</span>
-                <span class="font-medium">Instagram</span>
-            </a>
+        <h3 class="text-lg font-bold mb-4 text-red-600">文章</h3>
+        <div class="text-sm mb-2">
+            <button class="text-blue-600 mr-2" id="expandAll">展開全部</button>
+            <span class="text-gray-400">|</span>
+            <button class="text-blue-600 ml-2" id="collapseAll">收合全部</button>
         </div>
+        <ul class="space-y-1 text-sm category-tree">
+            {articleCategories.map((cat) => (
+                <li class="category-item">
+                    <div class="flex items-center gap-1">
+                        {cat.children.length > 0 && (
+                            <button class="toggle-btn text-gray-400 hover:text-gray-600 w-4">
+                                ┬
+                            </button>
+                        )}
+                        {cat.children.length === 0 && (
+                            <span class="w-4 text-gray-400">├</span>
+                        )}
+                        <a href={`/twopiggyhavefun-blog/category/${cat.slug}`} 
+                           class="text-blue-600 hover:underline">
+                            {cat.name}
+                        </a>
+                    </div>
+                    {cat.children.length > 0 && (
+                        <ul class="ml-4 mt-1 space-y-1 sub-categories">
+                            {cat.children.map((child, idx) => (
+                                <li>
+                                    <span class="text-gray-400 mr-1">
+                                        {idx === cat.children.length - 1 ? '└' : '├'}
+                                    </span>
+                                    <a href={`/twopiggyhavefun-blog/category/${child.slug}`}
+                                       class="text-blue-600 hover:underline">
+                                        {child.name}
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </li>
+            ))}
+        </ul>
     </div>
 
-    <!-- Search -->
+    <!-- Taiwan Day Trips -->
     <div class="bg-white border border-gray-200 p-4">
-        <h3 class="text-lg font-bold mb-4 border-l-4 border-blue-500 pl-3">搜尋文章</h3>
-        <form action="/search" method="get" class="flex">
-            <input type="text" name="q" placeholder="輸入關鍵字..." 
-                   class="flex-1 border border-gray-300 px-3 py-2 focus:outline-none focus:border-blue-500" />
-            <button type="submit" class="bg-black text-white px-4 py-2 hover:bg-gray-800 transition">
-                搜尋
-            </button>
-        </form>
+        <h3 class="text-lg font-bold mb-4" style="color: #c9a961;">台灣各地一日遊二日遊</h3>
+        <ul class="space-y-1 text-sm">
+            {taiwanTrips.map((trip) => (
+                <li>
+                    <a href={`/twopiggyhavefun-blog/tag/${trip.slug}`} 
+                       class="text-blue-600 hover:underline">
+                        {trip.name}
+                    </a>
+                </li>
+            ))}
+        </ul>
+    </div>
+
+    <!-- Website Stats -->
+    <div class="bg-white border border-gray-200 p-4">
+        <h3 class="font-bold mb-2 text-red-600">網站人氣統計</h3>
+        <div class="text-sm text-gray-600">
+            <p>今日人氣：<span class="font-medium">{stats.today.toLocaleString()}</span></p>
+            <p>累計人氣：<span class="font-medium">{stats.total.toLocaleString()}</span></p>
+        </div>
     </div>
 
     <!-- Recent Posts -->
     <div class="bg-white border border-gray-200 p-4">
-        <h3 class="text-lg font-bold mb-4 border-l-4 border-blue-500 pl-3">近期文章</h3>
+        <h3 class="text-lg font-bold mb-4 text-red-600">近期文章</h3>
         <ul class="space-y-3">
             {recentPosts.map((post) => (
                 <li>
@@ -70,19 +162,37 @@ const categories = [
         </ul>
     </div>
 
-    <!-- Categories -->
+    <!-- Search -->
     <div class="bg-white border border-gray-200 p-4">
-        <h3 class="text-lg font-bold mb-4 border-l-4 border-blue-500 pl-3">文章分類</h3>
-        <ul class="space-y-2">
-            {categories.map((cat) => (
-                <li>
-                    <a href={`/twopiggyhavefun-blog/category/${cat.slug}`}
-                       class="flex items-center gap-2 p-2 hover:bg-gray-100 transition rounded">
-                        <span>{cat.icon}</span>
-                        <span class="text-gray-700 hover:text-blue-600">{cat.name}</span>
-                    </a>
-                </li>
-            ))}
-        </ul>
+        <form action="/search" method="get" class="flex">
+            <input type="text" name="q" placeholder="搜尋文章..." 
+                   class="flex-1 border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-blue-500" />
+            <button type="submit" class="bg-gray-800 text-white px-4 py-2 text-sm hover:bg-gray-700 transition">
+                搜尋
+            </button>
+        </form>
     </div>
 </aside>
+
+<script>
+    // Toggle category expansion
+    document.querySelectorAll('.toggle-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const subCat = btn.closest('.category-item')?.querySelector('.sub-categories');
+            if (subCat) {
+                subCat.classList.toggle('hidden');
+                btn.textContent = subCat.classList.contains('hidden') ? '┼' : '┬';
+            }
+        });
+    });
+
+    document.getElementById('expandAll')?.addEventListener('click', () => {
+        document.querySelectorAll('.sub-categories').forEach(el => el.classList.remove('hidden'));
+        document.querySelectorAll('.toggle-btn').forEach(btn => (btn.textContent = '┬'));
+    });
+
+    document.getElementById('collapseAll')?.addEventListener('click', () => {
+        document.querySelectorAll('.sub-categories').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.toggle-btn').forEach(btn => (btn.textContent = '┼'));
+    });
+</script>

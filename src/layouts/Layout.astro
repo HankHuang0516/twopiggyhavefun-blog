@@ -1,5 +1,5 @@
 ---
-// Layout.astro - Bobowin Style
+// Layout.astro - Bobowin Style with Black Header
 interface Props {
     title: string;
     description?: string;
@@ -7,11 +7,10 @@ interface Props {
 
 const { title, description } = Astro.props;
 const navLinks = [
-    { name: '首頁', href: '/twopiggyhavefun-blog/' },
-    { name: '美食', href: '/twopiggyhavefun-blog/category/food' },
-    { name: '旅遊', href: '/twopiggyhavefun-blog/category/travel' },
-    { name: '生活', href: '/twopiggyhavefun-blog/category/life' },
-    { name: '關於我們', href: '/twopiggyhavefun-blog/about' },
+    { name: '關於兩隻小豬', href: '/twopiggyhavefun-blog/about' },
+    { name: '台灣好玩好吃趴趴走', href: '/twopiggyhavefun-blog/category/travel' },
+    { name: '親子育兒', href: '/twopiggyhavefun-blog/category/life' },
+    { name: '美食餐廳', href: '/twopiggyhavefun-blog/category/food' },
 ];
 ---
 
@@ -19,7 +18,7 @@ const navLinks = [
 <html lang="zh-TW">
     <head>
         <meta charset="UTF-8" />
-        <meta name="description" content={description || "兩隻小豬的好吃好玩日誌 - 分享美食、旅遊、生活與親子育兒的點點滴滴"} />
+        <meta name="description" content={description || "兩隻小豬旅行親子生活 - 分享美食、旅遊、生活與親子育兒的點點滴滴"} />
         <meta name="viewport" content="width=device-width" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <meta name="generator" content={Astro.generator} />
@@ -27,7 +26,7 @@ const navLinks = [
         
         <!-- SEO & Open Graph -->
         <meta property="og:title" content={`${title} | 兩隻小豬`} />
-        <meta property="og:description" content="兩隻小豬的好吃好玩日誌 - 分享美食、旅遊、生活與親子育兒的點點滴滴" />
+        <meta property="og:description" content="兩隻小豬旅行親子生活 - 分享美食、旅遊、生活與親子育兒的點點滴滴" />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="兩隻小豬" />
 
@@ -36,70 +35,101 @@ const navLinks = [
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
     </head>
     <body class="bg-white text-gray-800">
-        <!-- Header Layer 1: Site Title -->
-        <header class="bg-white border-b border-gray-200">
+        <!-- Header: Black Background with Gold Title (matches bobowin) -->
+        <header class="bg-black text-white">
             <div class="container mx-auto px-4 py-6 text-center">
                 <a href="/twopiggyhavefun-blog/" class="inline-block">
-                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 tracking-wide">
-                        🐷 兩隻小豬旅行親子生活
+                    <h1 class="text-2xl md:text-3xl font-bold tracking-wide" style="color: #c9a961;">
+                        兩隻小豬旅行親子生活
                     </h1>
-                    <p class="text-gray-500 text-sm mt-1">我們的鏡頭帶著你四處漫遊</p>
+                    <p class="text-gray-400 text-sm mt-1">我們的鏡頭帶著你四處漫遊</p>
                 </a>
             </div>
+            <!-- Navigation -->
+            <nav class="border-t border-gray-700">
+                <div class="container mx-auto px-4">
+                    <ul class="flex flex-wrap justify-center">
+                        {navLinks.map((link) => (
+                            <li>
+                                <a href={link.href} 
+                                   class="block px-4 py-3 text-gray-300 text-sm hover:text-white transition">
+                                    {link.name}
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </nav>
         </header>
-
-        <!-- Header Layer 2: Navigation Bar -->
-        <nav class="bg-black sticky top-0 z-50">
-            <div class="container mx-auto px-4">
-                <ul class="flex flex-wrap justify-center gap-1 md:gap-0">
-                    {navLinks.map((link) => (
-                        <li>
-                            <a href={link.href} 
-                               class="block px-4 py-3 text-white text-sm font-medium hover:bg-gray-800 transition">
-                                {link.name}
-                            </a>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        </nav>
 
         <main class="min-h-screen">
             <slot />
         </main>
         
-        <!-- Footer -->
-        <footer class="bg-gray-900 text-gray-400 py-8 mt-12">
-            <div class="container mx-auto px-4 text-center">
-                <p class="mb-2">© 2026 兩隻小豬旅行親子生活. All rights reserved.</p>
-                <div class="flex justify-center gap-4 text-sm">
-                    <a href="/twopiggyhavefun-blog/about" class="hover:text-white transition">關於我們</a>
-                    <a href="mailto:twopiggyhavefun@gmail.com" class="hover:text-white transition">聯絡我們</a>
-                </div>
+        <!-- Footer: Matching bobowin style -->
+        <footer class="bg-[#1a1a2e] text-gray-400 py-6 mt-12">
+            <div class="container mx-auto px-4 text-center text-sm">
+                <p class="mb-2">
+                    © 2026 兩隻小豬旅行親子生活 國內外旅遊,親子行程,露營生活,美食懶人包
+                </p>
+                <p>
+                    佈景：Flavor | 
+                    <span style="color: #c9a961;">網頁設計：兩隻小豬</span>
+                </p>
             </div>
         </footer>
+
+        <!-- Fixed Social Buttons (Right Side) - Bobowin Style -->
+        <div id="achang-ft-btn" class="fixed right-2 top-1/2 -translate-y-1/2 z-50 hidden lg:block">
+            <ul class="flex flex-col gap-2">
+                <li class="w-12 h-12 rounded-full overflow-hidden" style="background-color: #f9cd9a;">
+                    <a href="/twopiggyhavefun-blog/" class="block w-full h-full flex items-center justify-center">
+                        <span class="text-2xl">🐷</span>
+                    </a>
+                </li>
+                <li class="w-12 h-12 rounded-full overflow-hidden" style="background-color: #f9cd9a;">
+                    <a href="https://www.facebook.com/twopiggyhavefun" target="_blank" class="block w-full h-full flex items-center justify-center">
+                        <span class="text-xl text-blue-600 font-bold">f</span>
+                    </a>
+                </li>
+                <li class="w-12 h-12 rounded-full overflow-hidden" style="background-color: #f9cd9a;">
+                    <a href="https://www.instagram.com/twopiggyhavefun" target="_blank" class="block w-full h-full flex items-center justify-center">
+                        <span class="text-xl">📷</span>
+                    </a>
+                </li>
+                <li class="to-top w-12 h-12 rounded-full overflow-hidden" style="background-color: #f9cd9a;">
+                    <a href="#" class="block w-full h-full flex items-center justify-center">
+                        <span class="text-xl">⬆️</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
     </body>
 </html>
 
 <style is:global>
     :root {
         --color-primary: #337ab7;
+        --color-gold: #c9a961;
         --color-black: #000000;
         --color-white: #ffffff;
-        --color-gray-light: #f0f0f0;
         --color-text: #333333;
+    }
+    html {
+        scroll-behavior: smooth;
     }
     body {
         font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
     }
     a {
         color: var(--color-primary);
+        text-decoration: none;
     }
     a:hover {
         text-decoration: underline;
     }
     /* Reset link styles for nav and buttons */
-    nav a, .post-card a, .sidebar a, button {
+    nav a, .post-card a, .sidebar a, button, footer a {
         text-decoration: none;
     }
 </style>
