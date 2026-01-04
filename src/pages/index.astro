@@ -16,9 +16,12 @@ function fixImagePath(src: string | undefined): string {
 }
 
 // Get all posts
-const posts = await getCollection('posts');
+const posts = (await getCollection('posts')).filter(p => p.data);
 // Sort by date desc
-posts.sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf());
+posts.sort((a, b) => {
+    if (!a.data?.date || !b.data?.date) return 0;
+    return new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf();
+});
 
 const featuredPosts = posts.slice(0, 5);
 const recentPosts = posts.slice(0, 12);

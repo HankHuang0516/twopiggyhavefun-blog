@@ -1,0 +1,134 @@
+{
+    "name": "Pixnet Blog Sync",
+    "nodes": [
+        {
+            "parameters": {
+                "rule": {
+                    "interval": [
+                        {
+                            "field": "cronExpression",
+                            "expression": "0 21 * * *"
+                        }
+                    ]
+                }
+            },
+            "id": "schedule-trigger",
+            "name": "Daily 9PM Trigger",
+            "type": "n8n-nodes-base.scheduleTrigger",
+            "typeVersion": 1.2,
+            "position": [
+                100,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "command": "cd C:\\Hank\\Other\\project\\picture && node scripts/pixnet_sync.js"
+            },
+            "id": "execute-sync",
+            "name": "Run Pixnet Sync Script",
+            "type": "n8n-nodes-base.executeCommand",
+            "typeVersion": 1,
+            "position": [
+                320,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "conditions": {
+                    "options": {
+                        "caseSensitive": true,
+                        "leftValue": "",
+                        "typeValidation": "strict"
+                    },
+                    "conditions": [
+                        {
+                            "id": "condition-check",
+                            "leftValue": "={{ $json.stdout }}",
+                            "rightValue": "synced\":0",
+                            "operator": {
+                                "type": "string",
+                                "operation": "notContains"
+                            }
+                        }
+                    ],
+                    "combinator": "and"
+                },
+                "options": {}
+            },
+            "id": "check-if-synced",
+            "name": "Check If Articles Synced",
+            "type": "n8n-nodes-base.if",
+            "typeVersion": 2,
+            "position": [
+                540,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "content": "## Sync Complete!\n\nNew articles were synced from Pixnet to the Astro blog.\n\nCheck the output for details.",
+                "height": 200,
+                "width": 300
+            },
+            "id": "success-note",
+            "name": "New Articles Synced",
+            "type": "n8n-nodes-base.stickyNote",
+            "typeVersion": 1,
+            "position": [
+                760,
+                200
+            ]
+        },
+        {
+            "parameters": {
+                "content": "## No New Articles\n\nNo new articles were found on Pixnet.\n\nThe sync state is up to date.",
+                "height": 200,
+                "width": 300
+            },
+            "id": "no-articles-note",
+            "name": "No New Articles",
+            "type": "n8n-nodes-base.stickyNote",
+            "typeVersion": 1,
+            "position": [
+                760,
+                420
+            ]
+        }
+    ],
+    "connections": {
+        "Daily 9PM Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "Run Pixnet Sync Script",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Run Pixnet Sync Script": {
+            "main": [
+                [
+                    {
+                        "node": "Check If Articles Synced",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "active": false,
+    "settings": {
+        "executionOrder": "v1"
+    },
+    "versionId": "1",
+    "meta": {
+        "templateCredsSetupCompleted": true,
+        "instanceId": "pixnet-sync-workflow"
+    },
+    "tags": []
+}

@@ -1,0 +1,185 @@
+{
+    "name": "Add Article API",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "add-article",
+                "responseMode": "responseNode",
+                "options": {}
+            },
+            "id": "webhook-trigger",
+            "name": "Webhook - 接收文章資料",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2,
+            "position": [
+                100,
+                300
+            ],
+            "webhookId": "add-article-webhook"
+        },
+        {
+            "parameters": {
+                "conditions": {
+                    "options": {
+                        "caseSensitive": true,
+                        "leftValue": "",
+                        "typeValidation": "strict"
+                    },
+                    "conditions": [
+                        {
+                            "id": "check-title",
+                            "leftValue": "={{ $json.body.title }}",
+                            "rightValue": "",
+                            "operator": {
+                                "type": "string",
+                                "operation": "notEmpty"
+                            }
+                        },
+                        {
+                            "id": "check-content",
+                            "leftValue": "={{ $json.body.content }}",
+                            "rightValue": "",
+                            "operator": {
+                                "type": "string",
+                                "operation": "notEmpty"
+                            }
+                        },
+                        {
+                            "id": "check-link",
+                            "leftValue": "={{ $json.body.link }}",
+                            "rightValue": "",
+                            "operator": {
+                                "type": "string",
+                                "operation": "notEmpty"
+                            }
+                        },
+                        {
+                            "id": "check-category",
+                            "leftValue": "={{ $json.body.category }}",
+                            "rightValue": "",
+                            "operator": {
+                                "type": "string",
+                                "operation": "notEmpty"
+                            }
+                        }
+                    ],
+                    "combinator": "and"
+                },
+                "options": {}
+            },
+            "id": "validate-params",
+            "name": "驗證必備參數",
+            "type": "n8n-nodes-base.if",
+            "typeVersion": 2,
+            "position": [
+                320,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "http://host.docker.internal:3456/api/article",
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={{ { title: $json.body.title, content: $json.body.content, link: $json.body.link, date: $json.body.date || new Date().toISOString().split('T')[0], category: $json.body.category, tags: $json.body.tags || '' } }}",
+                "options": {
+                    "timeout": 30000
+                }
+            },
+            "id": "call-article-api",
+            "name": "呼叫 Article API",
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.2,
+            "position": [
+                540,
+                200
+            ]
+        },
+        {
+            "parameters": {
+                "respondWith": "json",
+                "responseBody": "={{ $json }}",
+                "options": {}
+            },
+            "id": "respond-success",
+            "name": "回應成功",
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.1,
+            "position": [
+                760,
+                200
+            ]
+        },
+        {
+            "parameters": {
+                "respondWith": "json",
+                "responseBody": "={{ { success: false, error: '缺少必備參數', required: ['title', 'content', 'link', 'category'] } }}",
+                "options": {
+                    "responseCode": 400
+                }
+            },
+            "id": "respond-error",
+            "name": "回應錯誤",
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.1,
+            "position": [
+                540,
+                420
+            ]
+        }
+    ],
+    "connections": {
+        "Webhook - 接收文章資料": {
+            "main": [
+                [
+                    {
+                        "node": "驗證必備參數",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "驗證必備參數": {
+            "main": [
+                [
+                    {
+                        "node": "呼叫 Article API",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "回應錯誤",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "呼叫 Article API": {
+            "main": [
+                [
+                    {
+                        "node": "回應成功",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "active": false,
+    "settings": {
+        "executionOrder": "v1"
+    },
+    "versionId": "7",
+    "meta": {
+        "templateCredsSetupCompleted": true,
+        "instanceId": "add-article-api"
+    },
+    "tags": []
+}

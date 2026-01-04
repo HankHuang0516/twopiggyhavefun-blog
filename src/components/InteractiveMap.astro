@@ -1,0 +1,181 @@
+---
+import 'leaflet/dist/leaflet.css';
+
+interface Props {
+  posts: any[];
+}
+
+const { posts } = Astro.props;
+
+// Filter posts that have coordinates
+const mapPosts = posts.filter(p => p.data.lat && p.data.lng).map(p => ({
+    title: p.data.title,
+    slug: p.slug,
+    lat: p.data.lat,
+    lng: p.data.lng,
+    cover: p.data.cover,
+    excerpt: p.body.substring(0, 100) + '...', // Simple excerpt
+    businessStatus: p.data.isPermanentlyClosed ? '已歇業' : '營業中'
+}));
+---
+
+<div class="flex flex-col lg:flex-row h-[calc(100vh-64px)] overflow-hidden">
+    <!-- Sidebar List -->
+    <div class="w-full lg:w-1/3 h-1/3 lg:h-full overflow-y-auto bg-white border-r border-gray-200 z-10 shadow-lg">
+        <div class="p-4 border-b bg-gray-50 top-0 sticky z-10">
+            <h2 class="font-bold text-gray-700">旅遊地圖 ({mapPosts.length})</h2>
+            <p class="text-xs text-gray-500">點擊列表或地圖地標查看詳情</p>
+        </div>
+        <div class="divide-y divide-gray-100" id="location-list">
+            {mapPosts.map((post, index) => (
+                <div 
+                    class="location-item p-4 hover:bg-blue-50 cursor-pointer transition-colors duration-200 group relative"
+                    data-lat={post.lat}
+                    data-lng={post.lng}
+                    data-id={index}
+                >
+                    <div class="flex gap-4">
+                        <div class="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
+                             {post.cover ? (
+                                <img src={post.cover} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                             ) : (
+                                <div class="w-full h-full flex items-center justify-center text-gray-300">No Image</div>
+                             )}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-bold text-gray-900 text-sm line-clamp-2 mb-1 group-hover:text-blue-600">{post.title}</h3>
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class={`text-xs px-2 py-0.5 rounded-full ${post.businessStatus === '已歇業' ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
+                                    {post.businessStatus}
+                                </span>
+                            </div>
+                            <a href={`/twopiggyhavefun-blog/posts/${post.slug}`} class="text-xs text-blue-500 hover:underline flex items-center gap-1">
+                                查看文章 &rarr;
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            ))}
+            {mapPosts.length === 0 && (
+                <div class="p-8 text-center text-gray-500">
+                    <p>目前沒有帶有座標的文章。</p>
+                </div>
+            )}
+        </div>
+    </div>
+
+    <!-- Map Container -->
+    <div class="flex-1 h-2/3 lg:h-full relative z-0">
+        <div id="leaflet-map" class="w-full h-full bg-gray-100"></div>
+    </div>
+</div>
+
+<script>
+    import L from 'leaflet';
+    
+    // Fix leaf icon path issue in Webpack/Vite
+    // @ts-ignore
+    delete L.Icon.Default.prototype._getIconUrl;
+    L.Icon.Default.mergeOptions({
+        iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+        iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+    });
+
+    const mapElement = document.getElementById('leaflet-map');
+    const locationItems = document.querySelectorAll('.location-item');
+
+    if (mapElement && locationItems.length > 0) {
+        // Initial View (Taipei centered default)
+        const map = L.map(mapElement).setView([23.6978, 120.9605], 7); // Taiwan center
+
+        // Add OpenStreetMap Tile Layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        const markers: L.Marker[] = [];
+        const bounds = L.latLngBounds([]);
+
+        // Parse data from DOM
+        locationItems.forEach((item) => {
+            const el = item as HTMLElement;
+            const lat = parseFloat(el.dataset.lat || '0');
+            const lng = parseFloat(el.dataset.lng || '0');
+            const id = parseInt(el.dataset.id || '0');
+            
+            // Get title and link from the item
+            const title = el.querySelector('h3')?.textContent || '';
+            const link = el.querySelector('a')?.getAttribute('href') || '#';
+
+            if (lat && lng) {
+                // Determine icon based on category/title
+                let iconChar = '📍';
+                let iconColor = 'bg-blue-500';
+                
+                // You can add more detailed logic here if you pass category data
+                // For now, we reuse the existing data or simple heuristics
+                const titleLower = title.toLowerCase();
+                
+                if (titleLower.includes('美食') || titleLower.includes('吃')) {
+                    iconChar = '🍔';
+                    iconColor = 'bg-orange-500';
+                } else if (titleLower.includes('住宿') || titleLower.includes('飯店') || titleLower.includes('民宿')) {
+                    iconChar = '🏨';
+                    iconColor = 'bg-purple-500';
+                } else if (titleLower.includes('景點') || titleLower.includes('玩') || titleLower.includes('遊')) {
+                    iconChar = '📷';
+                    iconColor = 'bg-green-500';
+                }
+
+                const customIcon = L.divIcon({
+                    className: 'custom-div-icon',
+                    html: `<div style="background-color: white; border-radius: 50%; padding: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-size: 18px;">${iconChar}</div>`,
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 30],
+                    popupAnchor: [0, -32]
+                });
+
+                const marker = L.marker([lat, lng], { icon: customIcon })
+                    .addTo(map)
+                    .bindPopup(`
+                        <div class="text-sm font-sans min-w-[200px]">
+                            <h3 class="font-bold mb-2 text-gray-800">${title}</h3>
+                            <a href="${link}" class="inline-block bg-blue-600 text-white text-xs px-3 py-1.5 rounded hover:bg-blue-700 transition">閱讀文章</a>
+                        </div>
+                    `);
+                
+                markers[id] = marker;
+                bounds.extend([lat, lng]);
+
+                // Click List Item -> Fly to Map
+                el.addEventListener('click', () => {
+                    map.flyTo([lat, lng], 15, {
+                        duration: 1.5
+                    });
+                    marker.openPopup();
+                    
+                    // Highlight active item
+                    document.querySelectorAll('.location-item').forEach(i => i.classList.remove('bg-blue-50', 'ring-2', 'ring-blue-200'));
+                    el.classList.add('bg-blue-50', 'ring-2', 'ring-blue-200');
+                });
+
+                // Click Marker -> Highlight List
+                marker.on('click', () => {
+                    document.querySelectorAll('.location-item').forEach(i => i.classList.remove('bg-blue-50', 'ring-2', 'ring-blue-200'));
+                    el.classList.add('bg-blue-50', 'ring-2', 'ring-blue-200');
+                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                });
+            }
+        });
+
+        // Fit bounds if we have value markers
+        if (markers.length > 0 && bounds.isValid()) {
+            map.fitBounds(bounds, { padding: [50, 50] });
+        }
+    }
+</script>
+
+<style>
+/* Leaflet Cluster or Custom Styles if needed */
+</style>

@@ -1,0 +1,73 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Sidebar from '../components/Sidebar.astro';
+---
+
+<Layout title="搜尋結果 | 兩隻小豬">
+    <div class="container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">
+        <div class="flex-1">
+            <header class="mb-8 border-b border-gray-200 pb-4">
+                <h1 class="text-3xl font-bold text-gray-800">搜尋結果: <span id="search-term" class="text-blue-600"></span></h1>
+                <p id="search-stats" class="text-gray-500 mt-2">搜尋中...</p>
+            </header>
+
+            <div id="search-results" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Results injected here -->
+            </div>
+        </div>
+        <Sidebar />
+    </div>
+</Layout>
+
+<script>
+    const searchParams = new URLSearchParams(window.location.search);
+    const query = searchParams.get('q')?.toLowerCase() || '';
+    
+    const termEl = document.getElementById('search-term');
+    if (termEl) termEl.textContent = query;
+
+    if (!query) {
+        const statsEl = document.getElementById('search-stats');
+        if (statsEl) statsEl.textContent = '請輸入關鍵字搜尋';
+    } else {
+        fetch('/twopiggyhavefun-blog/search.json')
+            .then(res => res.json())
+            .then(posts => {
+                const results = posts.filter((post: any) => {
+                    const title = post.title?.toLowerCase() || '';
+                    const desc = post.description?.toLowerCase() || '';
+                    const tags = post.tags?.join(' ').toLowerCase() || '';
+                    return title.includes(query) || desc.includes(query) || tags.includes(query);
+                });
+
+                const statsEl = document.getElementById('search-stats');
+                const resultsEl = document.getElementById('search-results');
+                
+                if (statsEl) statsEl.textContent = `共找到 ${results.length} 篇相關文章`;
+                
+                if (resultsEl) {
+                    if (results.length === 0) {
+                        resultsEl.innerHTML = '<p class="text-gray-500 col-span-2 text-center py-10">找不到相關文章。</p>';
+                    } else {
+                        const baseUrl = '/twopiggyhavefun-blog';
+                        resultsEl.innerHTML = results.map((post: any) => `
+                            <article class="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition overflow-hidden">
+                                <a href="${baseUrl}/posts/${post.slug}" class="block h-full p-4">
+                                    <h2 class="text-lg font-bold text-gray-800 mb-2 hover:text-blue-600">${post.title}</h2>
+                                    <p class="text-gray-600 text-sm line-clamp-3 mb-3">${post.description}...</p>
+                                    <span class="text-xs text-gray-400">
+                                        ${new Date(post.date).toLocaleDateString('zh-TW')}
+                                    </span>
+                                </a>
+                            </article>
+                        `).join('');
+                    }
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                const statsEl = document.getElementById('search-stats');
+                if (statsEl) statsEl.textContent = '搜尋發生錯誤';
+            });
+    }
+</script>

@@ -75,7 +75,7 @@ for (const [parent, config] of Object.entries(PIXNET_CATEGORY_HIERARCHY)) {
 
 // Get parent category slug from 個人分類 (either parent or subcategory name)
 export function getCategorySlug(category: string | undefined): SidebarCategorySlug {
-    if (!category) return 'other';
+    if (!category || typeof category !== 'string') return 'other';
 
     // Check if it's a parent category
     if (category in PIXNET_CATEGORY_HIERARCHY) {

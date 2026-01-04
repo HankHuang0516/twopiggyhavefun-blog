@@ -73,7 +73,8 @@ This project is a static blog migrated from Pixnet to Astro. It uses a "Magazine
 
 - ** 文章歸類(網頁右邊分類區)
   - 同步文章來源的"文章標籤(語言要一致)"並顯示"文章標籤"在頂部 (flex flex-wrap items-center gap-3 text-sm text-gray-500 mb-4)
-  - 同步文章來源的"個人分類"並顯示"個人分類"在底部 
+  - 同步文章來源的"個人分類"並顯示"個人分類"(超連結)在文末，點擊可以連到同一個分類區
+  - 右邊分類區需要包含所有的"個人分類"項目
   - 文章根據"個人分類"來自動分類到右邊分類區
   ![alt text](image.png)
   - 新增新的文章要可以根據"個人分類"自動分類
@@ -89,5 +90,14 @@ This project is a static blog migrated from Pixnet to Astro. It uses a "Magazine
 - ** 文章的創建時間要與原文章一致
   - Regresion test: 隨機挑5篇文章，驗證文章的創建時間是否與原文章一致
 
+- ** 確保文章的標題要與原文章一致
+  - Regresion test: 隨機挑15篇不同地區文章，驗證文章的標題是否與原文章一致
+
 - ** 確保網頁所有的按鈕都要能運作
   - Regresion test: 隨機挑10個非重複功能的按鈕，驗證按鈕是否能運作，且與按鈕目標一致
+
+- ** 確保網頁所有的超連結都要能運作
+  - Regresion test: 隨機挑10個非重複超連結，驗證超連結是否能運作，且與超連結目標一致
+
+- ** 確保網頁所有的圖片都要能運作
+  - Regresion test: 隨機挑10個非重複圖片，驗證圖片是否能運作，且與圖片目標一致

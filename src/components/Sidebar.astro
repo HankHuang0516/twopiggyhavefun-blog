@@ -1,6 +1,7 @@
 ---
 // Sidebar Component - Complete Pixnet Category Structure
 import { getCollection } from 'astro:content';
+import SearchWidget from './SearchWidget.astro';
 import { 
     getCategorySlug,
     PIXNET_CATEGORY_HIERARCHY,
@@ -20,8 +21,11 @@ function fixImagePath(src: string | undefined): string {
 }
 
 // Get all posts sorted by date
-const allPosts = await getCollection('posts');
-allPosts.sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf());
+const allPosts = (await getCollection('posts')).filter(p => p.data);
+allPosts.sort((a, b) => {
+    if (!a.data?.date || !b.data?.date) return 0;
+    return new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf();
+});
 const recentPosts = allPosts.slice(0, 5);
 
 // Track seen titles to avoid duplicates
@@ -139,7 +143,10 @@ const parentOrder = [
 ];
 ---
 
+
+
 <aside class="sidebar w-full lg:w-80 space-y-6">
+    <SearchWidget />
     <!-- Article Categories -->
     <div class="bg-white border border-gray-200 p-4">
         <h3 class="text-lg font-bold mb-3 text-red-600">文章</h3>

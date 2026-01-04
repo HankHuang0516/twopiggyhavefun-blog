@@ -1,0 +1,21 @@
+
+> picture@1.0.0 build
+> astro build
+
+[2m16:45:31[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[2m16:45:32[22m [34m[content][39m Syncing content
+[2m16:45:32[22m [34m[content][39m Content config changed
+[2m16:45:32[22m [34m[content][39m Clearing content store
+[InvalidContentEntryDataError] posts ??12077251311 data does not match collection schema.
+
+  businessHours**: **businessHours: Expected type `"string"`, received `"null"`
+
+  Hint:
+    See https://docs.astro.build/en/guides/content-collections/ for more information on content schemas.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/invalid-content-entry-data-error/
+  Location:
+    C:\Hank\Other\project\picture\src\content\posts\12077251311.md:0:0
+  Stack trace:
+    at getEntryDataAndImages (file:///C:/Hank/Other/project/picture/node_modules/astro/dist/content/utils.js:161:26)
+    at async syncData (file:///C:/Hank/Other/project/picture/node_modules/astro/dist/content/loaders/glob.js:94:28)

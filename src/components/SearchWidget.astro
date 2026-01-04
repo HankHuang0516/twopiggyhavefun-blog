@@ -1,0 +1,20 @@
+---
+// SearchWidget.astro
+---
+<div class="bg-white p-5 border border-gray-200 mb-6 rounded-sm">
+  <form action="/twopiggyhavefun-blog/search" method="get" class="flex relative">
+    <input 
+      type="text" 
+      name="q" 
+      placeholder="搜尋文章..." 
+      required
+      class="flex-1 border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+    />
+    <button 
+      type="submit" 
+      class="bg-[#2c3e50] text-white px-6 py-2.5 text-sm font-medium hover:bg-[#34495e] transition-colors"
+    >
+      搜尋
+    </button>
+  </form>
+</div>

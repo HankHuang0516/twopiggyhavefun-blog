@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 
 export async function getStaticPaths() {
-  const allPosts = await getCollection('posts');
+  const allPosts = (await getCollection('posts')).filter(p => p.data);
   // Extract all unique tags
   const uniqueTags = [...new Set(allPosts.map((post) => post.data.tags).flat())];
 
@@ -20,7 +20,10 @@ const { category } = Astro.params;
 const { posts } = Astro.props;
 
 // Sort by date text descending
-posts.sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf());
+posts.sort((a, b) => {
+    if (!a.data?.date || !b.data?.date) return 0;
+    return new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf();
+});
 
 const categoryNames: Record<string, string> = {
     food: '美食天地',

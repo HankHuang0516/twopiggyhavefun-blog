@@ -1,0 +1,28 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import InteractiveMap from '../../components/InteractiveMap.astro';
+import { getCollection } from 'astro:content';
+
+// Fetch and filter travel posts
+const allPosts = await getCollection('posts');
+const travelPosts = allPosts.filter(post => {
+    if (!post.data) return false;
+    const categories = [post.data.category, ...(post.data.tags || [])].join(' ');
+    // Very broad filter for travel posts
+    return categories.includes('旅遊') || categories.includes('景點') || categories.includes('住宿') || categories.includes('美食');
+});
+
+// Sort by date
+travelPosts.sort((a, b) => {
+     if (!a.data?.date || !b.data?.date) return 0;
+     return new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf();
+});
+---
+
+<Layout title="世界地圖旅遊足跡 | 兩隻小豬">
+    <!-- Full width/height container for the map interface -->
+    <div class="w-full h-full bg-white">
+        <!-- New Interactive Map Component -->
+        <InteractiveMap posts={travelPosts} />
+    </div>
+</Layout>

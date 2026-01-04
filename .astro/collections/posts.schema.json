@@ -45,6 +45,24 @@
         "originalUrl": {
           "type": "string"
         },
+        "businessHours": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "isPermanentlyClosed": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "lat": {
+          "type": "number"
+        },
+        "lng": {
+          "type": "number"
+        },
         "$schema": {
           "type": "string"
         }
