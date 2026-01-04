@@ -1,5 +1,5 @@
 ---
-// Sidebar Component - Bobowin Style with Dynamic Category Tree
+// Sidebar Component - Dynamic Category Tree from Post Tags
 import { getCollection } from 'astro:content';
 
 const BASE_URL = '/twopiggyhavefun-blog';
@@ -19,44 +19,80 @@ const allPosts = await getCollection('posts');
 allPosts.sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf());
 const recentPosts = allPosts.slice(0, 5);
 
+// Tag to display name mapping
+const tagDisplayNames: Record<string, string> = {
+    'taipei': '台北市',
+    'newtaipei': '新北市',
+    'taoyuan': '桃園',
+    'yilan': '宜蘭',
+    'hsinchu': '新竹',
+    'miaoli': '苗栗',
+    'taichung': '台中市',
+    'nantou': '南投',
+    'changhua': '彰化',
+    'chiayi': '嘉義',
+    'yunlin': '雲林',
+    'tainan': '台南',
+    'kaohsiung': '高雄',
+    'pingtung': '屏東',
+    'hualien': '花蓮',
+    'taitung': '台東',
+    'food': '美食餐廳',
+    'travel': '景點旅遊',
+    'life': '親子生活',
+    'japan': '日本旅遊',
+    'hongkong': '香港澳門',
+    'singapore': '新加坡',
+};
+
+// Region grouping
+const regionTags = ['taipei', 'newtaipei', 'taoyuan', 'yilan', 'hsinchu', 'miaoli', 'taichung', 'nantou', 'changhua', 'chiayi', 'yunlin', 'tainan', 'kaohsiung', 'pingtung', 'hualien', 'taitung'];
+const contentTags = ['food', 'travel', 'life'];
+const foreignTags = ['japan', 'hongkong', 'singapore'];
+
 // Count posts by tag
 const tagCounts = new Map<string, number>();
+const postsByTag = new Map<string, any[]>();
+
 allPosts.forEach(post => {
     const tags = post.data.tags || [];
     tags.forEach((tag: string) => {
+        if (tag === 'pixnet') return; // Skip pixnet tag
         tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+        if (!postsByTag.has(tag)) postsByTag.set(tag, []);
+        postsByTag.get(tag)!.push(post);
     });
 });
 
-// Build category structure
-const categories = [
-    { 
+// Build dynamic categories from actual tags
+const dynamicCategories = [
+    {
         id: 'taiwan',
-        name: '台灣好玩好吃趴趴走', 
+        name: '台灣好玩好吃趴趴走',
         count: allPosts.filter(p => {
             const tags = p.data.tags || [];
-            return tags.some((t: string) => ['taipei', 'newtaipei', 'taoyuan', 'yilan', 'hsinchu', 'miaoli', 'taichung', 'nantou', 'changhua', 'chiayi', 'yunlin', 'tainan', 'kaohsiung', 'pingtung', 'hualien', 'taitung', 'food', 'travel'].includes(t));
+            return tags.some((t: string) => [...regionTags, ...contentTags].includes(t));
         }).length,
         expanded: true,
-        children: [
-            { id: 'food', name: '美食餐廳', count: tagCounts.get('food') || 0 },
-            { id: 'travel', name: '景點旅遊', count: tagCounts.get('travel') || 0 },
-        ]
+        children: contentTags
+            .filter(tag => tagCounts.get(tag))
+            .map(tag => ({
+                id: tag,
+                name: tagDisplayNames[tag] || tag,
+                count: tagCounts.get(tag) || 0,
+                posts: postsByTag.get(tag) || []
+            }))
     },
-    { 
-        id: 'life',
-        name: '親子生活', 
-        count: tagCounts.get('life') || 0,
-        expanded: false,
-        children: []
-    },
-    { 
-        id: 'photography',
-        name: '攝影相關', 
-        count: tagCounts.get('photography') || 0,
-        expanded: false,
-        children: []
-    },
+    ...regionTags
+        .filter(tag => tagCounts.get(tag))
+        .map(tag => ({
+            id: tag,
+            name: tagDisplayNames[tag] || tag,
+            count: tagCounts.get(tag) || 0,
+            expanded: false,
+            children: [],
+            posts: postsByTag.get(tag) || []
+        }))
 ];
 
 // Taiwan day trips
@@ -90,12 +126,16 @@ const stats = {
         
         <!-- Category Tree -->
         <div class="dtree text-sm">
-            {categories.map((cat) => (
+            {dynamicCategories.map((cat) => (
                 <div class="dtree-node" data-id={cat.id}>
                     <div class="flex items-center py-1">
-                        {cat.children.length > 0 ? (
+                        {cat.children && cat.children.length > 0 ? (
                             <button class="toggle-btn w-5 text-gray-500 hover:text-gray-700 text-left" data-target={`node-${cat.id}`}>
                                 <span class="toggle-icon">{cat.expanded ? '▼' : '▶'}</span>
+                            </button>
+                        ) : cat.posts && cat.posts.length > 0 ? (
+                            <button class="toggle-btn w-5 text-gray-500 hover:text-gray-700 text-left" data-target={`posts-${cat.id}`}>
+                                <span class="toggle-icon">▶</span>
                             </button>
                         ) : (
                             <span class="w-5 text-gray-400 text-center">├</span>
@@ -106,26 +146,60 @@ const stats = {
                         <span class="text-gray-400 text-xs ml-1">({cat.count})</span>
                     </div>
                     
-                    {cat.children.length > 0 && (
+                    {/* Subcategories */}
+                    {cat.children && cat.children.length > 0 && (
                         <div class={`sub-categories ml-5 border-l border-gray-300 pl-3 ${cat.expanded ? '' : 'hidden'}`} id={`node-${cat.id}`}>
-                            {cat.children.map((child, idx) => (
-                                <div class="flex items-center py-1">
-                                    <span class="w-3 text-gray-400 text-xs">
-                                        {idx === cat.children.length - 1 ? '└' : '├'}
-                                    </span>
-                                    <a href={`${BASE_URL}/category/${child.id}`} class="text-blue-600 hover:underline ml-1">
-                                        {child.name}
-                                    </a>
-                                    <span class="text-gray-400 text-xs ml-1">({child.count})</span>
+                            {cat.children.map((child: any, idx: number) => (
+                                <div class="py-0.5">
+                                    <div class="flex items-center">
+                                        <button class="toggle-btn w-4 text-gray-500 hover:text-gray-700 text-left text-xs" data-target={`posts-${child.id}`}>
+                                            <span class="toggle-icon">▶</span>
+                                        </button>
+                                        <a href={`${BASE_URL}/category/${child.id}`} class="text-blue-600 hover:underline ml-1">
+                                            {child.name}
+                                        </a>
+                                        <span class="text-gray-400 text-xs ml-1">({child.count})</span>
+                                    </div>
+                                    {/* Posts under this category */}
+                                    <div class="sub-posts ml-4 border-l border-gray-200 pl-2 hidden max-h-40 overflow-y-auto" id={`posts-${child.id}`}>
+                                        {child.posts.slice(0, 10).map((post: any) => (
+                                            <div class="flex items-start py-0.5">
+                                                <span class="w-2 text-gray-300 text-xs flex-shrink-0">·</span>
+                                                <a href={`${BASE_URL}/posts/${post.slug}`} class="text-blue-500 hover:underline ml-1 text-xs line-clamp-1">
+                                                    {post.data.title}
+                                                </a>
+                                            </div>
+                                        ))}
+                                        {child.posts.length > 10 && (
+                                            <div class="text-gray-400 text-xs ml-3">...還有 {child.posts.length - 10} 篇</div>
+                                        )}
+                                    </div>
                                 </div>
                             ))}
+                        </div>
+                    )}
+                    
+                    {/* Posts directly under region */}
+                    {cat.posts && cat.posts.length > 0 && !cat.children?.length && (
+                        <div class="sub-posts ml-5 border-l border-gray-200 pl-2 hidden max-h-40 overflow-y-auto" id={`posts-${cat.id}`}>
+                            {cat.posts.slice(0, 10).map((post: any) => (
+                                <div class="flex items-start py-0.5">
+                                    <span class="w-2 text-gray-300 text-xs flex-shrink-0">·</span>
+                                    <a href={`${BASE_URL}/posts/${post.slug}`} class="text-blue-500 hover:underline ml-1 text-xs line-clamp-1">
+                                        {post.data.title}
+                                    </a>
+                                </div>
+                            ))}
+                            {cat.posts.length > 10 && (
+                                <div class="text-gray-400 text-xs ml-3">...還有 {cat.posts.length - 10} 篇</div>
+                            )}
                         </div>
                     )}
                 </div>
             ))}
 
             <!-- All Posts -->
-            <div class="dtree-node" data-id="all-posts">
+            <div class="dtree-node mt-2 pt-2 border-t border-gray-200" data-id="all-posts">
                 <div class="flex items-center py-1">
                     <button class="toggle-btn w-5 text-gray-500 hover:text-gray-700 text-left" data-target="node-all-posts">
                         <span class="toggle-icon">▶</span>
@@ -134,7 +208,7 @@ const stats = {
                     <span class="text-gray-400 text-xs ml-1">({allPosts.length})</span>
                 </div>
                 <div class="sub-categories ml-5 border-l border-gray-300 pl-3 hidden max-h-80 overflow-y-auto" id="node-all-posts">
-                    {allPosts.map((post, idx) => (
+                    {allPosts.map((post) => (
                         <div class="flex items-start py-0.5">
                             <span class="w-3 text-gray-400 text-xs flex-shrink-0">├</span>
                             <a href={`${BASE_URL}/posts/${post.slug}`} class="text-blue-600 hover:underline ml-1 text-xs line-clamp-1">
@@ -207,7 +281,8 @@ const stats = {
 </aside>
 
 <style>
-    .dtree-node .sub-categories.hidden {
+    .dtree-node .sub-categories.hidden,
+    .dtree-node .sub-posts.hidden {
         display: none;
     }
     .toggle-btn {
@@ -258,13 +333,13 @@ const stats = {
 
     // Expand All
     document.getElementById('expandAll')?.addEventListener('click', () => {
-        document.querySelectorAll('.sub-categories').forEach(el => el.classList.remove('hidden'));
+        document.querySelectorAll('.sub-categories, .sub-posts').forEach(el => el.classList.remove('hidden'));
         document.querySelectorAll('.toggle-icon').forEach(el => el.textContent = '▼');
     });
 
     // Collapse All
     document.getElementById('collapseAll')?.addEventListener('click', () => {
-        document.querySelectorAll('.sub-categories').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.sub-categories, .sub-posts').forEach(el => el.classList.add('hidden'));
         document.querySelectorAll('.toggle-icon').forEach(el => el.textContent = '▶');
     });
 </script>

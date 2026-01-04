@@ -1,0 +1,160 @@
+---
+// BusinessStatus.astro - Dynamic business status component
+interface Props {
+    businessName?: string;
+    status?: 'open' | 'closed' | 'unknown';
+    hours?: {
+        mon?: string;
+        tue?: string;
+        wed?: string;
+        thu?: string;
+        fri?: string;
+        sat?: string;
+        sun?: string;
+    };
+    permanentlyClosed?: boolean;
+}
+
+const { businessName, status, hours, permanentlyClosed } = Astro.props;
+
+// Get current day
+const dayNames = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+---
+
+{permanentlyClosed ? (
+    <div class="business-status closed-permanently bg-red-100 border-l-4 border-red-500 p-4 my-4">
+        <div class="flex items-center">
+            <span class="text-2xl mr-2">🚫</span>
+            <div>
+                <p class="font-bold text-red-700">已歇業</p>
+                <p class="text-red-600 text-sm">此店家目前已不再營業</p>
+            </div>
+        </div>
+    </div>
+) : hours ? (
+    <div class="business-status bg-gray-50 border border-gray-200 p-4 my-4 rounded" id="business-hours-widget">
+        <h4 class="font-bold text-gray-800 mb-2 flex items-center">
+            <span class="mr-2">🕐</span>
+            {businessName ? `${businessName} 營業時間` : '營業時間'}
+        </h4>
+        
+        <div class="grid grid-cols-2 gap-1 text-sm mb-3">
+            <div class="flex justify-between px-2 py-1 bg-white rounded">
+                <span>週一</span>
+                <span class="text-gray-600">{hours.mon || '未知'}</span>
+            </div>
+            <div class="flex justify-between px-2 py-1 bg-white rounded">
+                <span>週二</span>
+                <span class="text-gray-600">{hours.tue || '未知'}</span>
+            </div>
+            <div class="flex justify-between px-2 py-1 bg-white rounded">
+                <span>週三</span>
+                <span class="text-gray-600">{hours.wed || '未知'}</span>
+            </div>
+            <div class="flex justify-between px-2 py-1 bg-white rounded">
+                <span>週四</span>
+                <span class="text-gray-600">{hours.thu || '未知'}</span>
+            </div>
+            <div class="flex justify-between px-2 py-1 bg-white rounded">
+                <span>週五</span>
+                <span class="text-gray-600">{hours.fri || '未知'}</span>
+            </div>
+            <div class="flex justify-between px-2 py-1 bg-white rounded">
+                <span>週六</span>
+                <span class="text-gray-600">{hours.sat || '未知'}</span>
+            </div>
+            <div class="flex justify-between px-2 py-1 bg-white rounded col-span-2">
+                <span>週日</span>
+                <span class="text-gray-600">{hours.sun || '未知'}</span>
+            </div>
+        </div>
+        
+        <!-- Dynamic status badge (updated by JS) -->
+        <div id="current-status" class="flex items-center justify-center py-2 rounded font-medium">
+            <span class="status-icon mr-2"></span>
+            <span class="status-text">檢查營業狀態中...</span>
+        </div>
+    </div>
+    
+    <script define:vars={{ hours }}>
+        function parseTime(timeStr) {
+            if (!timeStr || timeStr === '休息' || timeStr === '已歇業') return null;
+            const [h, m] = timeStr.split(':').map(Number);
+            return h * 60 + m;
+        }
+        
+        function getBusinessStatus() {
+            const now = new Date();
+            const dayNames = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+            const day = dayNames[now.getDay()];
+            const todayHours = hours[day];
+            
+            if (!todayHours || todayHours === '休息' || todayHours === '公休') {
+                return { status: 'closed-today', message: '今日休息', color: 'bg-gray-200 text-gray-700' };
+            }
+            
+            if (todayHours === '已歇業') {
+                return { status: 'permanently-closed', message: '已歇業', color: 'bg-red-200 text-red-700' };
+            }
+            
+            const parts = todayHours.split('-');
+            if (parts.length !== 2) {
+                return { status: 'unknown', message: '營業時間未知', color: 'bg-gray-200 text-gray-600' };
+            }
+            
+            const [openStr, closeStr] = parts;
+            const openTime = parseTime(openStr);
+            const closeTime = parseTime(closeStr);
+            const nowTime = now.getHours() * 60 + now.getMinutes();
+            
+            if (openTime === null || closeTime === null) {
+                return { status: 'unknown', message: '營業時間格式錯誤', color: 'bg-gray-200 text-gray-600' };
+            }
+            
+            if (nowTime >= openTime && nowTime < closeTime) {
+                const remaining = closeTime - nowTime;
+                const hours = Math.floor(remaining / 60);
+                const mins = remaining % 60;
+                return { 
+                    status: 'open', 
+                    message: `營業中 (還有 ${hours}h ${mins}m 打烊)`, 
+                    color: 'bg-green-200 text-green-700' 
+                };
+            } else if (nowTime < openTime) {
+                const diff = openTime - nowTime;
+                const hours = Math.floor(diff / 60);
+                const mins = diff % 60;
+                return { 
+                    status: 'opening-soon', 
+                    message: `休息中 (${hours}小時${mins}分後開門)`, 
+                    color: 'bg-yellow-200 text-yellow-700' 
+                };
+            } else {
+                return { 
+                    status: 'closed', 
+                    message: '今日已打烊', 
+                    color: 'bg-gray-200 text-gray-700' 
+                };
+            }
+        }
+        
+        function updateStatus() {
+            const statusEl = document.getElementById('current-status');
+            if (!statusEl) return;
+            
+            const { status, message, color } = getBusinessStatus();
+            
+            const icon = status === 'open' ? '🟢' : 
+                         status === 'opening-soon' ? '🟡' : 
+                         status === 'permanently-closed' ? '🚫' : '🔴';
+            
+            statusEl.className = `flex items-center justify-center py-2 rounded font-medium ${color}`;
+            statusEl.innerHTML = `<span class="mr-2">${icon}</span><span>${message}</span>`;
+        }
+        
+        // Update immediately
+        updateStatus();
+        // Update every minute
+        setInterval(updateStatus, 60000);
+    </script>
+) : null}
