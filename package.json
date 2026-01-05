@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro build",
+    "dev": "node -e \"var fs=require('fs'); try{fs.rmSync('.astro',{recursive:true,force:true})}catch(e){}\" && astro dev",
+    "start": "node -e \"var fs=require('fs'); try{fs.rmSync('.astro',{recursive:true,force:true})}catch(e){}\" && astro dev",
+    "build": "node -e \"var fs=require('fs'); try{fs.rmSync('.astro',{recursive:true,force:true})}catch(e){}\" && astro build",
     "preview": "astro preview",
     "astro": "astro"
   },

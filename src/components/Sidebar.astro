@@ -65,7 +65,19 @@ allPosts.forEach(post => {
     }
     seenTitles.add(normalizedTitle);
     
-    const category = post.data.category || '';
+    let category = String(post.data.category || '').trim();
+    
+    // Sanitize category: if it looks like a URL or file path, ignore it
+    if (category && (
+        category.includes('http') || 
+        category.includes('pixnet') || 
+        category.includes('.jpg') || 
+        category.includes('.png') ||
+        category.length > 50
+    )) {
+        category = ''; // This will force it into "未分類文章"
+    }
+    
     if (!category) {
         // No category - put in 其他/未分類文章
         categoryStats['其他'].total++;
@@ -76,10 +88,13 @@ allPosts.forEach(post => {
         return;
     }
     
-    // Find which parent category this belongs to
+    // Find category from hierarchy
     let foundParent = '';
-    let foundSub = category;
+    let foundSub = '';
     
+    // Direct match first
+
+    // Direct match first
     for (const [parentName, config] of Object.entries(PIXNET_CATEGORY_HIERARCHY)) {
         // Check if category is the parent itself
         if (category === parentName) {
@@ -194,7 +209,8 @@ const parentOrder = [
                                             <button class="toggle-btn w-4 text-gray-400 text-xs" data-target={subId}>
                                                 <span class="toggle-icon">▶</span>
                                             </button>
-                                            <span class="text-blue-600 ml-1">{subName}</span>
+                                            <a href={`${BASE_URL}/category/${subName}`} 
+                                               class="text-blue-600 ml-1 hover:underline">{subName}</a>
                                             <span class="text-gray-400 text-xs ml-1">({uniquePosts.length})</span>
                                         </div>
                                         <div class="sub-posts ml-4 border-l border-gray-100 pl-2 hidden max-h-32 overflow-y-auto" id={subId}>

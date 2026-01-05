@@ -9,33 +9,44 @@ import {
     isUnboxing, 
     isWedding, 
     regionNames,
-    regionKeywords 
+    regionKeywords,
+    PIXNET_CATEGORY_HIERARCHY
 } from '../../utils/categories';
 
 export async function getStaticPaths() {
     const allPosts = (await getCollection('posts')).filter(p => p.data);
-    const categories = new Set<string>();
+    const slugs = new Set<string>();
     
-    // Always include main categories
-    const mainCategories = [
-        'domestic-food', 'domestic-travel', 'domestic-hotel', 
-        'foreign-travel', 'parenting', 'unboxing', 'wedding', 'other'
-    ];
-    mainCategories.forEach(c => categories.add(c));
+    // 1. Add main category slugs
+    for (const config of Object.values(PIXNET_CATEGORY_HIERARCHY)) {
+        slugs.add(config.slug);
+    }
+    
+    // 2. Add all subcategory names from hierarchy (Chinese names)
+    for (const config of Object.values(PIXNET_CATEGORY_HIERARCHY)) {
+        for (const sub of config.subcategories) {
+            slugs.add(sub); // e.g., "台北美食", "宜蘭景點"
+        }
+    }
+    
+    // 3. Add all unique category values from posts
+    allPosts.forEach(post => {
+        if (post.data.category) {
+            slugs.add(post.data.category);
+        }
+    });
 
-    // Calculate dynamic subcategories
+    // 4. Add dynamic region-type subcategories (legacy support)
     allPosts.forEach(post => {
         const title = post.data.title || '';
         const tags = post.data.tags || [];
         const { contentType, region } = categorizePost(title, tags);
-        
         if (contentType && region) {
-            // e.g. taipei-food, yilan-travel
-            categories.add(`${region}-${contentType}`);
+            slugs.add(`${region}-${contentType}`);
         }
     });
 
-    return Array.from(categories).map(slug => ({
+    return Array.from(slugs).map(slug => ({
         params: { slug },
         props: { slug }
     }));
@@ -126,6 +137,12 @@ else if (part2 && (part2 === 'food' || part2 === 'travel' || part2 === 'hotel'))
         const { contentType, region } = categorizePost(title, tags);
         return contentType === typeKey && region === regionKey;
     });
+}
+// 4. Chinese subcategory names (e.g., "台北美食", "保健食品", "宜蘭景點")
+// Filter by exact category match in frontmatter
+else {
+    categoryTitle = slug; // Use the Chinese name directly as title
+    filteredPosts = allPosts.filter(post => post.data.category === slug);
 }
 
 // Pagination or just show all? 
