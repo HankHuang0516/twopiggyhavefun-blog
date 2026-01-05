@@ -272,6 +272,7 @@ function parsePixnetArticles(html) {
 
 /**
  * 從文章頁面提取完整內容、標籤、分類
+ * 支援 Next.js RSC (React Server Components) 格式
  */
 function parseArticleContent(html) {
     const result = {
@@ -281,29 +282,58 @@ function parseArticleContent(html) {
         images: []
     };
 
-    // 1. 提取個人分類 (從 refer 或 category 連結)
-    const categoryMatch = html.match(/<a[^>]*href="[^"]*\/blog\/category\/[^"]*"[^>]*>([^<]+)<\/a>/i);
-    if (categoryMatch) {
-        result.category = categoryMatch[1].trim();
-    } else {
-        // 從內容中用分類名稱判斷
-        for (const [key, value] of Object.entries(CATEGORY_MAPPING)) {
-            if (key !== 'default' && html.includes(`>${key}<`)) {
-                result.category = key;
-                break;
+    // 1. 從 RSC 資料中提取標籤 (優先)
+    // Pixnet 使用 Next.js RSC，標籤在 self.__next_f.push() 中
+    // 格式: "tags":[{"id":8925,"name":"台北約會餐廳"},...]
+    const rscTagMatch = html.match(/\\?"tags\\?":\s*\[\s*\{[^[\]]*?"name\\?":\s*\\?"([^"\\]+)\\?"/);
+    if (rscTagMatch) {
+        // 找到 RSC 格式，提取所有標籤
+        const rscTagsRegex = /\\?"tags\\?":\s*\[((?:\{[^{}]*\},?\s*)*)\]/g;
+        let rscMatch;
+        while ((rscMatch = rscTagsRegex.exec(html)) !== null) {
+            const tagsJson = rscMatch[1];
+            // 從 JSON 中提取標籤名稱
+            const nameMatches = tagsJson.matchAll(/\\?"name\\?":\s*\\?"([^"\\]+)\\?"/g);
+            for (const m of nameMatches) {
+                const tag = m[1].trim();
+                if (tag && !result.tags.includes(tag)) {
+                    result.tags.push(tag);
+                }
             }
         }
     }
 
-    // 2. 提取標籤 (從 article-keyword 或 tag 連結)
-    const tagRegex = /<a[^>]*href="[^"]*\/blog\/tag\/[^"]*"[^>]*>([^<]+)<\/a>/gi;
-    let tagMatch;
-    const seenTags = new Set();
-    while ((tagMatch = tagRegex.exec(html)) !== null) {
-        const tag = tagMatch[1].trim();
-        if (tag && !seenTags.has(tag)) {
-            seenTags.add(tag);
-            result.tags.push(tag);
+    // 2. 提取個人分類 (優先從 RSC 資料)
+    const rscCategoryMatch = html.match(/\\?"category\\?":\s*\{[^{}]*?"name\\?":\s*\\?"([^"\\]+)\\?"/);
+    if (rscCategoryMatch) {
+        result.category = rscCategoryMatch[1].trim();
+    } else {
+        // Fallback: 從 HTML 連結提取
+        const categoryMatch = html.match(/<a[^>]*href="[^"]*\/blog\/category\/[^"]*"[^>]*>([^<]+)<\/a>/i);
+        if (categoryMatch) {
+            result.category = categoryMatch[1].trim();
+        } else {
+            // 從內容中用分類名稱判斷
+            for (const [key, value] of Object.entries(CATEGORY_MAPPING)) {
+                if (key !== 'default' && html.includes(`>${key}<`)) {
+                    result.category = key;
+                    break;
+                }
+            }
+        }
+    }
+
+    // 3. Fallback: 從 HTML tag 連結提取標籤
+    if (result.tags.length === 0) {
+        const tagRegex = /<a[^>]*href="[^"]*\/blog\/tag\/[^"]*"[^>]*>([^<]+)<\/a>/gi;
+        let tagMatch;
+        const seenTags = new Set();
+        while ((tagMatch = tagRegex.exec(html)) !== null) {
+            const tag = tagMatch[1].trim();
+            if (tag && !seenTags.has(tag)) {
+                seenTags.add(tag);
+                result.tags.push(tag);
+            }
         }
     }
 
