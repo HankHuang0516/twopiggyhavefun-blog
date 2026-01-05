@@ -434,8 +434,12 @@ async function syncPixnetArticles() {
                 const articleHtml = await fetchUrl(article.link);
                 const contentInfo = parseArticleContent(articleHtml);
 
-                log(`  分類: ${contentInfo.category}`, 'INFO');
-                log(`  標籤: ${contentInfo.tags.length} 個`, 'INFO');
+                // 標籤來自列表頁 JSON (article.tags)，分類優先使用文章頁面提取的
+                const finalTags = article.tags.length > 0 ? article.tags : contentInfo.tags;
+                const finalCategory = contentInfo.category || article.category;
+
+                log(`  分類: ${finalCategory}`, 'INFO');
+                log(`  標籤: ${finalTags.length} 個 - ${finalTags.join(', ')}`, 'INFO');
                 log(`  圖片: ${contentInfo.images.length} 張`, 'INFO');
 
                 const result = createArticle({
@@ -443,8 +447,8 @@ async function syncPixnetArticles() {
                     content: contentInfo.content,
                     link: article.link,
                     date: article.date,
-                    category: contentInfo.category,
-                    tags: contentInfo.tags
+                    category: finalCategory,
+                    tags: finalTags
                 });
 
                 if (result.success) {
