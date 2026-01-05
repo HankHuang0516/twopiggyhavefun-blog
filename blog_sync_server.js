@@ -271,18 +271,28 @@ function parsePixnetArticles(html) {
 }
 
 /**
- * 從文章頁面提取完整內容、標籤、分類
+ * 從文章頁面提取完整內容、標籤、分類、封面圖
  * 支援 Next.js RSC (React Server Components) 格式
+ * 格式參考 migrate_missing_posts.js
  */
 function parseArticleContent(html) {
     const result = {
-        category: 'travel',
+        category: '',
         tags: [],
-        content: '',
-        images: []
+        contentHtml: '',  // 保留原始 HTML
+        cover: '',        // 封面圖片
+        images: [],
+        businessHours: null
     };
 
-    // 1. 從 RSC 資料中提取標籤 (優先)
+    // 1. 提取封面圖片 (從 og:image meta tag)
+    const coverMatch = html.match(/<meta[^>]*property="og:image"[^>]*content="([^"]+)"/i) ||
+        html.match(/<meta[^>]*content="([^"]+)"[^>]*property="og:image"/i);
+    if (coverMatch) {
+        result.cover = coverMatch[1];
+    }
+
+    // 2. 從 RSC 資料中提取標籤 (優先)
     // Pixnet 使用 Next.js RSC，標籤在 self.__next_f.push() 中
     // 格式: "tags":[{"id":8925,"name":"台北約會餐廳"},...]
     const rscTagMatch = html.match(/\\?"tags\\?":\s*\[\s*\{[^[\]]*?"name\\?":\s*\\?"([^"\\]+)\\?"/);
@@ -303,7 +313,7 @@ function parseArticleContent(html) {
         }
     }
 
-    // 2. 提取個人分類 (優先從 RSC 資料)
+    // 3. 提取個人分類 (優先從 RSC 資料，保留中文原始名稱)
     const rscCategoryMatch = html.match(/\\?"category\\?":\s*\{[^{}]*?"name\\?":\s*\\?"([^"\\]+)\\?"/);
     if (rscCategoryMatch) {
         result.category = rscCategoryMatch[1].trim();
@@ -312,18 +322,10 @@ function parseArticleContent(html) {
         const categoryMatch = html.match(/<a[^>]*href="[^"]*\/blog\/category\/[^"]*"[^>]*>([^<]+)<\/a>/i);
         if (categoryMatch) {
             result.category = categoryMatch[1].trim();
-        } else {
-            // 從內容中用分類名稱判斷
-            for (const [key, value] of Object.entries(CATEGORY_MAPPING)) {
-                if (key !== 'default' && html.includes(`>${key}<`)) {
-                    result.category = key;
-                    break;
-                }
-            }
         }
     }
 
-    // 3. Fallback: 從 HTML tag 連結提取標籤
+    // 4. Fallback: 從 HTML tag 連結提取標籤
     if (result.tags.length === 0) {
         const tagRegex = /<a[^>]*href="[^"]*\/blog\/tag\/[^"]*"[^>]*>([^<]+)<\/a>/gi;
         let tagMatch;
@@ -337,26 +339,24 @@ function parseArticleContent(html) {
         }
     }
 
-    // 3. 提取完整文章內容
-    // 嘗試多種 selector 模式
+    // 5. 提取完整文章內容 (保留原始 HTML)
     let contentHtml = '';
 
-    // 優先：article-content-inner
-    const innerMatch = html.match(/<div[^>]*class="[^"]*article-content-inner[^"]*"[^>]*>([\s\S]*?)<\/div>\s*<div[^>]*class="[^"]*article/i);
+    // 優先使用 cheerio-like 選擇器：#article-content-inner 或 .article-content
+    const innerMatch = html.match(/<div[^>]*id="article-content-inner"[^>]*>([\s\S]*?)<\/div>\s*<div[^>]*class="[^"]*article/i);
     if (innerMatch) {
         contentHtml = innerMatch[1];
     } else {
-        // 備用：article-content
-        const contentMatch = html.match(/<div[^>]*class="[^"]*article-content[^"]*"[^>]*>([\s\S]*?)<\/div>\s*<(?:div[^>]*class="[^"]*article-footer|footer)/i);
-        if (contentMatch) {
-            contentHtml = contentMatch[1];
+        // 嘗試 class="article-content-inner"
+        const classMatch = html.match(/<div[^>]*class="[^"]*article-content-inner[^"]*"[^>]*>([\s\S]*?)<\/div>\s*<div[^>]*class="[^"]*article/i);
+        if (classMatch) {
+            contentHtml = classMatch[1];
         } else {
             // 最後嘗試：找 article-content-inner 到結尾
             const simpleMatch = html.match(/<div[^>]*class="[^"]*article-content-inner[^"]*"[^>]*>([\s\S]*)/i);
             if (simpleMatch) {
-                // 取到第一個 article-footer 或 article-keyword
                 let content = simpleMatch[1];
-                const endPos = content.search(/<div[^>]*class="[^"]*(?:article-footer|article-keyword)/i);
+                const endPos = content.search(/<div[^>]*class="[^"]*(?:article-footer|article-keyword|tag-container)/i);
                 if (endPos > 0) {
                     content = content.substring(0, endPos);
                 }
@@ -365,7 +365,15 @@ function parseArticleContent(html) {
         }
     }
 
-    // 4. 提取圖片 URLs
+    // 6. 如果沒有封面圖，從內容中取第一張圖
+    if (!result.cover && contentHtml) {
+        const firstImgMatch = contentHtml.match(/<img[^>]*src="([^"]+)"/i);
+        if (firstImgMatch) {
+            result.cover = firstImgMatch[1];
+        }
+    }
+
+    // 7. 提取圖片 URLs
     const imgRegex = /<img[^>]*src=["']([^"']+)["'][^>]*>/gi;
     let imgMatch;
     while ((imgMatch = imgRegex.exec(contentHtml)) !== null) {
@@ -375,8 +383,14 @@ function parseArticleContent(html) {
         }
     }
 
-    // 5. 轉換 HTML 為 Markdown
-    result.content = htmlToMarkdown(contentHtml);
+    // 8. 保留原始 HTML（不做 Markdown 轉換）
+    result.contentHtml = contentHtml;
+
+    // 9. 提取營業時間（可選）
+    const hoursMatch = contentHtml.match(/營業時間[：:]\s*([^\n<]+)/);
+    if (hoursMatch) {
+        result.businessHours = hoursMatch[1].trim();
+    }
 
     return result;
 }
@@ -385,10 +399,14 @@ function parseArticleContent(html) {
 // 文章建立
 // ============================================
 
+/**
+ * 建立文章 Markdown 檔案
+ * 格式參考 migrate_missing_posts.js
+ */
 function createArticle(data) {
-    const { title, content, link, date, category, tags = [] } = data;
+    const { title, contentHtml, link, date, category, tags = [], cover = '', businessHours = null } = data;
 
-    if (!title || !link || !category) {
+    if (!title || !link) {
         return { success: false, error: '缺少必填欄位' };
     }
 
@@ -396,30 +414,26 @@ function createArticle(data) {
         ? tags.split(',').map(t => t.trim()).filter(t => t)
         : Array.isArray(tags) ? tags : [];
 
-    const normalizedCategory = normalizeCategory(category);
     const articleDate = date || new Date().toISOString().split('T')[0];
     const slug = generateSlug(articleDate);
     const formattedDate = new Date(articleDate).toISOString();
-    const escapedTitle = title.replace(/'/g, "''");
 
-    const tagsYaml = tagList.length > 0
-        ? `tags:\n${tagList.map(t => `  - ${t}`).join('\n')}`
-        : 'tags: []';
-
-    const markdown = `---
-title: '${escapedTitle}'
-date: '${formattedDate}'
-category: ${normalizedCategory}
-${tagsYaml}
-originalUrl: ${link}
----
-
-${content || ''}
-
----
-
-📖 [閱讀完整文章](${link})
-`;
+    // 使用與 migrate_missing_posts.js 相同的 frontmatter 格式
+    const frontmatter = [
+        '---',
+        `title: ${JSON.stringify(title)}`,
+        `date: "${formattedDate}"`,
+        `cover: "${cover || ''}"`,
+        `tags: ${JSON.stringify(tagList)}`,
+        `originalUrl: "${link}"`,
+        `businessHours: ${businessHours ? JSON.stringify(businessHours) : 'null'}`,
+        `category: "${category || ''}"`,  // 保留中文原始分類名稱
+        '---',
+        '',
+        '<div class="pixnet-article prose max-w-none">',
+        contentHtml || '',
+        '</div>'
+    ].join('\n');
 
     if (!fs.existsSync(CONFIG.postsDir)) {
         fs.mkdirSync(CONFIG.postsDir, { recursive: true });
@@ -427,9 +441,9 @@ ${content || ''}
 
     const filename = `${slug}.md`;
     const filepath = path.join(CONFIG.postsDir, filename);
-    fs.writeFileSync(filepath, markdown, 'utf8');
+    fs.writeFileSync(filepath, frontmatter, 'utf8');
 
-    return { success: true, file: filename, path: filepath, slug, category: normalizedCategory, title };
+    return { success: true, file: filename, path: filepath, slug, category, title };
 }
 
 // ============================================
@@ -470,15 +484,18 @@ async function syncPixnetArticles() {
 
                 log(`  分類: ${finalCategory}`, 'INFO');
                 log(`  標籤: ${finalTags.length} 個 - ${finalTags.join(', ')}`, 'INFO');
+                log(`  封面: ${contentInfo.cover ? '有' : '無'}`, 'INFO');
                 log(`  圖片: ${contentInfo.images.length} 張`, 'INFO');
 
                 const result = createArticle({
                     title: article.title,
-                    content: contentInfo.content,
+                    contentHtml: contentInfo.contentHtml,  // 使用原始 HTML
                     link: article.link,
                     date: article.date,
                     category: finalCategory,
-                    tags: finalTags
+                    tags: finalTags,
+                    cover: contentInfo.cover,              // 封面圖片
+                    businessHours: contentInfo.businessHours  // 營業時間
                 });
 
                 if (result.success) {
