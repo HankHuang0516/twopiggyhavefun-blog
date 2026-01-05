@@ -94,20 +94,78 @@ function generateSlug(date) {
     return `${dateStr}-${hash}`;
 }
 
-function cleanContent(content) {
-    if (!content) return '';
-    return content
-        .replace(/<br\s*\/?>/gi, '\n')
-        .replace(/<\/p>/gi, '\n\n')
-        .replace(/<[^>]+>/g, '')
-        .replace(/&nbsp;/g, ' ')
-        .replace(/&amp;/g, '&')
-        .replace(/&lt;/g, '<')
-        .replace(/&gt;/g, '>')
-        .replace(/&quot;/g, '"')
-        .replace(/&#39;/g, "'")
-        .replace(/\n{3,}/g, '\n\n')
-        .trim();
+/**
+ * HTML 轉 Markdown（完整版）
+ * 保留圖片、連結、格式
+ */
+function htmlToMarkdown(html) {
+    if (!html) return '';
+
+    let md = html;
+
+    // 處理圖片 - 保留原始 URL
+    md = md.replace(/<img[^>]*src=["']([^"']+)["'][^>]*alt=["']([^"']*)["'][^>]*>/gi,
+        (match, src, alt) => `![${alt || ''}](${src})\n\n`);
+    md = md.replace(/<img[^>]*alt=["']([^"']*)["'][^>]*src=["']([^"']+)["'][^>]*>/gi,
+        (match, alt, src) => `![${alt || ''}](${src})\n\n`);
+    md = md.replace(/<img[^>]*src=["']([^"']+)["'][^>]*>/gi,
+        (match, src) => `![](${src})\n\n`);
+
+    // 處理連結
+    md = md.replace(/<a[^>]*href=["']([^"']+)["'][^>]*>([^<]*)<\/a>/gi, '[$2]($1)');
+
+    // 處理標題
+    md = md.replace(/<h1[^>]*>([^<]*)<\/h1>/gi, '\n# $1\n\n');
+    md = md.replace(/<h2[^>]*>([^<]*)<\/h2>/gi, '\n## $1\n\n');
+    md = md.replace(/<h3[^>]*>([^<]*)<\/h3>/gi, '\n### $1\n\n');
+    md = md.replace(/<h4[^>]*>([^<]*)<\/h4>/gi, '\n#### $1\n\n');
+
+    // 處理粗體和斜體
+    md = md.replace(/<strong[^>]*>([^<]*)<\/strong>/gi, '**$1**');
+    md = md.replace(/<b[^>]*>([^<]*)<\/b>/gi, '**$1**');
+    md = md.replace(/<em[^>]*>([^<]*)<\/em>/gi, '*$1*');
+    md = md.replace(/<i[^>]*>([^<]*)<\/i>/gi, '*$1*');
+
+    // 處理換行和分隔線
+    md = md.replace(/<br\s*\/?>/gi, '\n');
+    md = md.replace(/<hr\s*\/?>/gi, '\n---\n\n');
+
+    // 處理段落
+    md = md.replace(/<p[^>]*>/gi, '\n');
+    md = md.replace(/<\/p>/gi, '\n\n');
+
+    // 處理列表
+    md = md.replace(/<li[^>]*>/gi, '- ');
+    md = md.replace(/<\/li>/gi, '\n');
+    md = md.replace(/<\/?ul[^>]*>/gi, '\n');
+    md = md.replace(/<\/?ol[^>]*>/gi, '\n');
+
+    // 處理區塊引用
+    md = md.replace(/<blockquote[^>]*>/gi, '\n> ');
+    md = md.replace(/<\/blockquote>/gi, '\n\n');
+
+    // 移除其他 HTML 標籤
+    md = md.replace(/<div[^>]*>/gi, '\n');
+    md = md.replace(/<\/div>/gi, '\n');
+    md = md.replace(/<span[^>]*>/gi, '');
+    md = md.replace(/<\/span>/gi, '');
+    md = md.replace(/<[^>]+>/g, '');
+
+    // HTML 實體解碼
+    md = md.replace(/&nbsp;/g, ' ');
+    md = md.replace(/&amp;/g, '&');
+    md = md.replace(/&lt;/g, '<');
+    md = md.replace(/&gt;/g, '>');
+    md = md.replace(/&quot;/g, '"');
+    md = md.replace(/&#39;/g, "'");
+    md = md.replace(/&#(\d+);/g, (match, code) => String.fromCharCode(code));
+
+    // 清理多餘空白和換行
+    md = md.replace(/\n{4,}/g, '\n\n\n');
+    md = md.replace(/[ \t]+$/gm, '');
+    md = md.trim();
+
+    return md;
 }
 
 // ============================================
@@ -212,25 +270,85 @@ function parsePixnetArticles(html) {
     return articles.slice(0, CONFIG.maxArticlesPerSync);
 }
 
+/**
+ * 從文章頁面提取完整內容、標籤、分類
+ */
 function parseArticleContent(html) {
-    let category = 'travel';
+    const result = {
+        category: 'travel',
+        tags: [],
+        content: '',
+        images: []
+    };
 
-    // 從 HTML 中找分類
-    for (const [key, value] of Object.entries(CATEGORY_MAPPING)) {
-        if (key !== 'default' && html.includes(key)) {
-            category = value;
-            break;
+    // 1. 提取個人分類 (從 refer 或 category 連結)
+    const categoryMatch = html.match(/<a[^>]*href="[^"]*\/blog\/category\/[^"]*"[^>]*>([^<]+)<\/a>/i);
+    if (categoryMatch) {
+        result.category = categoryMatch[1].trim();
+    } else {
+        // 從內容中用分類名稱判斷
+        for (const [key, value] of Object.entries(CATEGORY_MAPPING)) {
+            if (key !== 'default' && html.includes(`>${key}<`)) {
+                result.category = key;
+                break;
+            }
         }
     }
 
-    // 提取內容預覽
-    let contentPreview = '';
-    const contentMatch = html.match(/<div[^>]*class="[^"]*article-content[^"]*"[^>]*>([\s\S]*?)<\/div>/);
-    if (contentMatch) {
-        contentPreview = cleanContent(contentMatch[1]).substring(0, 500);
+    // 2. 提取標籤 (從 article-keyword 或 tag 連結)
+    const tagRegex = /<a[^>]*href="[^"]*\/blog\/tag\/[^"]*"[^>]*>([^<]+)<\/a>/gi;
+    let tagMatch;
+    const seenTags = new Set();
+    while ((tagMatch = tagRegex.exec(html)) !== null) {
+        const tag = tagMatch[1].trim();
+        if (tag && !seenTags.has(tag)) {
+            seenTags.add(tag);
+            result.tags.push(tag);
+        }
     }
 
-    return { category, contentPreview };
+    // 3. 提取完整文章內容
+    // 嘗試多種 selector 模式
+    let contentHtml = '';
+
+    // 優先：article-content-inner
+    const innerMatch = html.match(/<div[^>]*class="[^"]*article-content-inner[^"]*"[^>]*>([\s\S]*?)<\/div>\s*<div[^>]*class="[^"]*article/i);
+    if (innerMatch) {
+        contentHtml = innerMatch[1];
+    } else {
+        // 備用：article-content
+        const contentMatch = html.match(/<div[^>]*class="[^"]*article-content[^"]*"[^>]*>([\s\S]*?)<\/div>\s*<(?:div[^>]*class="[^"]*article-footer|footer)/i);
+        if (contentMatch) {
+            contentHtml = contentMatch[1];
+        } else {
+            // 最後嘗試：找 article-content-inner 到結尾
+            const simpleMatch = html.match(/<div[^>]*class="[^"]*article-content-inner[^"]*"[^>]*>([\s\S]*)/i);
+            if (simpleMatch) {
+                // 取到第一個 article-footer 或 article-keyword
+                let content = simpleMatch[1];
+                const endPos = content.search(/<div[^>]*class="[^"]*(?:article-footer|article-keyword)/i);
+                if (endPos > 0) {
+                    content = content.substring(0, endPos);
+                }
+                contentHtml = content;
+            }
+        }
+    }
+
+    // 4. 提取圖片 URLs
+    const imgRegex = /<img[^>]*src=["']([^"']+)["'][^>]*>/gi;
+    let imgMatch;
+    while ((imgMatch = imgRegex.exec(contentHtml)) !== null) {
+        const src = imgMatch[1];
+        if (src && !src.includes('data:') && !src.includes('pixel')) {
+            result.images.push(src);
+        }
+    }
+
+    // 5. 轉換 HTML 為 Markdown
+    result.content = htmlToMarkdown(contentHtml);
+
+    return result;
 }
 
 // ============================================
@@ -238,7 +356,7 @@ function parseArticleContent(html) {
 // ============================================
 
 function createArticle(data) {
-    const { title, content, link, date, category, tags = '' } = data;
+    const { title, content, link, date, category, tags = [] } = data;
 
     if (!title || !link || !category) {
         return { success: false, error: '缺少必填欄位' };
@@ -266,7 +384,7 @@ ${tagsYaml}
 originalUrl: ${link}
 ---
 
-${cleanContent(content) || ''}
+${content || ''}
 
 ---
 
@@ -316,13 +434,17 @@ async function syncPixnetArticles() {
                 const articleHtml = await fetchUrl(article.link);
                 const contentInfo = parseArticleContent(articleHtml);
 
+                log(`  分類: ${contentInfo.category}`, 'INFO');
+                log(`  標籤: ${contentInfo.tags.length} 個`, 'INFO');
+                log(`  圖片: ${contentInfo.images.length} 張`, 'INFO');
+
                 const result = createArticle({
                     title: article.title,
-                    content: contentInfo.contentPreview,
+                    content: contentInfo.content,
                     link: article.link,
                     date: article.date,
                     category: contentInfo.category,
-                    tags: article.tags.join(',')
+                    tags: contentInfo.tags
                 });
 
                 if (result.success) {
@@ -491,7 +613,7 @@ const server = http.createServer(async (req, res) => {
 server.listen(CONFIG.port, () => {
     console.log('');
     console.log('='.repeat(55));
-    console.log('🚀 Pixnet Blog Sync Server');
+    console.log('🚀 Pixnet Blog Sync Server (Full Content Edition)');
     console.log('='.repeat(55));
     console.log(`📡 伺服器: http://localhost:${CONFIG.port}`);
     console.log(`📁 文章目錄: ${CONFIG.postsDir}`);
