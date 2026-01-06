@@ -63,6 +63,9 @@
         "lng": {
           "type": "number"
         },
+        "address": {
+          "type": "string"
+        },
         "$schema": {
           "type": "string"
         }

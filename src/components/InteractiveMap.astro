@@ -19,9 +19,9 @@ const mapPosts = posts.filter(p => p.data.lat && p.data.lng).map(p => ({
 }));
 ---
 
-<div class="flex flex-col lg:flex-row h-[calc(100vh-64px)] overflow-hidden">
+<div class="flex flex-col lg:flex-row h-[calc(100dvh-64px)] overflow-hidden">
     <!-- Sidebar List -->
-    <div class="w-full lg:w-1/3 h-1/3 lg:h-full overflow-y-auto bg-white border-r border-gray-200 z-10 shadow-lg">
+    <div class="w-full lg:w-1/3 h-[25dvh] lg:h-full overflow-y-auto bg-white border-r border-gray-200 z-10 shadow-lg shrink-0">
         <div class="p-4 border-b bg-gray-50 top-0 sticky z-10">
             <h2 class="font-bold text-gray-700">旅遊地圖 ({mapPosts.length})</h2>
             <p class="text-xs text-gray-500">點擊列表或地圖地標查看詳情</p>
@@ -65,7 +65,7 @@ const mapPosts = posts.filter(p => p.data.lat && p.data.lng).map(p => ({
     </div>
 
     <!-- Map Container -->
-    <div class="flex-1 h-2/3 lg:h-full relative z-0">
+    <div class="flex-1 relative z-0 min-h-0">
         <div id="leaflet-map" class="w-full h-full bg-gray-100"></div>
     </div>
 </div>

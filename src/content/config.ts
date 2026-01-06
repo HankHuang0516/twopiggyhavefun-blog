@@ -12,6 +12,7 @@ const posts = defineCollection({
         isPermanentlyClosed: z.boolean().nullable().optional(),
         lat: z.number().optional(),
         lng: z.number().optional(),
+        address: z.string().optional(),
     }),
 });
 

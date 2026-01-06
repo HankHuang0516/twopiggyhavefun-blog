@@ -73,6 +73,49 @@ const CATEGORY_MAPPING = {
     'default': 'travel'
 };
 
+// --- Geocoding Helpers ---
+
+function cleanAddress(addr) {
+    if (!addr) return '';
+    return addr
+        .replace(/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}.*$/, '')
+        .replace(/^\d{3,5}/g, '')
+        .replace(/\(.*?\)/g, '')
+        .replace(/（.*?）/g, '')
+        .replace(/[，,、。.]+$/, '')
+        .replace(/附近.*$/g, '')
+        .replace(/\s+/g, '')
+        .trim();
+}
+
+function geocode(address) {
+    return new Promise((resolve, reject) => {
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1&countrycodes=tw`;
+        const options = {
+            headers: { 'User-Agent': 'TwoPiggyBlogSyncServer/1.0 (twopiggyhavefun@gmail.com)' }
+        };
+        const req = https.get(url, options, (res) => {
+            let data = '';
+            res.on('data', chunk => data += chunk);
+            res.on('end', () => {
+                if (res.statusCode !== 200) { resolve(null); return; }
+                try {
+                    const json = JSON.parse(data);
+                    if (json && json.length > 0) {
+                        resolve({
+                            lat: parseFloat(json[0].lat),
+                            lng: parseFloat(json[0].lon)
+                        });
+                    } else { resolve(null); }
+                } catch (e) { resolve(null); }
+            });
+        });
+        req.on('error', (e) => resolve(null));
+        req.setTimeout(10000, () => req.destroy());
+    });
+}
+
+
 // ============================================
 // 工具函數
 // ============================================
@@ -392,6 +435,15 @@ function parseArticleContent(html) {
         result.businessHours = hoursMatch[1].trim();
     }
 
+    // 10. 提取地址 (New)
+    const addressMatch = html.match(/(?:地址|店址|地點|位置|Add|Address)[：:]\s*([^<>\n\r]+)/i);
+    if (addressMatch) {
+        let addr = cleanAddress(addressMatch[1]);
+        if (addr.length >= 3 && addr.length <= 100 && !/^\d+\./.test(addr)) {
+            result.address = addr;
+        }
+    }
+
     return result;
 }
 
@@ -404,7 +456,7 @@ function parseArticleContent(html) {
  * 格式參考 migrate_missing_posts.js
  */
 function createArticle(data) {
-    const { title, contentHtml, link, date, category, tags = [], cover = '', businessHours = null } = data;
+    const { title, contentHtml, link, date, category, tags = [], cover = '', businessHours = null, address = null, lat = null, lng = null } = data;
 
     if (!title || !link) {
         return { success: false, error: '缺少必填欄位' };
@@ -427,13 +479,19 @@ function createArticle(data) {
         `tags: ${JSON.stringify(tagList)}`,
         `originalUrl: "${link}"`,
         `businessHours: ${businessHours ? JSON.stringify(businessHours) : 'null'}`,
-        `category: "${category || ''}"`,  // 保留中文原始分類名稱
+        `category: "${category || ''}"`,
+        address ? `address: "${address}"` : null,
+        lat ? `lat: ${lat}` : null,
+        lng ? `lng: ${lng}` : null,
+    ].filter(Boolean); // Filter nulls
+
+    const frontmatterString = frontmatter.concat([
         '---',
         '',
         '<div class="pixnet-article prose max-w-none">',
         contentHtml || '',
         '</div>'
-    ].join('\n');
+    ]).join('\n');
 
     if (!fs.existsSync(CONFIG.postsDir)) {
         fs.mkdirSync(CONFIG.postsDir, { recursive: true });
@@ -441,7 +499,7 @@ function createArticle(data) {
 
     const filename = `${slug}.md`;
     const filepath = path.join(CONFIG.postsDir, filename);
-    fs.writeFileSync(filepath, frontmatter, 'utf8');
+    fs.writeFileSync(filepath, frontmatterString, 'utf8');
 
     return { success: true, file: filename, path: filepath, slug, category, title };
 }
@@ -487,6 +545,17 @@ async function syncPixnetArticles() {
                 log(`  封面: ${contentInfo.cover ? '有' : '無'}`, 'INFO');
                 log(`  圖片: ${contentInfo.images.length} 張`, 'INFO');
 
+                // Geocode
+                let coords = null;
+                if (contentInfo.address) {
+                    log(`  地址: ${contentInfo.address} (Geocoding...)`, 'INFO');
+                    try {
+                        await new Promise(r => setTimeout(r, 1200)); // Rate limit
+                        coords = await geocode(contentInfo.address);
+                        if (coords) log(`    -> 座標: ${coords.lat}, ${coords.lng}`, 'INFO');
+                    } catch (e) { /* ignore */ }
+                }
+
                 const result = createArticle({
                     title: article.title,
                     contentHtml: contentInfo.contentHtml,  // 使用原始 HTML
@@ -494,8 +563,12 @@ async function syncPixnetArticles() {
                     date: article.date,
                     category: finalCategory,
                     tags: finalTags,
+                    tags: finalTags,
                     cover: contentInfo.cover,              // 封面圖片
-                    businessHours: contentInfo.businessHours  // 營業時間
+                    businessHours: contentInfo.businessHours,  // 營業時間
+                    address: contentInfo.address,
+                    lat: coords ? coords.lat : null,
+                    lng: coords ? coords.lng : null
                 });
 
                 if (result.success) {

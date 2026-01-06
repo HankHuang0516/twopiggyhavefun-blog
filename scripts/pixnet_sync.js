@@ -45,6 +45,49 @@ const CATEGORY_MAPPING = {
     'default': 'travel'
 };
 
+// --- Geocoding Helpers ---
+
+function cleanAddress(addr) {
+    if (!addr) return '';
+    return addr
+        .replace(/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}.*$/, '')
+        .replace(/^\d{3,5}/g, '')
+        .replace(/\(.*?\)/g, '')
+        .replace(/（.*?）/g, '')
+        .replace(/[，,、。.]+$/, '')
+        .replace(/附近.*$/g, '')
+        .replace(/\s+/g, '')
+        .trim();
+}
+
+function geocode(address) {
+    return new Promise((resolve, reject) => {
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1&countrycodes=tw`;
+        const options = {
+            headers: { 'User-Agent': 'TwoPiggyBlogSync/1.0 (twopiggyhavefun@gmail.com)' }
+        };
+        const req = https.get(url, options, (res) => {
+            let data = '';
+            res.on('data', chunk => data += chunk);
+            res.on('end', () => {
+                if (res.statusCode !== 200) { resolve(null); return; }
+                try {
+                    const json = JSON.parse(data);
+                    if (json && json.length > 0) {
+                        resolve({
+                            lat: parseFloat(json[0].lat),
+                            lng: parseFloat(json[0].lon)
+                        });
+                    } else { resolve(null); }
+                } catch (e) { resolve(null); }
+            });
+        });
+        req.on('error', (e) => resolve(null)); // Resolve null on error to not break sync
+        req.setTimeout(10000, () => req.destroy());
+    });
+}
+
+
 /**
  * Fetch URL content using Node.js built-in modules
  */
@@ -193,19 +236,21 @@ function parseArticleContent(html) {
         }
     }
 
-    // Extract content preview (first 500 chars of article content)
-    let contentPreview = '';
-    const contentMatch = html.match(/<div[^>]*class="[^"]*article-content-inner[^"]*"[^>]*>([\s\S]*?)<\/div>/);
-    if (contentMatch) {
-        contentPreview = contentMatch[1]
-            .replace(/<[^>]+>/g, '') // Remove HTML tags
-            .replace(/&nbsp;/g, ' ')
-            .replace(/\s+/g, ' ')
-            .trim()
             .substring(0, 500);
-    }
+}
 
-    return { category, contentPreview };
+// Extract Address
+let address = null;
+const addressMatch = html.match(/(?:地址|店址|地點|位置|Add|Address)[：:]\s*([^<>\n\r]+)/i);
+if (addressMatch) {
+    address = cleanAddress(addressMatch[1]);
+    // Filter out IPs or too short/long
+    if (address.length < 3 || address.length > 100 || /^\d+\./.test(address)) {
+        address = null;
+    }
+}
+
+return { category, contentPreview, address };
 }
 
 /**
@@ -232,7 +277,7 @@ function saveSyncState(state) {
 /**
  * Generate markdown file for an article
  */
-function generateMarkdown(article, contentInfo) {
+function generateMarkdown(article, contentInfo, coords) {
     const slug = article.id;
     const filename = `pixnet-${slug}.md`;
     const filepath = path.join(CONFIG.postsDir, filename);
@@ -240,15 +285,29 @@ function generateMarkdown(article, contentInfo) {
     // Escape title for YAML
     const escapedTitle = article.title.replace(/'/g, "''");
 
-    const markdown = `---
+    let frontmatter = `---
 title: '${escapedTitle}'
 date: '${article.date}'
 category: ${contentInfo.category}
 tags:
   - pixnet-sync
   - auto-imported
-originalUrl: ${article.link}
----
+originalUrl: ${article.link}`;
+
+    if (coords) {
+        frontmatter += `
+lat: ${coords.lat}
+lng: ${coords.lng}`;
+    }
+    if (contentInfo.address) {
+        frontmatter += `
+address: '${contentInfo.address}'`;
+    }
+
+    frontmatter += `
+---`;
+
+    const markdown = `${frontmatter}
 
 ## ${article.title}
 
@@ -309,8 +368,18 @@ async function syncArticles() {
 
                 console.log(`  Category: ${contentInfo.category}`);
 
+                // Geocode if address found
+                let coords = null;
+                if (contentInfo.address) {
+                    console.log(`  Address found: ${contentInfo.address}... Geocoding`);
+                    // Sleep to be nice to API
+                    await new Promise(r => setTimeout(r, 1200));
+                    coords = await geocode(contentInfo.address);
+                    if (coords) console.log(`  -> Lat: ${coords.lat}, Lng: ${coords.lng}`);
+                }
+
                 // Generate and save markdown
-                const { filepath, markdown, filename } = generateMarkdown(article, contentInfo);
+                const { filepath, markdown, filename } = generateMarkdown(article, contentInfo, coords);
 
                 // Ensure posts directory exists
                 if (!fs.existsSync(CONFIG.postsDir)) {
