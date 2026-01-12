@@ -14,83 +14,68 @@ import {
     getCategorySlug
 } from '../../utils/categories';
 
-export async function getStaticPaths() {
+export async function getStaticPaths({ paginate }) {
     const allPosts = (await getCollection('posts')).filter(p => p.data);
-    const slugs = new Set<string>();
     
-    // 1. Add main category slugs
-    for (const config of Object.values(PIXNET_CATEGORY_HIERARCHY)) {
-        slugs.add(config.slug);
-    }
-    
-    // 2. Add all subcategory names from hierarchy (Chinese names)
-    for (const config of Object.values(PIXNET_CATEGORY_HIERARCHY)) {
-        for (const sub of config.subcategories) {
-            slugs.add(sub); // e.g., "台北美食", "宜蘭景點"
-        }
-    }
-    
-    // 3. Add all unique category values from posts
-    allPosts.forEach(post => {
-        if (post.data.category) {
-            slugs.add(post.data.category);
-        }
+    // Sort posts by date desc first
+    allPosts.sort((a, b) => {
+        if (!a.data?.date || !b.data?.date) return 0;
+        return new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf();
     });
 
-    // 4. Add dynamic region-type subcategories (legacy support)
-    allPosts.forEach(post => {
-        const title = post.data.title || '';
-        const tags = post.data.tags || [];
-        const { contentType, region } = categorizePost(title, tags);
-        if (contentType && region) {
-            slugs.add(`${region}-${contentType}`);
+    const categories = new Map(); // slug -> { title, posts[] }
+
+    // Helper to add post to a category bucket
+    function addToBucket(slug, title, post) {
+        if (!categories.has(slug)) {
+            categories.set(slug, { title, posts: [] });
         }
-    });
+        categories.get(slug).posts.push(post);
+    }
 
-    return Array.from(slugs).map(slug => ({
-        params: { slug },
-        props: { slug }
-    }));
-}
-
-const { slug } = Astro.props;
-const allPosts = (await getCollection('posts')).filter(p => p.data);
-allPosts.sort((a, b) => {
-    if (!a.data?.date || !b.data?.date) return 0;
-    return new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf();
-});
-
-// Filter logic
-let categoryTitle = '';
-let filteredPosts: typeof allPosts = [];
-
-// 1. Helper to find parent category name by slug
-function getParentCategoryNameBySlug(slug: string): string {
+    // 1. Process Main Categories from Hierarchy
     for (const [name, config] of Object.entries(PIXNET_CATEGORY_HIERARCHY)) {
-        if (config.slug === slug) return name;
+        // Collect all posts belonging to this main category
+        const posts = allPosts.filter(post => getCategorySlug(post.data.category) === config.slug);
+        categories.set(config.slug, { title: name, posts });
     }
-    return slug;
-}
 
-// 2. Check if this is a main category slug (e.g. 'domestic-travel')
-const mainCategoryName = getParentCategoryNameBySlug(slug);
-const isMainCategory = mainCategoryName !== slug;
+    // 2. Process Subcategories & Tags
+    // Iterate all posts to find unique tags/categories
+    allPosts.forEach(post => {
+        const cat = post.data.category;
+        const tags = post.data.tags || [];
 
-if (isMainCategory) {
-    categoryTitle = mainCategoryName;
-    filteredPosts = allPosts.filter(post => getCategorySlug(post.data.category) === slug);
-} 
-// 3. Fallback: Treat as Tag or Subcategory (e.g. '台北美食')
-else {
-    categoryTitle = slug;
-    filteredPosts = allPosts.filter(post => {
-        // Match exact category string or include in tags
-        return post.data.category === slug || (post.data.tags && post.data.tags.includes(slug));
+        // Add by direct category slug (if strict match)
+        if (cat) {
+             // If it's not a main category slug, treat as sub
+            const slug = cat; 
+            // Only add if we haven't handled this slug via main category logic above?
+            // Actually, we want to support /category/台北美食 explicitly
+            addToBucket(slug, slug, post);
+        }
+
+        // Add by tags
+        tags.forEach(tag => {
+            addToBucket(tag, tag, post);
+        });
     });
+
+    // 3. Generate Pagination Paths
+    const paths = [];
+    for (const [slug, data] of categories.entries()) {
+        const paged = paginate(data.posts, {
+            params: { slug },
+            props: { categoryTitle: data.title },
+            pageSize: 12
+        });
+        paths.push(...paged);
+    }
+
+    return paths;
 }
 
-// Pagination or just show all? 
-// For now, simple list.
+const { page, categoryTitle } = Astro.props;
 const BASE_URL = '/twopiggyhavefun-blog';
 
 function fixImagePath(src: string | undefined): string {
@@ -111,11 +96,13 @@ function fixImagePath(src: string | undefined): string {
                 <h1 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
                     <span class="text-blue-600">📂</span> {categoryTitle}
                 </h1>
-                <p class="text-gray-500 mt-2">共 {filteredPosts.length} 篇文章</p>
+                <p class="text-gray-500 mt-2">
+                    共 {page.total} 篇文章 (第 {page.currentPage} / {page.lastPage} 頁)
+                </p>
             </header>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {filteredPosts.map((post) => (
+                {page.data.map((post) => (
                     <article class="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition overflow-hidden">
                         <a href={`${BASE_URL}/posts/${post.slug}`} class="block h-full">
                             <div class="aspect-w-16 aspect-h-9 bg-gray-100 relative h-48">
@@ -142,10 +129,39 @@ function fixImagePath(src: string | undefined): string {
                 ))}
             </div>
 
-            {filteredPosts.length === 0 && (
+            {page.total === 0 && (
                 <div class="text-center py-20 text-gray-500">
                     <p class="text-xl">此分類目前沒有文章。</p>
                     <a href={BASE_URL} class="text-blue-500 hover:underline mt-4 inline-block">返回首頁</a>
+                </div>
+            )}
+
+            <!-- Pagination Controls -->
+            {page.lastPage > 1 && (
+                <div class="mt-12 flex justify-center gap-2">
+                    {page.url.prev ? (
+                        <a href={page.url.prev} class="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-50">
+                            &larr; 上一頁
+                        </a>
+                    ) : (
+                        <span class="px-4 py-2 border border-gray-200 text-gray-300 rounded cursor-not-allowed">
+                            &larr; 上一頁
+                        </span>
+                    )}
+                    
+                    <span class="px-4 py-2 text-gray-500">
+                        {page.currentPage} / {page.lastPage}
+                    </span>
+
+                    {page.url.next ? (
+                        <a href={page.url.next} class="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-50">
+                            下一頁 &rarr;
+                        </a>
+                    ) : (
+                        <span class="px-4 py-2 border border-gray-200 text-gray-300 rounded cursor-not-allowed">
+                            下一頁 &rarr;
+                        </span>
+                    )}
                 </div>
             )}
         </div>
