@@ -160,7 +160,19 @@ const parentOrder = [
 
 
 
-<aside class="sidebar w-full lg:w-80 space-y-6">
+<!-- Mobile Overlay -->
+<div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden transition-opacity duration-300"></div>
+
+<aside id="sidebar-panel" class="sidebar fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-2xl transform -translate-x-full transition-transform duration-300 lg:relative lg:translate-x-0 lg:w-80 lg:shadow-none lg:z-auto space-y-6 overflow-y-auto">
+    <!-- Mobile Header with Close Button -->
+    <div class="lg:hidden flex items-center justify-between p-4 bg-gray-50 border-b border-gray-200">
+        <span class="font-bold text-gray-700">設定 & 搜尋</span>
+        <button id="close-sidebar-btn" class="p-2 text-gray-500 hover:text-red-500 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+    </div>
     <SearchWidget />
     <!-- Article Categories -->
     <div class="bg-white border border-gray-200 p-4">
@@ -304,6 +316,43 @@ const parentOrder = [
 </style>
 
 <script>
+    // Close Sidebar Logic
+    const closeBtn = document.getElementById('close-sidebar-btn');
+    const sidebar = document.getElementById('sidebar-panel');
+    const overlay = document.getElementById('sidebar-overlay');
+    
+    function closeSidebar() {
+        sidebar?.classList.add('-translate-x-full');
+        overlay?.classList.add('hidden');
+    }
+
+    function openSidebar() {
+        sidebar?.classList.remove('-translate-x-full');
+        overlay?.classList.remove('hidden');
+    }
+    
+    closeBtn?.addEventListener('click', closeSidebar);
+    overlay?.addEventListener('click', closeSidebar);
+
+    // Listen for Open events from other components
+    document.addEventListener('open-sidebar', openSidebar);
+    
+    // Legacy support for "Gear" button if it exists and we can attach to it
+    // (Assuming the Gear button might be dynamically handled, we'll try to find it)
+    document.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        const gearBtn = target.closest('button, a');
+        // Heuristic for Gear icon or Setup button
+        if (gearBtn && (gearBtn.innerHTML.includes('card-text') || gearBtn.innerHTML.includes('gear') || gearBtn.innerText.includes('設定'))) {
+            // Prevent default navigation if it's just a toggle
+             if (gearBtn.getAttribute('href') === '#' || !gearBtn.getAttribute('href')) {
+                e.preventDefault();
+                openSidebar();
+             }
+        }
+    });
+
+    // Existing sidebar toggle logic...
     document.querySelectorAll('.toggle-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();

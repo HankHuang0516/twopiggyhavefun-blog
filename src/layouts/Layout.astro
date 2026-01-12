@@ -52,13 +52,20 @@ const navLinks = [
         <!-- Main Header: Black Background with Gold Title (Matches bobowin) -->
         <!-- If minimalHeader is true, hide this on mobile (lg:block), otherwise show always -->
         <header class={`bg-black text-white ${minimalHeader ? 'hidden lg:block' : ''}`}>
-            <div class="container mx-auto px-4 py-6 text-center">
+            <div class="container mx-auto px-4 py-6 text-center relative">
                 <a href="/twopiggyhavefun-blog/" class="inline-block">
                     <h1 class="text-2xl md:text-3xl font-bold tracking-wide" style="color: #c9a961;">
                         兩隻小豬旅行親子生活
                     </h1>
                     <p class="text-gray-400 text-sm mt-1">我們的鏡頭帶著你四處漫遊</p>
                 </a>
+                
+                <!-- Mobile Hamburger (Absolute Left) -->
+                <button id="mobile-menu-btn" class="absolute left-4 top-1/2 -translate-y-1/2 text-white p-2 lg:hidden hover:text-[#c9a961] transition-colors" aria-label="Menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
             </div>
             <!-- Navigation -->
             <nav class="border-t border-gray-700">
@@ -119,16 +126,61 @@ const navLinks = [
                 </li>
             </ul>
         </div>
+        <!-- Back to Top Button -->
+        <button id="back-to-top" class="fixed bottom-20 right-4 bg-gray-800 text-white p-3 rounded-full shadow-lg opacity-0 invisible transition-all duration-300 z-50 hover:bg-gray-700" aria-label="Back to Top">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+            </svg>
+        </button>
+
+        <script>
+            // Hamburger Menu Logic
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            menuBtn?.addEventListener('click', () => {
+                const event = new CustomEvent('open-sidebar');
+                document.dispatchEvent(event);
+            });
+
+            // Back to Top Logic
+            const backToTopBtn = document.getElementById('back-to-top');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTopBtn?.classList.remove('opacity-0', 'invisible');
+                } else {
+                    backToTopBtn?.classList.add('opacity-0', 'invisible');
+                }
+            });
+
+            backToTopBtn?.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        </script>
     </body>
 </html>
 
 <style is:global>
     :root {
-        --color-primary: #337ab7;
-        --color-gold: #c9a961;
-        --color-black: #000000;
-        --color-white: #ffffff;
-        --color-text: #333333;
+        /* Modern HSL Color Palette */
+        --color-primary-hsl: 208, 56%, 46%; /* #337ab7 */
+        --color-gold-hsl: 42, 53%, 58%;    /* #c9a961 */
+        --color-black-hsl: 0, 0%, 0%;
+        --color-white-hsl: 0, 0%, 100%;
+        --color-text-hsl: 0, 0%, 20%;
+        
+        --color-primary: hsl(var(--color-primary-hsl));
+        --color-gold: hsl(var(--color-gold-hsl));
+        --color-black: hsl(var(--color-black-hsl));
+        --color-white: hsl(var(--color-white-hsl));
+        --color-text: hsl(var(--color-text-hsl));
+
+        /* Shadows */
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     }
     html {
         scroll-behavior: smooth;
