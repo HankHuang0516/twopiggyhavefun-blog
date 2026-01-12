@@ -377,4 +377,16 @@ const parentOrder = [
         document.querySelectorAll('.sub-categories, .sub-posts').forEach(el => el.classList.add('hidden'));
         document.querySelectorAll('.toggle-icon').forEach(el => el.textContent = '▶');
     });
+
+    // Auto-close sidebar on mobile when a link is clicked
+    const sidebarLinks = sidebar?.querySelectorAll('a');
+    sidebarLinks?.forEach(link => {
+        link.addEventListener('click', () => {
+            // Only close if we are in mobile view (sidebar is fixed/absolute)
+            // A simple check is if the overlay is visible or if window width is small
+            if (window.innerWidth < 1024) { // lg breakpoint
+                closeSidebar();
+            }
+        });
+    });
 </script>

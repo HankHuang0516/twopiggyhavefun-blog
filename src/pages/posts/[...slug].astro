@@ -27,7 +27,7 @@ const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComp
 const lineShareUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(currentUrl)}`;
 ---
 
-<Layout title={post.data.title}>
+<Layout title={post.data.title} description={post.data.description} image={post.data.cover}>
     <div class="container mx-auto px-4 py-8">
         <!-- Breadcrumbs -->
         <nav class="text-sm mb-6 text-gray-500">

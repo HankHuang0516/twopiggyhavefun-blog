@@ -5,7 +5,9 @@ interface Props {
     description?: string;
 }
 
-const { title, description, minimalHeader = false } = Astro.props;
+const { title, description, image, minimalHeader = false } = Astro.props;
+const isHome = Astro.url.pathname === '/twopiggyhavefun-blog/' || Astro.url.pathname === '/twopiggyhavefun-blog';
+
 const navLinks = [
     { name: '關於兩隻小豬', href: '/twopiggyhavefun-blog/about' },
     { name: '台灣好玩好吃趴趴走', href: '/twopiggyhavefun-blog/category/travel' },
@@ -26,9 +28,10 @@ const navLinks = [
         
         <!-- SEO & Open Graph -->
         <meta property="og:title" content={`${title} | 兩隻小豬`} />
-        <meta property="og:description" content="兩隻小豬旅行親子生活 - 分享美食、旅遊、生活與親子育兒的點點滴滴" />
+        <meta property="og:description" content={description || "兩隻小豬旅行親子生活 - 分享美食、旅遊、生活與親子育兒的點點滴滴"} />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="兩隻小豬" />
+        {image && <meta property="og:image" content={image} />}
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -51,12 +54,18 @@ const navLinks = [
 
         <!-- Main Header: Black Background with Gold Title (Matches bobowin) -->
         <!-- If minimalHeader is true, hide this on mobile (lg:block), otherwise show always -->
-        <header class={`bg-black text-white ${minimalHeader ? 'hidden lg:block' : ''}`}>
+        <header class:list={['bg-black text-white', { 'hidden lg:block': minimalHeader }]}>
             <div class="container mx-auto px-4 py-6 text-center relative">
                 <a href="/twopiggyhavefun-blog/" class="inline-block">
-                    <h1 class="text-2xl md:text-3xl font-bold tracking-wide" style="color: #c9a961;">
-                        兩隻小豬旅行親子生活
-                    </h1>
+                    {isHome ? (
+                        <h1 class="text-2xl md:text-3xl font-bold tracking-wide" style="color: #c9a961;">
+                            兩隻小豬旅行親子生活
+                        </h1>
+                    ) : (
+                        <div class="text-2xl md:text-3xl font-bold tracking-wide" style="color: #c9a961;">
+                            兩隻小豬旅行親子生活
+                        </div>
+                    )}
                     <p class="text-gray-400 text-sm mt-1">我們的鏡頭帶著你四處漫遊</p>
                 </a>
                 
@@ -64,6 +73,13 @@ const navLinks = [
                 <button id="mobile-menu-btn" class="absolute left-4 top-1/2 -translate-y-1/2 text-white p-2 lg:hidden hover:text-[#c9a961] transition-colors" aria-label="Menu">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+
+                <!-- Mobile Search Icon (Absolute Right) -->
+                <button id="mobile-search-btn" class="absolute right-4 top-1/2 -translate-y-1/2 text-white p-2 lg:hidden hover:text-[#c9a961] transition-colors" aria-label="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                 </button>
             </div>
@@ -139,6 +155,18 @@ const navLinks = [
             menuBtn?.addEventListener('click', () => {
                 const event = new CustomEvent('open-sidebar');
                 document.dispatchEvent(event);
+            });
+
+            // Mobile Search Button Logic
+            const searchBtn = document.getElementById('mobile-search-btn');
+            searchBtn?.addEventListener('click', () => {
+                const event = new CustomEvent('open-sidebar');
+                document.dispatchEvent(event);
+                // Optional: Focus the search input after opening
+                setTimeout(() => {
+                    const searchInput = document.querySelector('.sidebar input[name="q"]') as HTMLInputElement;
+                    if (searchInput) searchInput.focus();
+                }, 300); // Wait for transition
             });
 
             // Back to Top Logic

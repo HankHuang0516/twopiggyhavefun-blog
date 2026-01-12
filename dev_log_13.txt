@@ -1,0 +1,1350 @@
+
+> picture@1.0.0 dev
+> node -e "var fs=require('fs'); try{fs.rmSync('.astro',{recursive:true,force:true})}catch(e){}" && astro dev --port 4321
+
+[2m23:21:15[22m [34m[types][39m Generated [2m2ms[22m
+[2m23:21:18[22m [34m[content][39m Syncing content
+[2m23:21:18[22m Configuration file updated. Restarting...
+[2m23:21:22[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[2m23:21:32[22m [34m[content][39m Syncing content
+[2m23:21:32[22m [34m[content][39m Synced content
+[2m23:21:32[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+
+[42m[1m astro [22m[49m [32mv5.16.8[39m [2mready in[22m 17650 [2mms[22m
+
+[2m??[22m Local    [36mhttp://localhost:4321/twopiggyhavefun-blog[39m
+[2m??[22m Network  [2muse --host to expose[22m
+
+[2m23:21:32[22m [32mwatching for file changes...[39m
+23:21:33 [ERROR] [vite] Error:   Failed to scan for dependencies from entries:
+  C:/Hank/Other/project/picture/src/components/BusinessStatus.astro
+C:/Hank/Other/project/picture/src/components/InteractiveMap.astro
+C:/Hank/Other/project/picture/src/components/PostCard.astro
+C:/Hank/Other/project/picture/src/components/SearchWidget.astro
+C:/Hank/Other/project/picture/src/components/Sidebar.astro
+C:/Hank/Other/project/picture/src/pages/about.astro
+C:/Hank/Other/project/picture/src/pages/index.astro
+C:/Hank/Other/project/picture/src/pages/search.astro
+C:/Hank/Other/project/picture/src/layouts/Layout.astro
+C:/Hank/Other/project/picture/src/pages/category/travel.astro
+C:/Hank/Other/project/picture/src/pages/category/[...slug].astro
+C:/Hank/Other/project/picture/src/pages/category/[category].astro
+C:/Hank/Other/project/picture/src/pages/posts/[...slug].astro
+
+  X [ERROR] The server is being restarted or closed. Request is outdated [plugin vite:dep-scan]
+
+    node_modules/esbuild/lib/main.js:1217:27:
+      1217 ??        let result = await callback({
+           ??                           ^
+
+    at throwClosedServerError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42055:15)
+    at EnvironmentPluginContainer.resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42234:9)
+    at resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14314:40)
+    at resolve (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14325:28)
+    at file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14380:32
+    at requestCallbacks.on-resolve (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1217:28)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1141:20:
+      1141 ??      let promise = setup({
+           ??                    ^
+
+    at setup (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14379:13)
+    at handlePlugins (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1141:21)
+    at buildOrContextImpl (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:854:5)
+    at Object.buildOrContext (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:680:5)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:68
+    at new Promise (<anonymous>)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:27)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1877:58)
+    at prepareEsbuildScanner (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14266:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    <stdin>:1:7:
+      1 ??import "C:/Hank/Other/project/picture/src/components/BusinessStatus...
+        ??       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] The server is being restarted or closed. Request is outdated [plugin vite:dep-scan]
+
+    node_modules/esbuild/lib/main.js:1217:27:
+      1217 ??        let result = await callback({
+           ??                           ^
+
+    at throwClosedServerError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42055:15)
+    at EnvironmentPluginContainer.resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42234:9)
+    at resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14314:40)
+    at resolve (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14325:28)
+    at file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14380:32
+    at requestCallbacks.on-resolve (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1217:28)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1141:20:
+      1141 ??      let promise = setup({
+           ??                    ^
+
+    at setup (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14379:13)
+    at handlePlugins (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1141:21)
+    at buildOrContextImpl (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:854:5)
+    at Object.buildOrContext (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:680:5)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:68
+    at new Promise (<anonymous>)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:27)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1877:58)
+    at prepareEsbuildScanner (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14266:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    <stdin>:2:7:
+      2 ??import "C:/Hank/Other/project/picture/src/components/InteractiveMap...
+        ??       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] The server is being restarted or closed. Request is outdated [plugin vite:dep-scan]
+
+    node_modules/esbuild/lib/main.js:1217:27:
+      1217 ??        let result = await callback({
+           ??                           ^
+
+    at throwClosedServerError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42055:15)
+    at EnvironmentPluginContainer.resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42234:9)
+    at resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14314:40)
+    at resolve (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14325:28)
+    at file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14380:32
+    at requestCallbacks.on-resolve (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1217:28)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1141:20:
+      1141 ??      let promise = setup({
+           ??                    ^
+
+    at setup (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14379:13)
+    at handlePlugins (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1141:21)
+    at buildOrContextImpl (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:854:5)
+    at Object.buildOrContext (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:680:5)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:68
+    at new Promise (<anonymous>)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:27)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1877:58)
+    at prepareEsbuildScanner (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14266:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    <stdin>:3:7:
+      3 ??import "C:/Hank/Other/project/picture/src/components/PostCard.astro"
+        ??       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] The server is being restarted or closed. Request is outdated [plugin vite:dep-scan]
+
+    node_modules/esbuild/lib/main.js:1217:27:
+      1217 ??        let result = await callback({
+           ??                           ^
+
+    at throwClosedServerError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42055:15)
+    at EnvironmentPluginContainer.resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42234:9)
+    at resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14314:40)
+    at resolve (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14325:28)
+    at file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14380:32
+    at requestCallbacks.on-resolve (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1217:28)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1141:20:
+      1141 ??      let promise = setup({
+           ??                    ^
+
+    at setup (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14379:13)
+    at handlePlugins (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1141:21)
+    at buildOrContextImpl (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:854:5)
+    at Object.buildOrContext (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:680:5)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:68
+    at new Promise (<anonymous>)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:27)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1877:58)
+    at prepareEsbuildScanner (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14266:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    <stdin>:4:7:
+      4 ??import "C:/Hank/Other/project/picture/src/components/SearchWidget.a...
+        ??       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] The server is being restarted or closed. Request is outdated [plugin vite:dep-scan]
+
+    node_modules/esbuild/lib/main.js:1217:27:
+      1217 ??        let result = await callback({
+           ??                           ^
+
+    at throwClosedServerError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42055:15)
+    at EnvironmentPluginContainer.resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42234:9)
+    at resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14314:40)
+    at resolve (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14325:28)
+    at file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14380:32
+    at requestCallbacks.on-resolve (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1217:28)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1141:20:
+      1141 ??      let promise = setup({
+           ??                    ^
+
+    at setup (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14379:13)
+    at handlePlugins (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1141:21)
+    at buildOrContextImpl (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:854:5)
+    at Object.buildOrContext (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:680:5)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:68
+    at new Promise (<anonymous>)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:27)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1877:58)
+    at prepareEsbuildScanner (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14266:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    <stdin>:5:7:
+      5 ??import "C:/Hank/Other/project/picture/src/components/Sidebar.astro"
+        ??       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] The server is being restarted or closed. Request is outdated [plugin vite:dep-scan]
+
+    node_modules/esbuild/lib/main.js:1217:27:
+      1217 ??        let result = await callback({
+           ??                           ^
+
+    at throwClosedServerError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42055:15)
+    at EnvironmentPluginContainer.resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42234:9)
+    at resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14314:40)
+    at resolve (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14325:28)
+    at file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14380:32
+    at requestCallbacks.on-resolve (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1217:28)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1141:20:
+      1141 ??      let promise = setup({
+           ??                    ^
+
+    at setup (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14379:13)
+    at handlePlugins (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1141:21)
+    at buildOrContextImpl (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:854:5)
+    at Object.buildOrContext (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:680:5)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:68
+    at new Promise (<anonymous>)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:27)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1877:58)
+    at prepareEsbuildScanner (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14266:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    <stdin>:6:7:
+      6 ??import "C:/Hank/Other/project/picture/src/pages/about.astro"
+        ??       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] The server is being restarted or closed. Request is outdated [plugin vite:dep-scan]
+
+    node_modules/esbuild/lib/main.js:1217:27:
+      1217 ??        let result = await callback({
+           ??                           ^
+
+    at throwClosedServerError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42055:15)
+    at EnvironmentPluginContainer.resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42234:9)
+    at resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14314:40)
+    at resolve (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14325:28)
+    at file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14380:32
+    at requestCallbacks.on-resolve (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1217:28)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1141:20:
+      1141 ??      let promise = setup({
+           ??                    ^
+
+    at setup (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14379:13)
+    at handlePlugins (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1141:21)
+    at buildOrContextImpl (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:854:5)
+    at Object.buildOrContext (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:680:5)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:68
+    at new Promise (<anonymous>)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:27)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1877:58)
+    at prepareEsbuildScanner (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14266:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    <stdin>:7:7:
+      7 ??import "C:/Hank/Other/project/picture/src/pages/index.astro"
+        ??       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] The server is being restarted or closed. Request is outdated [plugin vite:dep-scan]
+
+    node_modules/esbuild/lib/main.js:1217:27:
+      1217 ??        let result = await callback({
+           ??                           ^
+
+    at throwClosedServerError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42055:15)
+    at EnvironmentPluginContainer.resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42234:9)
+    at resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14314:40)
+    at resolve (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14325:28)
+    at file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14380:32
+    at requestCallbacks.on-resolve (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1217:28)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1141:20:
+      1141 ??      let promise = setup({
+           ??                    ^
+
+    at setup (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14379:13)
+    at handlePlugins (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1141:21)
+    at buildOrContextImpl (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:854:5)
+    at Object.buildOrContext (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:680:5)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:68
+    at new Promise (<anonymous>)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:27)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1877:58)
+    at prepareEsbuildScanner (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14266:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    <stdin>:8:7:
+      8 ??import "C:/Hank/Other/project/picture/src/pages/search.astro"
+        ??       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] The server is being restarted or closed. Request is outdated [plugin vite:dep-scan]
+
+    node_modules/esbuild/lib/main.js:1217:27:
+      1217 ??        let result = await callback({
+           ??                           ^
+
+    at throwClosedServerError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42055:15)
+    at EnvironmentPluginContainer.resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42234:9)
+    at resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14314:40)
+    at resolve (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14325:28)
+    at file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14380:32
+    at requestCallbacks.on-resolve (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1217:28)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1141:20:
+      1141 ??      let promise = setup({
+           ??                    ^
+
+    at setup (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14379:13)
+    at handlePlugins (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1141:21)
+    at buildOrContextImpl (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:854:5)
+    at Object.buildOrContext (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:680:5)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:68
+    at new Promise (<anonymous>)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:27)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1877:58)
+    at prepareEsbuildScanner (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14266:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    <stdin>:9:7:
+      9 ??import "C:/Hank/Other/project/picture/src/layouts/Layout.astro"
+        ??       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] The server is being restarted or closed. Request is outdated [plugin vite:dep-scan]
+
+    node_modules/esbuild/lib/main.js:1217:27:
+      1217 ??        let result = await callback({
+           ??                           ^
+
+    at throwClosedServerError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42055:15)
+    at EnvironmentPluginContainer.resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42234:9)
+    at resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14314:40)
+    at resolve (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14325:28)
+    at file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14380:32
+    at requestCallbacks.on-resolve (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1217:28)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1141:20:
+      1141 ??      let promise = setup({
+           ??                    ^
+
+    at setup (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14379:13)
+    at handlePlugins (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1141:21)
+    at buildOrContextImpl (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:854:5)
+    at Object.buildOrContext (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:680:5)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:68
+    at new Promise (<anonymous>)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:27)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1877:58)
+    at prepareEsbuildScanner (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14266:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    <stdin>:10:7:
+      10 ??import "C:/Hank/Other/project/picture/src/pages/category/travel.as...
+         ??       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] The server is being restarted or closed. Request is outdated [plugin vite:dep-scan]
+
+    node_modules/esbuild/lib/main.js:1217:27:
+      1217 ??        let result = await callback({
+           ??                           ^
+
+    at throwClosedServerError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42055:15)
+    at EnvironmentPluginContainer.resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42234:9)
+    at resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14314:40)
+    at resolve (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14325:28)
+    at file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14380:32
+    at requestCallbacks.on-resolve (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1217:28)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1141:20:
+      1141 ??      let promise = setup({
+           ??                    ^
+
+    at setup (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14379:13)
+    at handlePlugins (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1141:21)
+    at buildOrContextImpl (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:854:5)
+    at Object.buildOrContext (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:680:5)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:68
+    at new Promise (<anonymous>)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:27)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1877:58)
+    at prepareEsbuildScanner (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14266:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    <stdin>:11:7:
+      11 ??import "C:/Hank/Other/project/picture/src/pages/category/[...slug]...
+         ??       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] The server is being restarted or closed. Request is outdated [plugin vite:dep-scan]
+
+    node_modules/esbuild/lib/main.js:1217:27:
+      1217 ??        let result = await callback({
+           ??                           ^
+
+    at throwClosedServerError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42055:15)
+    at EnvironmentPluginContainer.resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42234:9)
+    at resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14314:40)
+    at resolve (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14325:28)
+    at file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14380:32
+    at requestCallbacks.on-resolve (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1217:28)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1141:20:
+      1141 ??      let promise = setup({
+           ??                    ^
+
+    at setup (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14379:13)
+    at handlePlugins (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1141:21)
+    at buildOrContextImpl (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:854:5)
+    at Object.buildOrContext (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:680:5)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:68
+    at new Promise (<anonymous>)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:27)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1877:58)
+    at prepareEsbuildScanner (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14266:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    <stdin>:12:7:
+      12 ??import "C:/Hank/Other/project/picture/src/pages/category/[category...
+         ??       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] The server is being restarted or closed. Request is outdated [plugin vite:dep-scan]
+
+    node_modules/esbuild/lib/main.js:1217:27:
+      1217 ??        let result = await callback({
+           ??                           ^
+
+    at throwClosedServerError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42055:15)
+    at EnvironmentPluginContainer.resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42234:9)
+    at resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14314:40)
+    at resolve (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14325:28)
+    at file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14380:32
+    at requestCallbacks.on-resolve (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1217:28)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1141:20:
+      1141 ??      let promise = setup({
+           ??                    ^
+
+    at setup (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14379:13)
+    at handlePlugins (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1141:21)
+    at buildOrContextImpl (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:854:5)
+    at Object.buildOrContext (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:680:5)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:68
+    at new Promise (<anonymous>)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:27)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1877:58)
+    at prepareEsbuildScanner (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14266:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    <stdin>:13:7:
+      13 ??import "C:/Hank/Other/project/picture/src/pages/posts/[...slug].as...
+         ??       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+    at failureErrorWithLog (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1467:15)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:926:25
+    at runOnEndCallbacks (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1307:45)
+    at buildResponseToResult (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:924:7)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:936:9
+    at new Promise (<anonymous>)
+    at requestCallbacks.on-end (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:935:54)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+[2m23:21:40[22m [34m[content][39m Synced content
+[2m23:21:40[22m [34m[types][39m Generated [2m19.98s[22m
+[2m23:21:40[22m [34m[vite][39m Port 4321 is in use, trying another one...
+23:25:26 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:KwXv10cWEeYXssYMPh1Lz","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":false,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    at async SSRCompatModuleRunner.getModuleInformation (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:1205:73)
+    at async instantiateModule (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:25231:12)
+    at async preloadAndSetPrerenderStatus (file:///C:/Hank/Other/project/picture/node_modules/astro/dist/prerender/routing.js:31:32)
+    at async matchRoute (file:///C:/Hank/Other/project/picture/node_modules/astro/dist/vite-plugin-astro-server/route.js:34:28)
+23:26:49 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:ztvyTSHAW5LGleLFb1va6","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":false,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+23:32:51 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:4L9opHNNecJc5_qfEkR4S","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":false,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+23:34:05 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:38zgzi9YHgIpivAU9A4GM","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":false,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+[2m23:34:34[22m [34m[200][39m / [2m10955ms[22m
+[2m23:34:34[22m [33m[404][39m /favicon.svg [2m2ms[22m
+[2m23:34:58[22m [34m[200][39m /category/domestic-travel [2m30ms[22m
+[2m23:35:17[22m [34m[200][39m /category/domestic-food [2m49ms[22m
+[2m23:35:31[22m [34m[200][39m /search [2m22ms[22m
+[2m23:35:31[22m [34m[200][39m /search.json [2m16ms[22m
+[2m23:35:48[22m [34m[200][39m /posts/12086445234 [2m21ms[22m
+[2m23:35:48[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:35:48[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m1ms[22m
+[2m23:35:48[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m1ms[22m
+[2m23:35:48[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m1ms[22m
+[2m23:35:48[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m1ms[22m
+[2m23:35:48[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:35:48[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:35:48[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:35:48[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:35:48[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:35:48[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:35:48[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m1ms[22m
+[2m23:35:48[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:35:48[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:35:48[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:35:48[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:35:48[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m1ms[22m
+[2m23:35:48[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:35:48[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:35:48[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:36:49[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:36:49[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:36:49[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:36:49[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:36:49[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:36:49[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:36:49[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:36:49[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:36:49[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:36:49[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:36:49[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:36:49[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:36:49[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:36:49[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:37:43[22m [34m[watch][39m src/pages/category/[...slug].astro
+[2m23:37:43[22m [34m[watch][39m src/pages/category/[...slug].astro
+[2m23:37:43[22m [34m[200][39m /posts/12086445234 [2m85ms[22m
+[2m23:37:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:37:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m1ms[22m
+[2m23:37:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:37:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:37:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m1ms[22m
+[2m23:37:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:37:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:37:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:37:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:37:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:37:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:37:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:37:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:37:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:37:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:37:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:37:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:37:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:37:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:37:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+23:38:14 [ERROR] getCategorySlug is not defined
+  Stack trace:
+    at C:\Hank\Other\project\picture\src\pages\category\[...slug].astro:80:79
+    at C:\Hank\Other\project\picture\src\pages\category\[...slug].astro:80:30
+    [...] See full stack trace in the browser, or rerun with --verbose.
+[2m23:38:15[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:38:15[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:38:15[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:38:15[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:38:15[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:38:15[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:38:15[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:38:15[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:38:15[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:38:15[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m1ms[22m
+[2m23:38:15[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:38:15[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:38:15[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:38:15[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:38:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:38:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:38:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:38:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:38:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:38:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:38:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:38:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:38:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:38:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:38:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:38:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:38:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:38:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+23:39:23 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:2f1bvIQDsWPz_kzhrzM5T","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":false,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+[2m23:39:28[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:39:28[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:39:28[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:39:28[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:39:28[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m1ms[22m
+[2m23:39:28[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:39:28[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:39:28[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:39:28[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:39:28[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:39:28[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:39:28[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:39:28[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:39:28[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:39:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:39:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:39:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:39:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:39:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:39:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m1ms[22m
+[2m23:39:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:39:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:39:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:39:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:39:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:39:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:39:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:39:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:39:48[22m [34m[200][39m /category/?啣??舫? [2m49ms[22m
+23:39:53 [ERROR] getCategorySlug is not defined
+  Stack trace:
+    at C:\Hank\Other\project\picture\src\pages\category\[...slug].astro:80:79
+    at C:\Hank\Other\project\picture\src\pages\category\[...slug].astro:80:30
+    [...] See full stack trace in the browser, or rerun with --verbose.
+[2m23:39:54[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:39:54[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:39:54[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:39:54[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:39:54[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:39:54[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:39:54[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:39:54[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:39:54[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:39:54[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:39:54[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:39:54[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:39:54[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:39:54[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:40:10[22m [34m[200][39m / [2m46ms[22m
+[2m23:40:42[22m [34m[200][39m /search [2m39ms[22m
+[2m23:40:42[22m [34m[200][39m /search.json [2m13ms[22m
+[2m23:40:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:40:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:40:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:40:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:40:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m1ms[22m
+[2m23:40:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:40:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:40:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:40:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:40:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:40:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:40:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:40:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:40:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:40:50[22m [34m[200][39m /posts/12086445234 [2m19ms[22m
+[2m23:40:50[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:40:50[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:40:50[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:40:50[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m1ms[22m
+[2m23:40:50[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:40:50[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m1ms[22m
+[2m23:40:51[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:40:51[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:40:51[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m1ms[22m
+[2m23:40:51[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:40:51[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:40:51[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:40:51[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:40:51[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:40:51[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:40:51[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:40:51[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:40:51[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:40:51[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m1ms[22m
+[2m23:40:51[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:41:36[22m [34m[watch][39m src/pages/category/[...slug].astro
+[2m23:41:36[22m [34m[watch][39m src/pages/category/[...slug].astro
+[2m23:41:37[22m [34m[200][39m /posts/12086445234 [2m178ms[22m
+[2m23:41:37[22m [34m[200][39m /category/domestic-travel [2m103ms[22m
+[2m23:41:37[22m [34m[200][39m /category/?啣??舫? [2m105ms[22m
+[2m23:41:37[22m [34m[200][39m /category/domestic-travel [2m30ms[22m
+[2m23:41:37[22m [34m[200][39m /posts/12086445234 [2m20ms[22m
+[2m23:41:37[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:41:37[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m1ms[22m
+[2m23:41:37[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m1ms[22m
+[2m23:41:37[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m1ms[22m
+[2m23:41:37[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m1ms[22m
+[2m23:41:37[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m1ms[22m
+[2m23:41:37[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:41:37[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:41:37[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:41:37[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:41:37[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m1ms[22m
+[2m23:41:37[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m1ms[22m
+[2m23:41:37[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:41:37[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:41:37[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:41:37[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:41:37[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:41:37[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:41:37[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:41:37[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:41:37[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:41:37[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:41:37[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:41:37[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m1ms[22m
+[2m23:41:37[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m1ms[22m
+[2m23:41:37[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m1ms[22m
+[2m23:41:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:41:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:41:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m1ms[22m
+[2m23:41:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:41:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m1ms[22m
+[2m23:41:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m1ms[22m
+[2m23:41:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:41:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:41:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:41:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:41:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m1ms[22m
+[2m23:41:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:41:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m1ms[22m
+[2m23:41:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:41:54[22m [34m[200][39m /category/domestic-travel [2m23ms[22m
+[33m[1m23:42:04[22m [WARN] [router][39m A `getStaticPaths()` route pattern was matched, but no matching static path was found for requested path `/category/taipei-travel`.
+
+Possible dynamic routes being matched: src/pages/category/[category].astro, src/pages/category/[...slug].astro.
+[2m23:42:04[22m [33m[404][39m /category/taipei-travel [2m1ms[22m
+[2m23:42:09[22m [34m[200][39m /category/?啣??舫? [2m27ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m1ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:42:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:43:38[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:43:39[22m [34m[watch][39m src/components/Sidebar.astro
+[2m23:43:40[22m [34m[200][39m /category/?啣??舫? [2m110ms[22m
+[2m23:43:40[22m [34m[200][39m /category/domestic-travel [2m111ms[22m
+[2m23:43:40[22m [34m[200][39m /posts/12086445234 [2m118ms[22m
+[2m23:43:40[22m [34m[200][39m /category/?啣??舫? [2m34ms[22m
+[2m23:43:40[22m [34m[200][39m /category/domestic-travel [2m27ms[22m
+[2m23:43:40[22m [34m[200][39m /posts/12086445234 [2m14ms[22m
+[2m23:43:40[22m [34m[200][39m /category/domestic-travel [2m32ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m1ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m1ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m1ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m1ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m1ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:43:40[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:43:41[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m1ms[22m
+[2m23:43:43[22m [34m[watch][39m src/layouts/Layout.astro
+[2m23:43:43[22m [34m[200][39m /posts/12086445234 [2m105ms[22m
+[2m23:43:43[22m [34m[200][39m /category/?啣??舫? [2m112ms[22m
+[2m23:43:43[22m [34m[200][39m /category/domestic-travel [2m113ms[22m
+[2m23:43:43[22m [34m[200][39m /posts/12086445234 [2m18ms[22m
+[2m23:43:43[22m [34m[200][39m /category/?啣??舫? [2m30ms[22m
+[2m23:43:43[22m [34m[200][39m /category/domestic-travel [2m32ms[22m
+[2m23:43:43[22m [34m[200][39m /category/domestic-travel [2m25ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m1ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m1ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m1ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m1ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:43[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:43:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:43:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:43:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:43:44[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m1ms[22m
+[2m23:43:45[22m [34m[watch][39m src/layouts/Layout.astro
+[2m23:43:45[22m [34m[200][39m /posts/12086445234 [2m112ms[22m
+[2m23:43:45[22m [34m[200][39m /category/?啣??舫? [2m125ms[22m
+[2m23:43:45[22m [34m[200][39m /category/domestic-travel [2m126ms[22m
+[2m23:43:45[22m [34m[200][39m /posts/12086445234 [2m21ms[22m
+[2m23:43:45[22m [34m[200][39m /category/?啣??舫? [2m26ms[22m
+[2m23:43:45[22m [34m[200][39m /category/domestic-travel [2m30ms[22m
+[2m23:43:45[22m [34m[200][39m /category/domestic-travel [2m27ms[22m
+[2m23:43:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:43:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:43:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:43:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:43:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:43:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:43:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m1ms[22m
+[2m23:43:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:43:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:43:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:43:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m1ms[22m
+[2m23:43:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:43:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:44:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+23:45:00 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:CuskiOloBF9TJldtePSxX","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":false,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m1ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m1ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m1ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m1ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:45:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:46:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+23:46:57 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:Huq4Y9keAIWDLZL7kj6YX","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":false,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:47:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+23:47:57 [ERROR] [ActionsCantBeLoaded] An unknown error was thrown while loading the Astro actions file.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/actions-cant-be-loaded/
+  Stack trace:
+    at loadActions (file:///C:/Hank/Other/project/picture/node_modules/astro/dist/actions/loadActions.js:8:11)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+  Caused by:
+  transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:awkSYJ4WsYlj5EUKdZqXe","data":["virtual:astro:actions/entrypoint",null,{"cached":false,"startOffset":2}]}})
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+23:48:04 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:63lbY5xOwOusz3CV7hLMc","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":false,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:48:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+23:49:16 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:GN7VTCVEQOjreelMnd0FY","data":["C:/Hank/Other/project/picture/src/pages/category/[category].astro",null,{"cached":false,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+[2m23:49:29[22m [34m[200][39m / [2m46ms[22m
+[2m23:49:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:49:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:49:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:49:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:49:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:49:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:49:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:49:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:49:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:49:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:49:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:49:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:49:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:49:45[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:49:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:49:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:49:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:49:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:49:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:49:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:49:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m1ms[22m
+[2m23:49:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:49:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:49:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:49:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:49:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:49:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:49:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:50:04[22m [34m[200][39m /category/domestic-travel [2m42ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m1ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m0ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m0ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/teeth_smile.gif [2m1ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/shades_smile.gif [2m0ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/embaressed_smile.gif [2m0ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/heart.gif [2m0ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/regular_smile.gif [2m0ms[22m
+[2m23:50:46[22m [33m[404][39m //s.pixfs.net/f.pixnet.net/images/emotions/lightbulb.gif [2m1ms[22m
+00:09:14 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:lqDmlxiY3h7E02ojW0A3f","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":false,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+00:10:14 [ERROR] [ActionsCantBeLoaded] An unknown error was thrown while loading the Astro actions file.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/actions-cant-be-loaded/
+  Stack trace:
+    at loadActions (file:///C:/Hank/Other/project/picture/node_modules/astro/dist/actions/loadActions.js:8:11)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+  Caused by:
+  transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:qZSVX2RuIQcr8rrczViCv","data":["virtual:astro:actions/entrypoint",null,{"cached":false,"startOffset":2}]}})
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+00:10:30 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:fSHfk0JafZtE77pmB_An9","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":false,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+00:11:30 [ERROR] [ActionsCantBeLoaded] An unknown error was thrown while loading the Astro actions file.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/actions-cant-be-loaded/
+  Stack trace:
+    at loadActions (file:///C:/Hank/Other/project/picture/node_modules/astro/dist/actions/loadActions.js:8:11)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+  Caused by:
+  transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:siQKzQGPEsAr7cvOahhWI","data":["virtual:astro:actions/entrypoint",null,{"cached":false,"startOffset":2}]}})
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+00:12:00 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:f-aNBLwHQEjsWmb_mf56f","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":false,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+00:13:00 [ERROR] [ActionsCantBeLoaded] An unknown error was thrown while loading the Astro actions file.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/actions-cant-be-loaded/
+  Stack trace:
+    at loadActions (file:///C:/Hank/Other/project/picture/node_modules/astro/dist/actions/loadActions.js:8:11)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+  Caused by:
+  transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:_Ihy1Rap_JqJhIvB_oy9s","data":["virtual:astro:actions/entrypoint",null,{"cached":false,"startOffset":2}]}})
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+00:13:05 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:XshORBFF0XXY7_j5cwIwP","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":false,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+00:14:05 [ERROR] [ActionsCantBeLoaded] An unknown error was thrown while loading the Astro actions file.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/actions-cant-be-loaded/
+  Stack trace:
+    at loadActions (file:///C:/Hank/Other/project/picture/node_modules/astro/dist/actions/loadActions.js:8:11)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+  Caused by:
+  transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:QZsoUb5IWCLfgPwn1WGo3","data":["virtual:astro:actions/entrypoint",null,{"cached":false,"startOffset":2}]}})
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+00:14:05 [ERROR] [ActionsCantBeLoaded] An unknown error was thrown while loading the Astro actions file.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/actions-cant-be-loaded/
+  Stack trace:
+    at loadActions (file:///C:/Hank/Other/project/picture/node_modules/astro/dist/actions/loadActions.js:8:11)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+  Caused by:
+  transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:QZsoUb5IWCLfgPwn1WGo3","data":["virtual:astro:actions/entrypoint",null,{"cached":false,"startOffset":2}]}})
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+00:14:36 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:rXxTICGrv9RCc4j_Qxk6n","data":["C:/Hank/Other/project/picture/src/pages/category/[category].astro",null,{"cached":false,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+00:15:36 [ERROR] [ActionsCantBeLoaded] An unknown error was thrown while loading the Astro actions file.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/actions-cant-be-loaded/
+  Stack trace:
+    at loadActions (file:///C:/Hank/Other/project/picture/node_modules/astro/dist/actions/loadActions.js:8:11)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+  Caused by:
+  transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:ikH8iGvkAnLwJbxTud4Tm","data":["virtual:astro:actions/entrypoint",null,{"cached":false,"startOffset":2}]}})
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+00:15:36 [ERROR] [ActionsCantBeLoaded] An unknown error was thrown while loading the Astro actions file.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/actions-cant-be-loaded/
+  Stack trace:
+    at loadActions (file:///C:/Hank/Other/project/picture/node_modules/astro/dist/actions/loadActions.js:8:11)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+  Caused by:
+  transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:ikH8iGvkAnLwJbxTud4Tm","data":["virtual:astro:actions/entrypoint",null,{"cached":false,"startOffset":2}]}})
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+00:16:36 [ERROR] [ActionsCantBeLoaded] An unknown error was thrown while loading the Astro actions file.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/actions-cant-be-loaded/
+  Stack trace:
+    at loadActions (file:///C:/Hank/Other/project/picture/node_modules/astro/dist/actions/loadActions.js:8:11)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+  Caused by:
+  transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:o1E47-otUa7WsMRJxdQf5","data":["virtual:astro:actions/entrypoint",null,{"cached":false,"startOffset":2}]}})
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+[2m00:19:17[22m [34m[watch][39m src/layouts/Layout.astro

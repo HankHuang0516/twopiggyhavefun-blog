@@ -1,0 +1,2222 @@
+
+> picture@1.0.0 dev
+> node -e "var fs=require('fs'); try{fs.rmSync('.astro',{recursive:true,force:true})}catch(e){}" && astro dev
+
+[2m21:09:35[22m [34m[types][39m Generated [2m1ms[22m
+[2m21:09:38[22m [34m[content][39m Syncing content
+[2m21:09:46[22m [34m[content][39m Synced content
+
+[42m[1m astro [22m[49m [32mv5.16.8[39m [2mready in[22m 10912 [2mms[22m
+
+[2m??[22m Local    [36mhttp://localhost:4321/twopiggyhavefun-blog[39m
+[2m??[22m Network  [2muse --host to expose[22m
+
+[2m21:09:46[22m [32mwatching for file changes...[39m
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:46 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at C:/Hank/Other/project/picture/src/pages/category/[category].astro
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:46 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:46 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:46 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:46 [ERROR] [UnknownCompilerError] Go program has already exited
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at d._resume (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:6350)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:46 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at C:/Hank/Other/project/picture/src/pages/category/[category].astro
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:46 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:46 [ERROR] [UnknownCompilerError] Go program has already exited
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at d._resume (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:6350)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:46 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at C:/Hank/Other/project/picture/src/pages/category/[category].astro
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:46 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:46 [ERROR] [UnknownCompilerError] Go program has already exited
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at d._resume (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:6350)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:46 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at C:/Hank/Other/project/picture/src/pages/category/[category].astro
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:46 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:46 [ERROR] [UnknownCompilerError] Go program has already exited
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at d._resume (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:6350)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:47 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at C:/Hank/Other/project/picture/src/pages/category/[category].astro
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:47 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:47 [ERROR] [UnknownCompilerError] Go program has already exited
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at d._resume (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:6350)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:47 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at C:/Hank/Other/project/picture/src/pages/category/[category].astro
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:47 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:47 [ERROR] [UnknownCompilerError] Go program has already exited
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at d._resume (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:6350)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:47 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at C:/Hank/Other/project/picture/src/pages/category/[category].astro
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:49 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:49 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:49 [ERROR] [UnknownCompilerError] Go program has already exited
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at d._resume (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:6350)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:49 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at C:/Hank/Other/project/picture/src/pages/category/[category].astro
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:49 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:49 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:49 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:49 [ERROR] [UnknownCompilerError] Go program has already exited
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at d._resume (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:6350)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:49 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at C:/Hank/Other/project/picture/src/pages/category/[category].astro
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:49 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:49 [ERROR] [UnknownCompilerError] Go program has already exited
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at d._resume (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:6350)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:49 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at C:/Hank/Other/project/picture/src/pages/category/[category].astro
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:49 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:49 [ERROR] [UnknownCompilerError] Go program has already exited
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at d._resume (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:6350)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:49 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at C:/Hank/Other/project/picture/src/pages/category/[category].astro
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:49 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:49 [ERROR] [UnknownCompilerError] Go program has already exited
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at d._resume (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:6350)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:49 [ERROR] [UnknownCompilerError] Go program has already exited
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at d._resume (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:6350)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:49 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at C:/Hank/Other/project/picture/src/pages/category/[category].astro
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:49 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:49 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 9 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x14565a0)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x14565a0)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x14565a0)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x14342e0}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:50 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1543]:0x164bec
+    at wasm://wasm/01398f46:wasm-function[1169]:0xfaaf6
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:50 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1543]:0x164bec
+    at wasm://wasm/01398f46:wasm-function[1169]:0xfaaf6
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:57 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:57 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:57 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:57 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:57 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:57 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:57 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:57 [ERROR] [UnknownCompilerError] Go program has already exited
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at d._resume (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:6350)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:57 [ERROR] [UnknownCompilerError] Go program has already exited
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at d._resume (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:6350)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:57 [ERROR] [UnknownCompilerError] Go program has already exited
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at d._resume (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:6350)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:57 [ERROR] [UnknownCompilerError] Go program has already exited
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at d._resume (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:6350)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:57 [ERROR] [UnknownCompilerError] Go program has already exited
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at d._resume (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:6350)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:57 [ERROR] [UnknownCompilerError] Go program has already exited
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at d._resume (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:6350)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x14565a0)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x14565a0)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x14565a0)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:57 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at C:/Hank/Other/project/picture/src/pages/category/[category].astro
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:57 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:57 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 9 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x14565a0)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x14565a0)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x14565a0)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434200}, {0x1446e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:58 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1543]:0x164bec
+    at wasm://wasm/01398f46:wasm-function[1169]:0xfaaf6
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:58 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1543]:0x164bec
+    at wasm://wasm/01398f46:wasm-function[1169]:0xfaaf6
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:58 [ERROR] [UnhandledRejection] Astro detected an unhandled rejection. Here's the stack trace:
+Error: Go program has already exited
+    at d._resume (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:6350)
+    at file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:6575
+  Hint:
+    Make sure your promises all have an `await` or a `.catch()` handler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unhandled-rejection/
+  Stack trace:
+    at d._resume (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:6350)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:59 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:59 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:59 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:59 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:59 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:59 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:59 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:59 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:59 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:59 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:59 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:59 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:59 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:59 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:59 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:09:59 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:09:59 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:10:05 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:05 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:10:05 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:05 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:05 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:10:05 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:05 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:05 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:10:05 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:05 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:10:05 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:05 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:05 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:10:05 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:05 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:10:05 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:10:05 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:05 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:10:05 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:05 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:10:05 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:10:47 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:47 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:47 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:10:47 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:47 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:47 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456480)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:10:47 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:47 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:10:47 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:47 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:10:47 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:47 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:10:47 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:47 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+panic: html: bad parser state: originalIM was set twice [recovered]
+	panic: interface conversion: string is not error: missing method Error
+
+goroutine 7 [running]:
+main.main.Transform.func1.1.1.1()
+	./astro-wasm.go:335 +0x5
+panic({0x17940, 0x7b460})
+	runtime/panic.go:770 +0x1a
+github.com/withastro/compiler/internal.(*parser).setOriginalIM(...)
+	github.com/withastro/compiler/internal/parser.go:545
+github.com/withastro/compiler/internal.inBodyIM(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:1106 +0x41a
+github.com/withastro/compiler/internal.(*parser).parseCurrentToken(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3009 +0x12
+github.com/withastro/compiler/internal.(*parser).parse(0x1456360)
+	github.com/withastro/compiler/internal/parser.go:3036 +0x3
+github.com/withastro/compiler/internal.ParseWithOptions({0x7bca8, 0x1434100}, {0x1445e20, 0x1, 0x1})
+	github.com/withastro/compiler/internal/parser.go:3100 +0x13
+main.main.Transform.func1.1.1()
+	./astro-wasm.go:340 +0x4
+created by main.main.Transform.func1.1 in goroutine 6
+	./astro-wasm.go:331 +0x7
+exit code: 2
+21:10:47 [ERROR] [UnknownCompilerError] Cannot read properties of undefined (reading 'exports')
+  Hint:
+    This is almost always a problem with the Astro compiler, not your code. Please open an issue at https://astro.build/issues/compiler.
+  Error reference:
+    https://docs.astro.build/en/reference/errors/unknown-compiler-error/
+  Stack trace:
+    at syscall/js.valueNew (file:///C:/Hank/Other/project/picture/node_modules/@astrojs/compiler/dist/chunk-W5DTLHV4.js:1:4526)
+    at wasm://wasm/01398f46:wasm-function[1567]:0x168afa
+    at wasm://wasm/01398f46:wasm-function[1163]:0xfaa2b
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:58 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:Jnj6NdabfzqVFsg1THeLk","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":true,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:58 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:Jnj6NdabfzqVFsg1THeLk","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":true,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:58 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:Jnj6NdabfzqVFsg1THeLk","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":true,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:58 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:Jnj6NdabfzqVFsg1THeLk","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":true,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:58 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:Jnj6NdabfzqVFsg1THeLk","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":true,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:58 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:Jnj6NdabfzqVFsg1THeLk","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":true,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:58 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:Jnj6NdabfzqVFsg1THeLk","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":true,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:58 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:Jnj6NdabfzqVFsg1THeLk","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":true,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:58 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:Jnj6NdabfzqVFsg1THeLk","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":true,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:58 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:Jnj6NdabfzqVFsg1THeLk","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":true,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:58 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:Jnj6NdabfzqVFsg1THeLk","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":true,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:58 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:Jnj6NdabfzqVFsg1THeLk","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":true,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:58 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:Jnj6NdabfzqVFsg1THeLk","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":true,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:58 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:Jnj6NdabfzqVFsg1THeLk","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":true,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:58 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:Jnj6NdabfzqVFsg1THeLk","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":true,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+21:10:58 [ERROR] transport invoke timed out after 60000ms (data: {"type":"custom","event":"vite:invoke","data":{"name":"fetchModule","id":"send:Jnj6NdabfzqVFsg1THeLk","data":["C:/Hank/Other/project/picture/src/pages/index.astro",null,{"cached":true,"startOffset":2}]}})
+  Stack trace:
+    at reviveInvokeError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/module-runner.js:548:17)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+[2m21:11:08[22m [34m[200][39m / [2m9555ms[22m
+[2m21:11:08[22m [34m[200][39m / [2m1216ms[22m
+[2m21:11:08[22m [34m[200][39m / [2m1215ms[22m
+[2m21:11:08[22m [34m[200][39m / [2m1179ms[22m
+[2m21:11:08[22m [34m[200][39m / [2m1178ms[22m
+[2m21:11:15[22m Configuration file removed. Restarting...

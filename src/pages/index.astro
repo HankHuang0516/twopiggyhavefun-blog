@@ -32,7 +32,7 @@ const recentPosts = posts.slice(0, 12);
     <section class="featured-slider relative overflow-hidden bg-black">
         <div class="slider-container relative h-[400px] md:h-[500px]">
             {featuredPosts.map((post, index) => (
-                <div class={`slide absolute inset-0 transition-opacity duration-700 ${index === 0 ? 'opacity-100' : 'opacity-0'}`} 
+                <div class:list={['slide absolute inset-0 transition-opacity duration-700', { 'opacity-100': index === 0, 'opacity-0': index !== 0 }]} 
                      data-index={index}>
                     <img 
                         src={fixImagePath(post.data.cover)} 

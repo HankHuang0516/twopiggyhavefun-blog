@@ -1,0 +1,21 @@
+
+> picture@1.0.0 dev
+> node -e "var fs=require('fs'); try{fs.rmSync('.astro',{recursive:true,force:true})}catch(e){}" && astro dev --port 4321
+
+[2m21:40:37[22m [34m[types][39m Generated [2m1ms[22m
+[2m21:40:39[22m Configuration file updated. Restarting...
+[33m[1m21:40:40[22m [WARN] [content][39m Content config not loaded
+21:40:40 [ERROR] [content] transport was disconnected, cannot call "fetchModule"
+
+[42m[1m astro [22m[49m [32mv5.16.8[39m [2mready in[22m 2869 [2mms[22m
+
+[2m??[22m Local    [36mhttp://localhost:4321/twopiggyhavefun-blog[39m
+[2m??[22m Network  [2muse --host to expose[22m
+
+[2m21:40:40[22m [32mwatching for file changes...[39m
+[2m21:40:41[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[2m21:40:42[22m [34m[content][39m Syncing content
+[2m21:40:50[22m [34m[content][39m Synced content
+[2m21:40:50[22m [34m[types][39m Generated [2m9.91s[22m
+[2m21:40:50[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[2m21:40:50[22m [34m[vite][39m Port 4321 is in use, trying another one...

@@ -1,0 +1,566 @@
+
+> picture@1.0.0 dev
+> node -e "var fs=require('fs'); try{fs.rmSync('.astro',{recursive:true,force:true})}catch(e){}" && astro dev
+
+[2m21:37:28[22m [34m[types][39m Generated [2m1ms[22m
+[2m21:37:30[22m [34m[content][39m Syncing content
+[2m21:37:31[22m Configuration file updated. Restarting...
+[2m21:37:34[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+[2m21:37:40[22m [34m[content][39m Syncing content
+[2m21:37:40[22m [34m[content][39m Synced content
+[2m21:37:41[22m [34m[vite][39m Re-optimizing dependencies because vite config has changed
+
+[42m[1m astro [22m[49m [32mv5.16.8[39m [2mready in[22m 12950 [2mms[22m
+
+[2m??[22m Local    [36mhttp://localhost:4321/twopiggyhavefun-blog[39m
+[2m??[22m Network  [2muse --host to expose[22m
+
+[2m21:37:41[22m [32mwatching for file changes...[39m
+21:37:41 [ERROR] [vite] Error:   Failed to scan for dependencies from entries:
+  C:/Hank/Other/project/picture/src/components/BusinessStatus.astro
+C:/Hank/Other/project/picture/src/components/InteractiveMap.astro
+C:/Hank/Other/project/picture/src/components/PostCard.astro
+C:/Hank/Other/project/picture/src/components/SearchWidget.astro
+C:/Hank/Other/project/picture/src/components/Sidebar.astro
+C:/Hank/Other/project/picture/src/layouts/Layout.astro
+C:/Hank/Other/project/picture/src/pages/about.astro
+C:/Hank/Other/project/picture/src/pages/index.astro
+C:/Hank/Other/project/picture/src/pages/search.astro
+C:/Hank/Other/project/picture/src/pages/category/travel.astro
+C:/Hank/Other/project/picture/src/pages/category/[...slug].astro
+C:/Hank/Other/project/picture/src/pages/category/[category].astro
+C:/Hank/Other/project/picture/src/pages/posts/[...slug].astro
+
+  X [ERROR] The server is being restarted or closed. Request is outdated [plugin vite:dep-scan]
+
+    node_modules/esbuild/lib/main.js:1217:27:
+      1217 ??        let result = await callback({
+           ??                           ^
+
+    at throwClosedServerError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42055:15)
+    at EnvironmentPluginContainer.resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42234:9)
+    at resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14314:40)
+    at resolve (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14325:28)
+    at file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14380:32
+    at requestCallbacks.on-resolve (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1217:28)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1141:20:
+      1141 ??      let promise = setup({
+           ??                    ^
+
+    at setup (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14379:13)
+    at handlePlugins (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1141:21)
+    at buildOrContextImpl (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:854:5)
+    at Object.buildOrContext (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:680:5)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:68
+    at new Promise (<anonymous>)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:27)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1877:58)
+    at prepareEsbuildScanner (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14266:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    <stdin>:1:7:
+      1 ??import "C:/Hank/Other/project/picture/src/components/BusinessStatus...
+        ??       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] The server is being restarted or closed. Request is outdated [plugin vite:dep-scan]
+
+    node_modules/esbuild/lib/main.js:1217:27:
+      1217 ??        let result = await callback({
+           ??                           ^
+
+    at throwClosedServerError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42055:15)
+    at EnvironmentPluginContainer.resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42234:9)
+    at resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14314:40)
+    at resolve (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14325:28)
+    at file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14380:32
+    at requestCallbacks.on-resolve (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1217:28)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1141:20:
+      1141 ??      let promise = setup({
+           ??                    ^
+
+    at setup (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14379:13)
+    at handlePlugins (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1141:21)
+    at buildOrContextImpl (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:854:5)
+    at Object.buildOrContext (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:680:5)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:68
+    at new Promise (<anonymous>)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:27)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1877:58)
+    at prepareEsbuildScanner (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14266:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    <stdin>:2:7:
+      2 ??import "C:/Hank/Other/project/picture/src/components/InteractiveMap...
+        ??       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] The server is being restarted or closed. Request is outdated [plugin vite:dep-scan]
+
+    node_modules/esbuild/lib/main.js:1217:27:
+      1217 ??        let result = await callback({
+           ??                           ^
+
+    at throwClosedServerError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42055:15)
+    at EnvironmentPluginContainer.resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42234:9)
+    at resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14314:40)
+    at resolve (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14325:28)
+    at file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14380:32
+    at requestCallbacks.on-resolve (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1217:28)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1141:20:
+      1141 ??      let promise = setup({
+           ??                    ^
+
+    at setup (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14379:13)
+    at handlePlugins (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1141:21)
+    at buildOrContextImpl (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:854:5)
+    at Object.buildOrContext (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:680:5)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:68
+    at new Promise (<anonymous>)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:27)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1877:58)
+    at prepareEsbuildScanner (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14266:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    <stdin>:3:7:
+      3 ??import "C:/Hank/Other/project/picture/src/components/PostCard.astro"
+        ??       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] The server is being restarted or closed. Request is outdated [plugin vite:dep-scan]
+
+    node_modules/esbuild/lib/main.js:1217:27:
+      1217 ??        let result = await callback({
+           ??                           ^
+
+    at throwClosedServerError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42055:15)
+    at EnvironmentPluginContainer.resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42234:9)
+    at resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14314:40)
+    at resolve (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14325:28)
+    at file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14380:32
+    at requestCallbacks.on-resolve (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1217:28)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1141:20:
+      1141 ??      let promise = setup({
+           ??                    ^
+
+    at setup (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14379:13)
+    at handlePlugins (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1141:21)
+    at buildOrContextImpl (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:854:5)
+    at Object.buildOrContext (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:680:5)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:68
+    at new Promise (<anonymous>)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:27)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1877:58)
+    at prepareEsbuildScanner (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14266:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    <stdin>:4:7:
+      4 ??import "C:/Hank/Other/project/picture/src/components/SearchWidget.a...
+        ??       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] The server is being restarted or closed. Request is outdated [plugin vite:dep-scan]
+
+    node_modules/esbuild/lib/main.js:1217:27:
+      1217 ??        let result = await callback({
+           ??                           ^
+
+    at throwClosedServerError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42055:15)
+    at EnvironmentPluginContainer.resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42234:9)
+    at resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14314:40)
+    at resolve (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14325:28)
+    at file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14380:32
+    at requestCallbacks.on-resolve (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1217:28)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1141:20:
+      1141 ??      let promise = setup({
+           ??                    ^
+
+    at setup (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14379:13)
+    at handlePlugins (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1141:21)
+    at buildOrContextImpl (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:854:5)
+    at Object.buildOrContext (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:680:5)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:68
+    at new Promise (<anonymous>)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:27)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1877:58)
+    at prepareEsbuildScanner (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14266:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    <stdin>:5:7:
+      5 ??import "C:/Hank/Other/project/picture/src/components/Sidebar.astro"
+        ??       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] The server is being restarted or closed. Request is outdated [plugin vite:dep-scan]
+
+    node_modules/esbuild/lib/main.js:1217:27:
+      1217 ??        let result = await callback({
+           ??                           ^
+
+    at throwClosedServerError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42055:15)
+    at EnvironmentPluginContainer.resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42234:9)
+    at resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14314:40)
+    at resolve (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14325:28)
+    at file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14380:32
+    at requestCallbacks.on-resolve (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1217:28)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1141:20:
+      1141 ??      let promise = setup({
+           ??                    ^
+
+    at setup (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14379:13)
+    at handlePlugins (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1141:21)
+    at buildOrContextImpl (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:854:5)
+    at Object.buildOrContext (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:680:5)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:68
+    at new Promise (<anonymous>)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:27)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1877:58)
+    at prepareEsbuildScanner (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14266:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    <stdin>:6:7:
+      6 ??import "C:/Hank/Other/project/picture/src/layouts/Layout.astro"
+        ??       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] The server is being restarted or closed. Request is outdated [plugin vite:dep-scan]
+
+    node_modules/esbuild/lib/main.js:1217:27:
+      1217 ??        let result = await callback({
+           ??                           ^
+
+    at throwClosedServerError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42055:15)
+    at EnvironmentPluginContainer.resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42234:9)
+    at resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14314:40)
+    at resolve (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14325:28)
+    at file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14380:32
+    at requestCallbacks.on-resolve (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1217:28)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1141:20:
+      1141 ??      let promise = setup({
+           ??                    ^
+
+    at setup (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14379:13)
+    at handlePlugins (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1141:21)
+    at buildOrContextImpl (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:854:5)
+    at Object.buildOrContext (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:680:5)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:68
+    at new Promise (<anonymous>)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:27)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1877:58)
+    at prepareEsbuildScanner (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14266:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    <stdin>:7:7:
+      7 ??import "C:/Hank/Other/project/picture/src/pages/about.astro"
+        ??       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] The server is being restarted or closed. Request is outdated [plugin vite:dep-scan]
+
+    node_modules/esbuild/lib/main.js:1217:27:
+      1217 ??        let result = await callback({
+           ??                           ^
+
+    at throwClosedServerError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42055:15)
+    at EnvironmentPluginContainer.resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42234:9)
+    at resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14314:40)
+    at resolve (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14325:28)
+    at file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14380:32
+    at requestCallbacks.on-resolve (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1217:28)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1141:20:
+      1141 ??      let promise = setup({
+           ??                    ^
+
+    at setup (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14379:13)
+    at handlePlugins (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1141:21)
+    at buildOrContextImpl (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:854:5)
+    at Object.buildOrContext (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:680:5)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:68
+    at new Promise (<anonymous>)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:27)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1877:58)
+    at prepareEsbuildScanner (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14266:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    <stdin>:8:7:
+      8 ??import "C:/Hank/Other/project/picture/src/pages/index.astro"
+        ??       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] The server is being restarted or closed. Request is outdated [plugin vite:dep-scan]
+
+    node_modules/esbuild/lib/main.js:1217:27:
+      1217 ??        let result = await callback({
+           ??                           ^
+
+    at throwClosedServerError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42055:15)
+    at EnvironmentPluginContainer.resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42234:9)
+    at resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14314:40)
+    at resolve (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14325:28)
+    at file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14380:32
+    at requestCallbacks.on-resolve (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1217:28)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1141:20:
+      1141 ??      let promise = setup({
+           ??                    ^
+
+    at setup (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14379:13)
+    at handlePlugins (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1141:21)
+    at buildOrContextImpl (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:854:5)
+    at Object.buildOrContext (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:680:5)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:68
+    at new Promise (<anonymous>)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:27)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1877:58)
+    at prepareEsbuildScanner (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14266:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    <stdin>:9:7:
+      9 ??import "C:/Hank/Other/project/picture/src/pages/search.astro"
+        ??       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] The server is being restarted or closed. Request is outdated [plugin vite:dep-scan]
+
+    node_modules/esbuild/lib/main.js:1217:27:
+      1217 ??        let result = await callback({
+           ??                           ^
+
+    at throwClosedServerError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42055:15)
+    at EnvironmentPluginContainer.resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42234:9)
+    at resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14314:40)
+    at resolve (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14325:28)
+    at file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14380:32
+    at requestCallbacks.on-resolve (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1217:28)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1141:20:
+      1141 ??      let promise = setup({
+           ??                    ^
+
+    at setup (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14379:13)
+    at handlePlugins (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1141:21)
+    at buildOrContextImpl (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:854:5)
+    at Object.buildOrContext (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:680:5)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:68
+    at new Promise (<anonymous>)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:27)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1877:58)
+    at prepareEsbuildScanner (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14266:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    <stdin>:10:7:
+      10 ??import "C:/Hank/Other/project/picture/src/pages/category/travel.as...
+         ??       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] The server is being restarted or closed. Request is outdated [plugin vite:dep-scan]
+
+    node_modules/esbuild/lib/main.js:1217:27:
+      1217 ??        let result = await callback({
+           ??                           ^
+
+    at throwClosedServerError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42055:15)
+    at EnvironmentPluginContainer.resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42234:9)
+    at resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14314:40)
+    at resolve (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14325:28)
+    at file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14380:32
+    at requestCallbacks.on-resolve (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1217:28)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1141:20:
+      1141 ??      let promise = setup({
+           ??                    ^
+
+    at setup (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14379:13)
+    at handlePlugins (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1141:21)
+    at buildOrContextImpl (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:854:5)
+    at Object.buildOrContext (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:680:5)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:68
+    at new Promise (<anonymous>)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:27)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1877:58)
+    at prepareEsbuildScanner (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14266:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    <stdin>:11:7:
+      11 ??import "C:/Hank/Other/project/picture/src/pages/category/[...slug]...
+         ??       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] The server is being restarted or closed. Request is outdated [plugin vite:dep-scan]
+
+    node_modules/esbuild/lib/main.js:1217:27:
+      1217 ??        let result = await callback({
+           ??                           ^
+
+    at throwClosedServerError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42055:15)
+    at EnvironmentPluginContainer.resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42234:9)
+    at resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14314:40)
+    at resolve (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14325:28)
+    at file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14380:32
+    at requestCallbacks.on-resolve (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1217:28)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1141:20:
+      1141 ??      let promise = setup({
+           ??                    ^
+
+    at setup (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14379:13)
+    at handlePlugins (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1141:21)
+    at buildOrContextImpl (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:854:5)
+    at Object.buildOrContext (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:680:5)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:68
+    at new Promise (<anonymous>)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:27)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1877:58)
+    at prepareEsbuildScanner (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14266:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    <stdin>:12:7:
+      12 ??import "C:/Hank/Other/project/picture/src/pages/category/[category...
+         ??       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] The server is being restarted or closed. Request is outdated [plugin vite:dep-scan]
+
+    node_modules/esbuild/lib/main.js:1217:27:
+      1217 ??        let result = await callback({
+           ??                           ^
+
+    at throwClosedServerError (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42055:15)
+    at EnvironmentPluginContainer.resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:42234:9)
+    at resolveId (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14314:40)
+    at resolve (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14325:28)
+    at file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14380:32
+    at requestCallbacks.on-resolve (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1217:28)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:508:28)
+
+  This error came from the "onResolve" callback registered here:
+
+    node_modules/esbuild/lib/main.js:1141:20:
+      1141 ??      let promise = setup({
+           ??                    ^
+
+    at setup (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14379:13)
+    at handlePlugins (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1141:21)
+    at buildOrContextImpl (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:854:5)
+    at Object.buildOrContext (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:680:5)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:68
+    at new Promise (<anonymous>)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:2035:27)
+    at Object.context (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1877:58)
+    at prepareEsbuildScanner (file:///C:/Hank/Other/project/picture/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:14266:24)
+
+  The plugin "vite:dep-scan" was triggered by this import
+
+    <stdin>:13:7:
+      13 ??import "C:/Hank/Other/project/picture/src/pages/posts/[...slug].as...
+         ??       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+    at failureErrorWithLog (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1467:15)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:926:25
+    at runOnEndCallbacks (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:1307:45)
+    at buildResponseToResult (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:924:7)
+    at C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:936:9
+    at new Promise (<anonymous>)
+    at requestCallbacks.on-end (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:935:54)
+    at handleRequest (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:628:17)
+    at handleIncomingPacket (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:653:7)
+    at Socket.readFromStdout (C:\Hank\Other\project\picture\node_modules\esbuild\lib\main.js:581:7)
+[2m21:37:46[22m [34m[content][39m Synced content
+[2m21:37:46[22m [34m[types][39m Generated [2m14.03s[22m
+[2m21:37:46[22m [34m[vite][39m Port 4321 is in use, trying another one...

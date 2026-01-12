@@ -10,7 +10,8 @@ import {
     isWedding, 
     regionNames,
     regionKeywords,
-    PIXNET_CATEGORY_HIERARCHY
+    PIXNET_CATEGORY_HIERARCHY,
+    getCategorySlug
 } from '../../utils/categories';
 
 export async function getStaticPaths() {
@@ -63,86 +64,29 @@ allPosts.sort((a, b) => {
 let categoryTitle = '';
 let filteredPosts: typeof allPosts = [];
 
-const [part1, part2] = slug.split('-');
+// 1. Helper to find parent category name by slug
+function getParentCategoryNameBySlug(slug: string): string {
+    for (const [name, config] of Object.entries(PIXNET_CATEGORY_HIERARCHY)) {
+        if (config.slug === slug) return name;
+    }
+    return slug;
+}
 
-// 1. Check Special Categories
-if (slug === 'foreign-travel') {
-    categoryTitle = '國外旅遊';
-    filteredPosts = allPosts.filter(post => isForeignTravel(post.data.title || ''));
-} else if (slug === 'parenting') {
-    categoryTitle = '親子育兒';
-    filteredPosts = allPosts.filter(post => isParenting(post.data.title || ''));
-} else if (slug === 'unboxing') {
-    categoryTitle = '開箱推薦';
-    filteredPosts = allPosts.filter(post => isUnboxing(post.data.title || ''));
-} else if (slug === 'wedding') {
-    categoryTitle = '婚禮大小事';
-    filteredPosts = allPosts.filter(post => isWedding(post.data.title || ''));
-} else if (slug === 'other') {
-    categoryTitle = '其他';
-    filteredPosts = allPosts.filter(post => {
-        const title = post.data.title || '';
-        const tags = post.data.tags || [];
-        const { contentType, region } = categorizePost(title, tags);
-        if (isForeignTravel(title) || isParenting(title) || isUnboxing(title) || isWedding(title)) return false;
-        if ((contentType === 'food' || contentType === 'travel' || contentType === 'hotel') && region) return false;
-        // Check fallback logic matches Sidebar's "other"
-        if (contentType === 'food' || contentType === 'travel') return false; 
-        return true;
-    });
+// 2. Check if this is a main category slug (e.g. 'domestic-travel')
+const mainCategoryName = getParentCategoryNameBySlug(slug);
+const isMainCategory = mainCategoryName !== slug;
+
+if (isMainCategory) {
+    categoryTitle = mainCategoryName;
+    filteredPosts = allPosts.filter(post => getCategorySlug(post.data.category) === slug);
 } 
-// 2. Check Domestic Main Categories
-else if (slug === 'domestic-food') {
-    categoryTitle = '國內美食';
-    filteredPosts = allPosts.filter(post => {
-        const title = post.data.title || '';
-        const tags = post.data.tags || [];
-        const { contentType, region } = categorizePost(title, tags);
-        return contentType === 'food' && (region || true); // Include fallback "food" in domestic main?
-        // Sidebar logic: domesticFood includes categorized by region + fallback 'other' region food
-        // So yes, all food that isn't Foreign.
-        // But categorizePost separates based on keywords. 
-        // Sidebar logic: if contentType === 'food', it counts towards domesticFood.
-    });
-} else if (slug === 'domestic-travel') {
-    categoryTitle = '國內旅遊';
-    filteredPosts = allPosts.filter(post => {
-        const title = post.data.title || '';
-        const tags = post.data.tags || [];
-        const { contentType } = categorizePost(title, tags);
-        return contentType === 'travel';
-    });
-} else if (slug === 'domestic-hotel') {
-    categoryTitle = '國內住宿';
-    filteredPosts = allPosts.filter(post => {
-        const title = post.data.title || '';
-        const tags = post.data.tags || [];
-        const { contentType } = categorizePost(title, tags);
-        return contentType === 'hotel';
-    });
-}
-// 3. Subcategories (e.g. taipei-food)
-else if (part2 && (part2 === 'food' || part2 === 'travel' || part2 === 'hotel')) {
-    const regionKey = part1;
-    const typeKey = part2;
-    const regionName = regionNames[regionKey] || regionKey;
-    
-    if (typeKey === 'food') categoryTitle = `${regionName}美食`;
-    if (typeKey === 'travel') categoryTitle = `${regionName}景點`;
-    if (typeKey === 'hotel') categoryTitle = `${regionName}住宿`;
-
-    filteredPosts = allPosts.filter(post => {
-        const title = post.data.title || '';
-        const tags = post.data.tags || [];
-        const { contentType, region } = categorizePost(title, tags);
-        return contentType === typeKey && region === regionKey;
-    });
-}
-// 4. Chinese subcategory names (e.g., "台北美食", "保健食品", "宜蘭景點")
-// Filter by exact category match in frontmatter
+// 3. Fallback: Treat as Tag or Subcategory (e.g. '台北美食')
 else {
-    categoryTitle = slug; // Use the Chinese name directly as title
-    filteredPosts = allPosts.filter(post => post.data.category === slug);
+    categoryTitle = slug;
+    filteredPosts = allPosts.filter(post => {
+        // Match exact category string or include in tags
+        return post.data.category === slug || (post.data.tags && post.data.tags.includes(slug));
+    });
 }
 
 // Pagination or just show all? 
