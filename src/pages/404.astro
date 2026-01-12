@@ -1,0 +1,17 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="404 - 找不到頁面" description="很抱歉，您要找的頁面不存在。">
+    <div class="flex flex-col items-center justify-center min-h-[60vh] px-4 text-center">
+        <div class="text-9xl mb-4">🙈</div>
+        <h1 class="text-4xl font-bold text-gray-800 mb-4">找不到頁面</h1>
+        <p class="text-gray-500 text-lg mb-8 max-w-md">
+            糟糕！您可能迷路了。您所尋找的頁面可能已被移除、名稱更改或暫時無法使用。
+        </p>
+        <a href="/twopiggyhavefun-blog/" 
+           class="bg-[#337ab7] text-white px-8 py-3 rounded-full hover:bg-blue-600 transition shadow-lg flex items-center gap-2">
+            <span>🏠</span> 返回首頁
+        </a>
+    </div>
+</Layout>
