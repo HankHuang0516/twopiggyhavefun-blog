@@ -22,6 +22,7 @@ const navLinks = [
         <meta charset="UTF-8" />
         <meta name="description" content={description || "兩隻小豬旅行親子生活 - 分享美食、旅遊、生活與親子育兒的點點滴滴"} />
         <meta name="viewport" content="width=device-width" />
+        <link rel="alternate" hreflang="zh-TW" href={new URL(Astro.url.pathname, Astro.site)} />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png">
         <meta name="generator" content={Astro.generator} />
@@ -131,12 +132,12 @@ const navLinks = [
                     </a>
                 </li>
                 <li class="w-12 h-12 rounded-full overflow-hidden" style="background-color: #f9cd9a;">
-                    <a href="https://www.facebook.com/twopiggyhavefun" target="_blank" class="block w-full h-full flex items-center justify-center">
+                    <a href="https://www.facebook.com/twopiggyhavefun" target="_blank" rel="noopener noreferrer" class="block w-full h-full flex items-center justify-center">
                         <span class="text-xl text-blue-600 font-bold">f</span>
                     </a>
                 </li>
                 <li class="w-12 h-12 rounded-full overflow-hidden" style="background-color: #f9cd9a;">
-                    <a href="https://www.instagram.com/twopiggyhavefun" target="_blank" class="block w-full h-full flex items-center justify-center">
+                    <a href="https://www.instagram.com/twopiggyhavefun" target="_blank" rel="noopener noreferrer" class="block w-full h-full flex items-center justify-center">
                         <span class="text-xl">📷</span>
                     </a>
                 </li>
