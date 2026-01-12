@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hankhuang0516.github.io/twopiggyhavefun-blog/sitemap-index.xml
