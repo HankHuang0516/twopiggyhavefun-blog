@@ -31,7 +31,11 @@ const navLinks = [
         <meta property="og:description" content={description || "兩隻小豬旅行親子生活 - 分享美食、旅遊、生活與親子育兒的點點滴滴"} />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="兩隻小豬" />
+        <meta property="og:site_name" content="兩隻小豬" />
         {image && <meta property="og:image" content={image} />}
+
+        <!-- Canonical URL -->
+        <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

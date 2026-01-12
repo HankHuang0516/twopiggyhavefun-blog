@@ -25,7 +25,23 @@ const formattedDate = new Date(post.data.date).toLocaleDateString('zh-TW', {
 const currentUrl = `https://hankhuang0516.github.io/twopiggyhavefun-blog/posts/${post.slug}`;
 const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
 const lineShareUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(currentUrl)}`;
+
+// JSON-LD Schema
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": post.data.title,
+  "image": post.data.cover ? [post.data.cover] : [],
+  "datePublished": post.data.date.toISOString(),
+  "dateModified": post.data.date.toISOString(),
+  "author": {
+    "@type": "Person",
+    "name": "兩隻小豬"
+  },
+  "description": post.data.description || post.data.title
+};
 ---
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
 <Layout title={post.data.title} description={post.data.description} image={post.data.cover}>
     <div class="container mx-auto px-4 py-8">

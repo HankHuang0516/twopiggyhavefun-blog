@@ -14,78 +14,82 @@ import {
     getCategorySlug
 } from '../../utils/categories';
 
-export async function getStaticPaths({ paginate }) {
+const { slug } = Astro.params;
+const { categoryTitle, posts, pageNum, totalPages } = Astro.props;
+const BASE_URL = '/twopiggyhavefun-blog';
+
+// Generate paths manually to avoid "paginate" helper quirks with [...slug]
+export async function getStaticPaths() {
     const allPosts = (await getCollection('posts')).filter(p => p.data);
-    
-    // Sort posts by date desc first
-    allPosts.sort((a, b) => {
-        if (!a.data?.date || !b.data?.date) return 0;
-        return new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf();
-    });
+    // Sort desc
+    allPosts.sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf());
 
-    const categories = new Map(); // slug -> { title, posts[] }
+    const categories = new Map();
 
-    // Helper to add post to a category bucket
-    function addToBucket(slug, title, post) {
-        if (!categories.has(slug)) {
-            categories.set(slug, { title, posts: [] });
-        }
-        categories.get(slug).posts.push(post);
+    function addToBucket(key, title, post) {
+        if (!categories.has(key)) categories.set(key, { title, posts: [] });
+        categories.get(key).posts.push(post);
     }
 
-    // 1. Process Main Categories from Hierarchy
+    // 1. Main Categories
     for (const [name, config] of Object.entries(PIXNET_CATEGORY_HIERARCHY)) {
-        // Collect all posts belonging to this main category
-        const posts = allPosts.filter(post => getCategorySlug(post.data.category) === config.slug);
+        const posts = allPosts.filter(p => getCategorySlug(p.data.category) === config.slug);
         categories.set(config.slug, { title: name, posts });
     }
 
-    // 2. Process Subcategories & Tags
-    // Iterate all posts to find unique tags/categories
-    allPosts.forEach(post => {
-        const cat = post.data.category;
-        const tags = post.data.tags || [];
-
-        // Add by direct category slug (if strict match)
-        if (cat) {
-             // If it's not a main category slug, treat as sub
-            const slug = cat; 
-            // Only add if we haven't handled this slug via main category logic above?
-            // Actually, we want to support /category/台北美食 explicitly
-            addToBucket(slug, slug, post);
-        }
-
-        // Add by tags
-        tags.forEach(tag => {
-            addToBucket(tag, tag, post);
-        });
+    // 2. Sub/Tags
+    allPosts.forEach(p => {
+        if (p.data.category) addToBucket(p.data.category, p.data.category, p);
+        (p.data.tags || []).forEach(t => addToBucket(t, t, p));
     });
 
-    // 3. Generate Pagination Paths
     const paths = [];
-    for (const [slug, data] of categories.entries()) {
-        const paged = paginate(data.posts, {
-            params: { slug },
-            props: { categoryTitle: data.title },
-            pageSize: 12
-        });
-        paths.push(...paged);
-    }
+    const PAGE_SIZE = 12;
 
+    for (const [catSlug, data] of categories.entries()) {
+        const totalPosts = data.posts.length;
+        if (totalPosts === 0) continue; // Skip empty
+        const totalPages = Math.ceil(totalPosts / PAGE_SIZE);
+
+        for (let i = 1; i <= totalPages; i++) {
+            const pagePosts = data.posts.slice((i - 1) * PAGE_SIZE, i * PAGE_SIZE);
+            
+            // Page 1 is just the slug (e.g., "domestic-travel")
+            // Page 2+ is "domestic-travel/2"
+            const urlSlug = i === 1 ? catSlug : `${catSlug}/${i}`;
+
+            paths.push({
+                params: { slug: urlSlug },
+                props: {
+                    categoryTitle: data.title,
+                    posts: pagePosts,
+                    pageNum: i,
+                    totalPages
+                }
+            });
+        }
+    }
     return paths;
 }
 
-const { page, categoryTitle } = Astro.props;
-const BASE_URL = '/twopiggyhavefun-blog';
-
-function fixImagePath(src: string | undefined): string {
+function fixImagePath(src) {
     if (!src) return `${BASE_URL}/placeholder.jpg`;
     if (src.startsWith('http')) return src;
-    if (src.startsWith('/') && !src.startsWith(BASE_URL)) {
-        return `${BASE_URL}${src}`;
-    }
+    if (src.startsWith('/') && !src.startsWith(BASE_URL)) return `${BASE_URL}${src}`;
     return src;
 }
+
+// Construct Prev/Next URLs logic
+// We need to know the 'base' category slug to build links.
+// We can derive it by removing `/${pageNum}` from current slug if pageNum > 1
+const currentSlug = slug;
+const baseCategorySlug = pageNum === 1 ? currentSlug : currentSlug.replace(`/${pageNum}`, '');
+
+const prevUrl = pageNum === 1 ? null : 
+    (pageNum === 2 ? `${BASE_URL}/category/${baseCategorySlug}` : `${BASE_URL}/category/${baseCategorySlug}/${pageNum - 1}`);
+
+const nextUrl = pageNum === totalPages ? null : `${BASE_URL}/category/${baseCategorySlug}/${pageNum + 1}`;
+
 ---
 
 <Layout title={`${categoryTitle} - 兩隻小豬`}>
@@ -97,12 +101,12 @@ function fixImagePath(src: string | undefined): string {
                     <span class="text-blue-600">📂</span> {categoryTitle}
                 </h1>
                 <p class="text-gray-500 mt-2">
-                    共 {page.total} 篇文章 (第 {page.currentPage} / {page.lastPage} 頁)
+                    第 {pageNum} / {totalPages} 頁
                 </p>
             </header>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {page.data.map((post) => (
+                {posts.map((post) => (
                     <article class="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition overflow-hidden">
                         <a href={`${BASE_URL}/posts/${post.slug}`} class="block h-full">
                             <div class="aspect-w-16 aspect-h-9 bg-gray-100 relative h-48">
@@ -129,7 +133,7 @@ function fixImagePath(src: string | undefined): string {
                 ))}
             </div>
 
-            {page.total === 0 && (
+            {posts.length === 0 && (
                 <div class="text-center py-20 text-gray-500">
                     <p class="text-xl">此分類目前沒有文章。</p>
                     <a href={BASE_URL} class="text-blue-500 hover:underline mt-4 inline-block">返回首頁</a>
@@ -137,10 +141,10 @@ function fixImagePath(src: string | undefined): string {
             )}
 
             <!-- Pagination Controls -->
-            {page.lastPage > 1 && (
+            {totalPages > 1 && (
                 <div class="mt-12 flex justify-center gap-2">
-                    {page.url.prev ? (
-                        <a href={page.url.prev} class="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-50">
+                    {prevUrl ? (
+                        <a href={prevUrl} class="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-50">
                             &larr; 上一頁
                         </a>
                     ) : (
@@ -150,11 +154,11 @@ function fixImagePath(src: string | undefined): string {
                     )}
                     
                     <span class="px-4 py-2 text-gray-500">
-                        {page.currentPage} / {page.lastPage}
+                        {pageNum} / {totalPages}
                     </span>
 
-                    {page.url.next ? (
-                        <a href={page.url.next} class="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-50">
+                    {nextUrl ? (
+                        <a href={nextUrl} class="px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-50">
                             下一頁 &rarr;
                         </a>
                     ) : (
