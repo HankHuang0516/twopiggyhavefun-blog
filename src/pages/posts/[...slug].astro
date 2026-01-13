@@ -79,7 +79,7 @@ const breadcrumbSchema = {
                     <span class="mx-2">›</span>
                 </>
             )}
-            <span class="text-gray-700">{post.data.title.slice(0, 30)}...</span>
+            <span class="text-gray-700 breadcrumb-title" title={post.data.title}>{post.data.title}</span>
         </nav>
 
         <div class="flex flex-col lg:flex-row gap-8">
@@ -187,6 +187,7 @@ const breadcrumbSchema = {
 
 <style is:global>
     /* Pixnet Content Overrides */
+    /* Pixnet Content Overrides */
     .pixnet-content img {
         margin: 1.5em auto;
         max-width: 100%;
@@ -200,6 +201,13 @@ const breadcrumbSchema = {
         margin-bottom: 1.5em;
         line-height: 1.8;
     }
+    .pixnet-content table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        max-width: 100%;
+        margin: 1em 0;
+    }
     .pixnet-content ul { list-style-type: disc; padding-left: 1.5em; }
     .pixnet-content ol { list-style-type: decimal; padding-left: 1.5em; }
     .pixnet-content a {
@@ -207,6 +215,19 @@ const breadcrumbSchema = {
     }
     .pixnet-content a:hover {
         text-decoration: underline;
+    }
+    .breadcrumb-title {
+        display: inline-block;
+        max-width: 150px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: bottom;
+    }
+    @media (min-width: 768px) {
+        .breadcrumb-title {
+            max-width: 300px;
+        }
     }
 </style>
 
