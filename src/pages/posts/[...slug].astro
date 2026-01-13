@@ -24,7 +24,7 @@ export async function getStaticPaths() {
 }
 
 const { post, prevPost, nextPost } = Astro.props;
-const { Content } = await post.render();
+const { Content, headings } = await post.render();
 
 const safeDate = post.data.date ? new Date(post.data.date) : new Date();
 const formattedDate = safeDate.toLocaleDateString('zh-TW', {
@@ -144,6 +144,29 @@ const breadcrumbSchema = {
                         </a>
                     )}
                 </header>
+
+                <!-- Table of Contents (Mobile Friendly Collapsible) -->
+                {headings && headings.length > 0 && (
+                    <div class="mb-8 border border-gray-200 rounded-lg overflow-hidden">
+                        <details class="group bg-gray-50">
+                            <summary class="flex items-center justify-between p-4 font-bold text-gray-700 cursor-pointer select-none">
+                                <span>📖 文章目錄 (Table of Contents)</span>
+                                <span class="transition group-open:rotate-180">▼</span>
+                            </summary>
+                            <nav class="p-4 pt-0 bg-white">
+                                <ul class="space-y-2 text-sm mt-3">
+                                    {headings.filter(h => h.depth <= 3).map(h => (
+                                        <li class={`pl-${(h.depth - 1) * 3} border-l-2 border-transparent hover:border-blue-500`}>
+                                            <a href={`#${h.slug}`} class="block py-1 text-gray-600 hover:text-blue-600 transition truncate">
+                                                {h.text}
+                                            </a>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </nav>
+                        </details>
+                    </div>
+                )}
 
                 <!-- Featured Image -->
                 {post.data.cover && (
