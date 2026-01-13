@@ -44,6 +44,9 @@ const navLinks = [
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
     </head>
     <body class="bg-white text-gray-800">
+        <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-white focus:text-blue-600 fixed top-0 left-0">
+            跳至主要內容 (Skip to main content)
+        </a>
         
         <!-- Mobile Minimal Header (Only show if minimalHeader is true) -->
         {minimalHeader && (
@@ -106,7 +109,7 @@ const navLinks = [
             </nav>
         </header>
 
-        <main class="min-h-screen">
+        <main id="main-content" class="min-h-screen">
             <slot />
         </main>
         
@@ -114,10 +117,10 @@ const navLinks = [
         <footer class="bg-[#1a1a2e] text-gray-400 py-6 mt-12">
             <div class="container mx-auto px-4 text-center text-sm">
                 <p class="mb-2">
-                    © 2026 兩隻小豬旅行親子生活 國內外旅遊,親子行程,露營生活,美食懶人包
+                    © {new Date().getFullYear()} 兩隻小豬旅行親子生活 國內外旅遊,親子行程,露營生活,美食懶人包
                 </p>
                 <p>
-                    佈景：<a href="#" class="hover:text-gray-300">Flavor</a> | 
+                    佈景：<span class="text-gray-500">Flavor</span> | 
                     <a href="/twopiggyhavefun-blog/about" style="color: #c9a961;" class="hover:underline">網頁設計：兩隻小豬</a>
                 </p>
             </div>
