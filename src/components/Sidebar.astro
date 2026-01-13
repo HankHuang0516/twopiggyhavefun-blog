@@ -304,6 +304,20 @@ const parentOrder = [
                 </li>
             ))}
         </ul>
+            ))}
+        </ul>
+    </div>
+
+    <!-- Tags Cloud -->
+    <div class="bg-white border border-gray-200 p-4">
+        <h3 class="text-lg font-bold mb-4 text-red-600">熱門標籤</h3>
+        <div class="flex flex-wrap gap-2">
+            {['台北美食', '台中景點', '親子餐廳', '住宿推薦', '日本旅遊', '台灣小吃'].map(tag => (
+                <a href={`/twopiggyhavefun-blog/category/${tag}`} class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded hover:bg-red-50 hover:text-red-500 transition">
+                    #{tag}
+                </a>
+            ))}
+        </div>
     </div>
 
     <!-- Search -->
@@ -324,6 +338,13 @@ const parentOrder = [
     .toggle-icon { display: inline-block; transition: transform 0.2s; }
     .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    
+    /* External Link Icon for Content */
+    .pixnet-content a[target="_blank"]::after {
+        content: " ↗";
+        font-size: 0.8em;
+        opacity: 0.7;
+    }
 </style>
 
 <script>

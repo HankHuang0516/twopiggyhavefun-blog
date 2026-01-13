@@ -238,6 +238,15 @@ const navLinks = [
     nav a, .post-card a, .sidebar a, button, footer a {
         text-decoration: none;
     }
+    
+    /* Global External Link helper */
+    article .prose a[href^="http"]:not([href*="hankhuang0516.github.io"])::after {
+        content: " ↗";
+        font-size: 0.75em;
+        vertical-align: super;
+        margin-left: 2px;
+        opacity: 0.6;
+    }
 </style>
 
 <script>
