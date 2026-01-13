@@ -52,9 +52,11 @@ const displayCategory = categoryNames[category] || category;
 
 <Layout title={displayCategory}>
   <div class="container mx-auto px-4 py-12">
-    <header class="mb-12 text-center">
-        <h1 class="text-4xl font-bold text-gray-900 mb-4">{displayCategory}</h1>
-        <p class="text-gray-500">共 {posts.length} 篇文章</p>
+    <header class="mb-12 text-center bg-gray-50 py-10 rounded-2xl border border-gray-100">
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3 flex items-center justify-center gap-3">
+             <span class="text-[#c9a961]">📂</span> {displayCategory}
+        </h1>
+        <p class="text-gray-500 font-medium">共 {posts.length} 篇文章</p>
     </header>
 
     {posts.length > 0 ? (
