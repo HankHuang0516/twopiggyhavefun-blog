@@ -9,11 +9,8 @@ interface Props {
 }
 
 const { title, slug, date, cover, tags = [] } = Astro.props;
-const formattedDate = new Date(date).toLocaleDateString('zh-TW', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-});
+import { formatDate } from '../utils/date';
+const formattedDate = formatDate(date);
 
 // Helper to fix image paths
 const BASE_URL = '/twopiggyhavefun-blog';

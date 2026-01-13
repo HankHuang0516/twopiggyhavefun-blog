@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import PostCard from '../../components/PostCard.astro';
 
 export async function getStaticPaths() {
   const allPosts = (await getCollection('posts')).filter(p => p.data);
@@ -60,37 +61,31 @@ const displayCategory = categoryNames[category] || category;
     </header>
 
     {posts.length > 0 ? (
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.map((post) => (
-                <article class="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col h-full border border-gray-100 group">
-                    <a href={`/posts/${post.slug}`} class="block overflow-hidden h-48 md:h-56 relative">
-                        <img 
-                            src={post.data.cover || '/placeholder.jpg'} 
-                            alt={post.data.title}
-                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                        />
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    </a>
-                    <div class="p-6 flex-1 flex flex-col">
-                        <div class="mb-3 text-sm text-gray-500 flex items-center justify-between">
-                                <span>{new Date(post.data.date).toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' })}</span>
-                        </div>
-                        <h2 class="text-xl font-bold mb-3 leading-snug text-gray-800 group-hover:text-pink-600 transition-colors line-clamp-2">
-                            <a href={`/posts/${post.slug}`}>
-                                {post.data.title}
-                            </a>
-                        </h2>
-                        <a href={`/posts/${post.slug}`} class="mt-auto text-pink-600 font-medium hover:text-pink-700 inline-flex items-center gap-1 group/btn">
-                            繼續閱讀 <span class="group-hover/btn:translate-x-1 transition-transform">→</span>
-                        </a>
-                    </div>
-                </article>
+                <PostCard 
+                    title={post.data.title} 
+                    slug={post.slug} 
+                    date={post.data.date} 
+                    cover={post.data.cover}
+                    tags={post.data.tags}
+                    category={post.data.category}
+                />
             ))}
         </div>
     ) : (
-        <div class="text-center py-20 bg-gray-50 rounded-lg">
-            <p class="text-gray-500 text-lg mb-4">目前此分類尚無文章。</p>
-            <a href="/twopiggyhavefun-blog/" class="text-blue-600 hover:underline">返回首頁</a>
+        <div class="text-center py-20 bg-gray-50 rounded-2xl border border-gray-100">
+            <div class="text-6xl mb-4">📭</div>
+            <h2 class="text-2xl font-bold text-gray-700 mb-2">這裡還沒有文章</h2>
+            <p class="text-gray-500 mb-6">這個分類目前是空的，晚點再來看看吧！</p>
+            <div class="flex justify-center gap-4">
+                <a href="/twopiggyhavefun-blog/" class="text-blue-600 hover:text-white hover:bg-blue-600 px-6 py-2 rounded-full border border-blue-200 transition">
+                    回首頁
+                </a>
+                <a href="/twopiggyhavefun-blog/search" class="text-gray-600 hover:text-white hover:bg-gray-600 px-6 py-2 rounded-full border border-gray-300 transition">
+                    搜尋文章
+                </a>
+            </div>
         </div>
     )}
   </div>
