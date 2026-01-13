@@ -9,7 +9,7 @@ import Layout from '../layouts/Layout.astro';
         <p class="text-gray-500 text-lg mb-8 max-w-md">
             糟糕！您可能迷路了。您所尋找的頁面可能已被移除、名稱更改或暫時無法使用。
         </p>
-        <div class="flex flex-col md:flex-row gap-4">
+        <div class="flex flex-col md:flex-row gap-4 mb-12">
             <a href="/twopiggyhavefun-blog/" 
                class="bg-[#337ab7] text-white px-8 py-3 rounded-full hover:bg-blue-600 transition shadow-lg flex items-center gap-2">
                 <span>🏠</span> 返回首頁
@@ -18,6 +18,16 @@ import Layout from '../layouts/Layout.astro';
                class="bg-white text-gray-700 border border-gray-300 px-8 py-3 rounded-full hover:bg-gray-50 transition shadow-sm flex items-center gap-2">
                 <span>✈️</span> 探索旅遊文章
             </a>
+        </div>
+        
+        <div class="w-full max-w-md mx-auto">
+            <p class="text-gray-500 mb-2 text-sm">或者試試看搜尋？</p>
+            <div class="bg-white p-2 rounded-lg shadow-sm border border-gray-200">
+                <form action="/twopiggyhavefun-blog/search" method="get" class="flex">
+                    <input type="text" name="q" placeholder="例如：台北美食..." class="flex-1 px-4 py-2 bg-transparent focus:outline-none" required />
+                    <button type="submit" class="bg-gray-800 text-white px-6 py-2 rounded-md hover:bg-gray-700 transition">搜尋</button>
+                </form>
+            </div>
         </div>
     </div>
 </Layout>
