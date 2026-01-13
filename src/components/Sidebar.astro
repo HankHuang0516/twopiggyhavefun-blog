@@ -213,8 +213,8 @@ const parentOrder = [
                 return (
                     <div class="dtree-node">
                         <div class="flex items-center py-1">
-                            <button class="toggle-btn w-5 text-gray-500" data-target={catId}>
-                                <span class="toggle-icon">▶</span>
+                            <button class="toggle-btn w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 active:bg-gray-100 rounded-full transition-colors -ml-1" data-target={catId}>
+                                <span class="toggle-icon text-xs">▶</span>
                             </button>
                             <a href={`${BASE_URL}/category/${parentSlug}`} class="font-medium text-gray-800 hover:text-blue-600">
                                 {parentName}
@@ -229,7 +229,7 @@ const parentOrder = [
                                 return (
                                     <div class="py-0.5">
                                         <div class="flex items-center">
-                                            <button class="toggle-btn w-4 text-gray-400 text-xs" data-target={subId}>
+                                            <button class="toggle-btn w-6 h-6 flex items-center justify-center text-gray-400 hover:text-gray-600 active:bg-gray-100 rounded-full transition-colors -ml-1 text-[10px]" data-target={subId}>
                                                 <span class="toggle-icon">▶</span>
                                             </button>
                                             <a href={`${BASE_URL}/category/${subName}`} 
