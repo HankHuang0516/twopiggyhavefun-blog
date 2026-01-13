@@ -60,10 +60,12 @@ function fixImagePath(src: string | undefined): string {
             ))}
         </div>
         
-        <!-- Read More Button -->
         <a href={`/twopiggyhavefun-blog/posts/${slug}`}
-           class="inline-block bg-black text-white px-6 py-2 text-sm font-medium hover:bg-gray-800 transition">
+           class="inline-block bg-black text-white px-6 py-2 text-sm font-medium hover:bg-gray-800 transition z-10 relative">
             繼續閱讀
         </a>
     </div>
+    
+    <!-- Full Card Clickable Overlay -->
+    <a href={`/twopiggyhavefun-blog/posts/${slug}`} class="absolute inset-0 z-0" aria-label={`閱讀文章: ${title}`}></a>
 </article>

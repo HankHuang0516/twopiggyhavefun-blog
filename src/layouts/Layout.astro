@@ -303,11 +303,14 @@ const navLinks = [
             // Fade In
             img.style.opacity = '0';
             img.style.transition = 'opacity 0.5s ease-in-out';
+            img.style.backgroundColor = '#f3f4f6'; // gray-100 placeholder
             if (img.complete) {
                 img.style.opacity = '1';
+                img.style.backgroundColor = 'transparent'; // Remove placeholder color on load
             } else {
                 img.onload = () => {
                     img.style.opacity = '1';
+                    img.style.backgroundColor = 'transparent';
                 };
             }
 
