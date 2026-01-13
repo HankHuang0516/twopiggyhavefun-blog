@@ -47,7 +47,20 @@ import Sidebar from '../components/Sidebar.astro';
                 
                 if (resultsEl) {
                     if (results.length === 0) {
-                        resultsEl.innerHTML = '<p class="text-gray-500 col-span-2 text-center py-10">找不到相關文章。</p>';
+                        resultsEl.innerHTML = `
+                            <div class="col-span-1 md:col-span-2 text-center py-10">
+                                <p class="text-gray-500 text-lg mb-4">找不到與 "${query}" 相關的文章。</p>
+                                <div class="text-sm text-gray-400">
+                                    <p class="mb-2">建議您嘗試以下熱門關鍵字：</p>
+                                    <div class="flex flex-wrap justify-center gap-2">
+                                        <a href="?q=日本" class="bg-gray-100 px-3 py-1 rounded hover:bg-blue-100 text-blue-600">日本</a>
+                                        <a href="?q=台北" class="bg-gray-100 px-3 py-1 rounded hover:bg-blue-100 text-blue-600">台北</a>
+                                        <a href="?q=住宿" class="bg-gray-100 px-3 py-1 rounded hover:bg-blue-100 text-blue-600">住宿</a>
+                                        <a href="?q=拉麵" class="bg-gray-100 px-3 py-1 rounded hover:bg-blue-100 text-blue-600">拉麵</a>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
                     } else {
                         const baseUrl = '/twopiggyhavefun-blog';
                         resultsEl.innerHTML = results.map((post: any) => `
