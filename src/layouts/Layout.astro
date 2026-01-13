@@ -99,7 +99,7 @@ const navLinks = [
                         {navLinks.map((link) => (
                             <li>
                                 <a href={link.href} 
-                                   class="block px-4 py-3 text-gray-300 text-sm hover:text-white transition">
+                                   class={`block px-4 py-3 text-sm hover:text-white transition ${Astro.url.pathname === link.href || (link.href !== '/twopiggyhavefun-blog/' && Astro.url.pathname.startsWith(link.href)) ? 'text-white font-bold border-b-2 border-[#c9a961]' : 'text-gray-300'}`}>
                                     {link.name}
                                 </a>
                             </li>
@@ -114,7 +114,7 @@ const navLinks = [
         </main>
         
         <!-- Footer: Matching bobowin style -->
-        <footer class="bg-[#1a1a2e] text-gray-400 py-8 mt-12 mb-16 lg:mb-0">
+        <footer class="bg-[#1a1a2e] text-gray-400 py-8 mt-12 pb-24 lg:pb-8">
             <div class="container mx-auto px-4 text-center text-sm">
                 <p class="mb-4 text-gray-500">
                     © {new Date().getFullYear()} 兩隻小豬旅行親子生活 國內外旅遊,親子行程,露營生活,美食懶人包
