@@ -239,10 +239,41 @@ const navLinks = [
 </style>
 
 <script>
-    // Fade in images when loaded
+    // Fade in images and Zoom logic
     document.addEventListener('DOMContentLoaded', () => {
         const images = document.querySelectorAll('img');
+        
+        // Create Lightbox Elements
+        const lightbox = document.createElement('div');
+        lightbox.id = 'lightbox-modal';
+        lightbox.className = 'fixed inset-0 z-[60] bg-black/90 hidden flex items-center justify-center cursor-zoom-out opacity-0 transition-opacity duration-300';
+        lightbox.innerHTML = `
+            <img class="max-w-[90vw] max-h-[90vh] object-contain transform scale-95 transition-transform duration-300">
+            <button class="absolute top-4 right-4 text-white text-4xl">&times;</button>
+        `;
+        document.body.appendChild(lightbox);
+        
+        const lightboxImg = lightbox.querySelector('img');
+        const closeBtn = lightbox.querySelector('button');
+
+        function closeLightbox() {
+            lightbox.classList.remove('opacity-100');
+            lightbox.classList.add('opacity-0');
+            lightboxImg.classList.remove('scale-100');
+            lightboxImg.classList.add('scale-95');
+            setTimeout(() => {
+                lightbox.classList.add('hidden');
+            }, 300);
+        }
+
+        lightbox.addEventListener('click', closeLightbox);
+        closeBtn.addEventListener('click', closeLightbox);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+
         images.forEach(img => {
+            // Fade In
             img.style.opacity = '0';
             img.style.transition = 'opacity 0.5s ease-in-out';
             if (img.complete) {
@@ -251,6 +282,24 @@ const navLinks = [
                 img.onload = () => {
                     img.style.opacity = '1';
                 };
+            }
+
+            // Lightbox Click (only for content images or large images)
+            // We exclude iconic svgs or small icons if possible, but for simplicity let's apply to all larger images
+            if (img.width > 100 || img.classList.contains('object-cover')) {
+                img.style.cursor = 'zoom-in';
+                img.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    lightboxImg.src = img.src;
+                    lightbox.classList.remove('hidden');
+                    // Force reflow
+                    void lightbox.offsetWidth; 
+                    lightbox.classList.remove('opacity-0');
+                    lightbox.classList.add('opacity-100');
+                    lightboxImg.classList.remove('scale-95');
+                    lightboxImg.classList.add('scale-100');
+                });
             }
         });
     });

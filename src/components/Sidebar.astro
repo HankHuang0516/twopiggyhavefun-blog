@@ -166,7 +166,7 @@ const parentOrder = [
 <aside id="sidebar-panel" class="sidebar fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-2xl transform -translate-x-full transition-transform duration-300 lg:relative lg:translate-x-0 lg:w-80 lg:shadow-none lg:z-auto space-y-6 overflow-y-auto">
     <!-- Mobile Header with Close Button -->
     <div class="lg:hidden flex items-center justify-between p-4 bg-gray-50 border-b border-gray-200">
-        <span class="font-bold text-gray-700">設定 & 搜尋</span>
+        <span class="font-bold text-gray-700">選單 (Menu)</span>
         <button id="close-sidebar-btn" class="p-2 text-gray-500 hover:text-red-500 transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -174,6 +174,17 @@ const parentOrder = [
         </button>
     </div>
     <SearchWidget />
+    
+    <!-- Mobile Main Navigation (Only visible on mobile) -->
+    <div class="lg:hidden bg-white border border-gray-200 p-4">
+        <h3 class="text-lg font-bold mb-3 text-red-600">主選單</h3>
+        <ul class="space-y-2">
+            <li><a href="/twopiggyhavefun-blog/about" class="block text-gray-700 hover:text-blue-600">關於兩隻小豬</a></li>
+            <li><a href="/twopiggyhavefun-blog/category/travel" class="block text-gray-700 hover:text-blue-600">台灣好玩好吃趴趴走</a></li>
+            <li><a href="/twopiggyhavefun-blog/category/parenting" class="block text-gray-700 hover:text-blue-600">親子育兒</a></li>
+            <li><a href="/twopiggyhavefun-blog/category/domestic-food" class="block text-gray-700 hover:text-blue-600">美食餐廳</a></li>
+        </ul>
+    </div>
     <!-- Article Categories -->
     <div class="bg-white border border-gray-200 p-4">
         <h3 class="text-lg font-bold mb-3 text-red-600">文章</h3>
