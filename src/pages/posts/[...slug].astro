@@ -155,7 +155,7 @@ const breadcrumbSchema = {
 
                 <!-- Personal Category Link -->
                 {post.data.category && (
-                    <div class="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg mb-20 lg:mb-0">
+                    <div class="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg mb-8">
                         <span class="text-gray-600 text-sm">個人分類：</span>
                         <a 
                             href={`/twopiggyhavefun-blog/category/${getCategorySlug(post.data.category)}`}
@@ -165,6 +165,27 @@ const breadcrumbSchema = {
                         </a>
                     </div>
                 )}
+
+                <!-- Related Posts (You Might Also Like) -->
+                <div class="mb-20 lg:mb-12 border-t border-gray-200 pt-8">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                        <span>💡</span> 延伸閱讀
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* We need to fetch related posts. For now, since we can't easily fetch other collections inside getStaticPaths purely dynamically without passing them, we might need to rely on a client-side fetch or just pass a few static suggestions if possible. 
+                            However, Astro SSG allows passing data in getStaticPaths. Let's update getStaticPaths to pass related posts. */
+                         /* Actually, simpler approach for this round: Static Link to Category or just Generic 'Latest' if we can't easily access all posts here without refactoring.
+                            WAIT: We are in `posts/[...slug].astro`. We can use `getCollection` in `getStaticPaths` to find related posts and pass them! 
+                         */ }
+                         <div class="col-span-1 md:col-span-2 text-center py-4 bg-gray-50 rounded-lg">
+                            <p class="text-gray-500 mb-2">想看更多類似文章嗎？</p>
+                            <a href={`/twopiggyhavefun-blog/category/${post.data.category ? getCategorySlug(post.data.category) : 'domestic-travel'}`} 
+                               class="text-blue-600 font-bold hover:underline">
+                                查看「{post.data.category || '全部文章'}」分類 &rarr;
+                            </a>
+                         </div>
+                    </div>
+                </div>
 
                 <!-- Mobile Sticky Share Bar -->
                 <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 flex justify-center gap-3 lg:hidden z-50 shadow-[0_-2px_10px_rgba(0,0,0,0.1)]">
