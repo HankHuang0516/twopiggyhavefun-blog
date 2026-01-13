@@ -68,18 +68,18 @@ const breadcrumbSchema = {
 <Layout title={post.data.title} description={post.data.description} image={post.data.cover}>
     <div class="container mx-auto px-4 py-8">
         <!-- Breadcrumbs -->
-        <nav class="text-sm mb-6 text-gray-500">
-            <a href="/twopiggyhavefun-blog/" class="hover:text-blue-600">首頁</a>
-            <span class="mx-2">›</span>
+        <nav class="text-sm mb-6 text-gray-500 flex items-center whitespace-nowrap overflow-hidden">
+            <a href="/twopiggyhavefun-blog/" class="hover:text-blue-600 flex-shrink-0">首頁</a>
+            <span class="mx-2 flex-shrink-0">›</span>
             {post.data.category && (
                 <>
-                    <a href={`/twopiggyhavefun-blog/category/${getCategorySlug(post.data.category)}`} class="hover:text-blue-600">
+                    <a href={`/twopiggyhavefun-blog/category/${getCategorySlug(post.data.category)}`} class="hover:text-blue-600 flex-shrink-0">
                         {post.data.category}
                     </a>
-                    <span class="mx-2">›</span>
+                    <span class="mx-2 flex-shrink-0">›</span>
                 </>
             )}
-            <span class="text-gray-700 breadcrumb-title" title={post.data.title}>{post.data.title}</span>
+            <span class="text-gray-700 breadcrumb-title truncate" title={post.data.title}>{post.data.title}</span>
         </nav>
 
         <div class="flex flex-col lg:flex-row gap-8">

@@ -2,19 +2,53 @@
 // SearchWidget.astro
 ---
 <div class="bg-white p-5 border border-gray-200 mb-6 rounded-lg shadow-sm">
-  <form action="/twopiggyhavefun-blog/search" method="get" class="flex relative">
-    <input 
-      type="text" 
-      name="q" 
-      placeholder="搜尋文章..." 
-      required
-      class="flex-1 border border-gray-300 px-4 py-2.5 text-base focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-    />
+  <form action="/twopiggyhavefun-blog/search" method="get" class="flex relative group">
+    <div class="relative flex-1">
+        <input 
+          type="text" 
+          name="q" 
+          id="search-input"
+          placeholder="搜尋文章..." 
+          required
+          class="w-full border border-gray-300 pl-4 pr-10 py-2.5 text-base focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors rounded-l-md"
+        />
+        <button type="button" id="clear-search" class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 hidden p-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+            </svg>
+        </button>
+    </div>
     <button 
       type="submit" 
-      class="bg-[#2c3e50] text-white px-6 py-2.5 text-sm font-medium hover:bg-[#34495e] transition-colors"
+      class="bg-[#2c3e50] text-white px-6 py-2.5 text-sm font-medium hover:bg-[#34495e] transition-colors rounded-r-md whitespace-nowrap"
     >
       搜尋
     </button>
   </form>
 </div>
+
+<script>
+    const searchInput = document.getElementById('search-input') as HTMLInputElement;
+    const clearBtn = document.getElementById('clear-search');
+
+    if (searchInput && clearBtn) {
+        // Show/Hide logic
+        const toggleClear = () => {
+            if (searchInput.value.length > 0) {
+                clearBtn.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+            }
+        };
+
+        searchInput.addEventListener('input', toggleClear);
+        toggleClear(); // Init check
+
+        // Clear action
+        clearBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            searchInput.focus();
+            toggleClear();
+        });
+    }
+</script>
