@@ -1,86 +1,108 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Sidebar from '../components/Sidebar.astro';
+import { getCollection } from 'astro:content';
+
+const { q } = Astro.url.searchParams;
+const query = q || '';
+
+// Get all posts
+const allPosts = await getCollection('posts');
+const posts = allPosts.filter(p => p.data);
+
+// Client-side search logic will happen in the script below
+// But we prepare the data structure for Fuse.js
+const serializedPosts = posts.map(post => ({
+    title: post.data.title,
+    description: post.data.description,
+    slug: post.slug,
+    date: post.data.date,
+    category: post.data.category,
+    cover: post.data.cover
+}));
 ---
 
-<Layout title="搜尋結果 | 兩隻小豬">
-    <div class="container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">
-        <div class="flex-1">
-            <header class="mb-8 border-b border-gray-200 pb-4">
-                <h1 class="text-3xl font-bold text-gray-800">搜尋結果: <span id="search-term" class="text-blue-600"></span></h1>
-                <p id="search-stats" class="text-gray-500 mt-2">搜尋中...</p>
-            </header>
+<Layout title={`搜尋結果: ${query}`}>
+    <div class="container mx-auto px-4 py-12">
+        <header class="mb-12 text-center bg-gray-50 py-10 rounded-2xl border border-gray-100">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                搜尋結果
+            </h1>
+            <p class="text-gray-500 text-lg">
+                關鍵字：<span class="text-blue-600 font-bold">"{query}"</span>
+            </p>
+        </header>
 
-            <div id="search-results" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Results injected here -->
+        <div id="search-results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Results injected here -->
+            <div class="col-span-full text-center py-20">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mb-4"></div>
+                <p class="text-gray-500">正在搜尋...</p>
             </div>
         </div>
-        <Sidebar />
+        
+        <div id="no-results" class="hidden text-center py-20 bg-gray-50 rounded-lg">
+            <p class="text-gray-500 text-lg mb-4">找不到與 "<span class="font-bold">{query}</span>" 相關文章。</p>
+            <a href="/twopiggyhavefun-blog/" class="text-blue-600 hover:underline">返回首頁</a>
+        </div>
     </div>
 </Layout>
 
-<script>
-    const searchParams = new URLSearchParams(window.location.search);
-    const query = searchParams.get('q')?.toLowerCase() || '';
-    
-    const termEl = document.getElementById('search-term');
-    if (termEl) termEl.textContent = query;
+<script define:vars={{ serializedPosts, query }}>
+    import Fuse from 'https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.esm.js';
 
-    if (!query) {
-        const statsEl = document.getElementById('search-stats');
-        if (statsEl) statsEl.textContent = '請輸入關鍵字搜尋';
-    } else {
-        fetch('/twopiggyhavefun-blog/search.json')
-            .then(res => res.json())
-            .then(posts => {
-                const results = posts.filter((post: any) => {
-                    const title = post.title?.toLowerCase() || '';
-                    const desc = post.description?.toLowerCase() || '';
-                    const tags = post.tags?.join(' ').toLowerCase() || '';
-                    return title.includes(query) || desc.includes(query) || tags.includes(query);
-                });
+    document.addEventListener('DOMContentLoaded', () => {
+        const resultsContainer = document.getElementById('search-results');
+        const noResults = document.getElementById('no-results');
 
-                const statsEl = document.getElementById('search-stats');
-                const resultsEl = document.getElementById('search-results');
-                
-                if (statsEl) statsEl.textContent = `共找到 ${results.length} 篇相關文章`;
-                
-                if (resultsEl) {
-                    if (results.length === 0) {
-                        resultsEl.innerHTML = `
-                            <div class="col-span-1 md:col-span-2 text-center py-10">
-                                <p class="text-gray-500 text-lg mb-4">找不到與 "${query}" 相關的文章。</p>
-                                <div class="text-sm text-gray-400">
-                                    <p class="mb-2">建議您嘗試以下熱門關鍵字：</p>
-                                    <div class="flex flex-wrap justify-center gap-2">
-                                        <a href="?q=日本" class="bg-gray-100 px-3 py-1 rounded hover:bg-blue-100 text-blue-600">日本</a>
-                                        <a href="?q=台北" class="bg-gray-100 px-3 py-1 rounded hover:bg-blue-100 text-blue-600">台北</a>
-                                        <a href="?q=住宿" class="bg-gray-100 px-3 py-1 rounded hover:bg-blue-100 text-blue-600">住宿</a>
-                                        <a href="?q=拉麵" class="bg-gray-100 px-3 py-1 rounded hover:bg-blue-100 text-blue-600">拉麵</a>
-                                    </div>
-                                </div>
+        if (!query) {
+            resultsContainer.innerHTML = '';
+            noResults.classList.remove('hidden');
+            return;
+        }
+
+        const fuse = new Fuse(serializedPosts, {
+            keys: ['title', 'description', 'category'],
+            threshold: 0.4,
+            includeScore: true
+        });
+
+        const results = fuse.search(query);
+
+        if (results.length === 0) {
+            resultsContainer.innerHTML = '';
+            noResults.classList.remove('hidden');
+        } else {
+            noResults.classList.add('hidden');
+            resultsContainer.innerHTML = results.map(result => {
+                const post = result.item;
+                const date = new Date(post.date).toLocaleDateString('zh-TW');
+                const cover = post.cover || '/twopiggyhavefun-blog/placeholder.jpg';
+                // Fix path
+                const safeCover = cover.startsWith('/') && !cover.startsWith('/twopiggyhavefun-blog') 
+                    ? `/twopiggyhavefun-blog${cover}` 
+                    : cover;
+
+                return `
+                    <article class="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col h-full border border-gray-100 group">
+                        <a href="/twopiggyhavefun-blog/posts/${post.slug}" class="block overflow-hidden h-48 relative">
+                            <img src="${safeCover}" alt="${post.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        </a>
+                        <div class="p-6 flex-1 flex flex-col">
+                            <div class="mb-2 text-sm text-gray-500 flex justify-between">
+                                <span>${date}</span>
+                                <span class="text-blue-500">${post.category || '未分類'}</span>
                             </div>
-                        `;
-                    } else {
-                        const baseUrl = '/twopiggyhavefun-blog';
-                        resultsEl.innerHTML = results.map((post: any) => `
-                            <article class="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition overflow-hidden">
-                                <a href="${baseUrl}/posts/${post.slug}" class="block h-full p-4">
-                                    <h2 class="text-lg font-bold text-gray-800 mb-2 hover:text-blue-600">${post.title}</h2>
-                                    <p class="text-gray-600 text-sm line-clamp-3 mb-3">${post.description}...</p>
-                                    <span class="text-xs text-gray-400">
-                                        ${new Date(post.date).toLocaleDateString('zh-TW')}
-                                    </span>
-                                </a>
-                            </article>
-                        `).join('');
-                    }
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                const statsEl = document.getElementById('search-stats');
-                if (statsEl) statsEl.textContent = '搜尋發生錯誤';
-            });
-    }
+                            <h2 class="text-xl font-bold mb-3 leading-snug text-gray-800 group-hover:text-blue-600 transition-colors line-clamp-2">
+                                <a href="/twopiggyhavefun-blog/posts/${post.slug}">${post.title}</a>
+                            </h2>
+                            <p class="text-gray-600 text-sm line-clamp-2 mb-4 flex-1">${post.description || ''}</p>
+                            <a href="/twopiggyhavefun-blog/posts/${post.slug}" class="mt-auto text-blue-600 font-medium hover:underline">
+                                繼續閱讀 →
+                            </a>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+        }
+    });
 </script>
