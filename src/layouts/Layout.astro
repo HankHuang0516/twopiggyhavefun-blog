@@ -257,7 +257,8 @@ const navLinks = [
     }
     
     /* Global External Link helper */
-    article .prose a[href^="http"]:not([href*="hankhuang0516.github.io"])::after {
+    /* Global External Link helper */
+    .external-link::after {
         content: " ↗";
         font-size: 0.75em;
         vertical-align: super;
@@ -394,7 +395,10 @@ const navLinks = [
             if (href && href.startsWith('http') && !href.includes(currentHost) && !href.includes('hankhuang0516.github.io')) {
                 link.setAttribute('target', '_blank');
                 link.setAttribute('rel', 'noopener noreferrer');
-                link.classList.add('external-link');
+                // Only add icon if link does NOT contain an image
+                if (!link.querySelector('img')) {
+                    link.classList.add('external-link');
+                }
             }
         });
     });

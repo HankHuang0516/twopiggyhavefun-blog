@@ -24,13 +24,13 @@ function fixImagePath(src: string | undefined): string {
 }
 ---
 
-<article class="post-card bg-white border border-gray-200 mb-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg rounded-sm overflow-hidden">
+<article class="post-card group bg-white border border-gray-200 mb-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg rounded-sm overflow-hidden">
     <!-- Featured Image -->
     <a href={`/twopiggyhavefun-blog/posts/${slug}`} class="block">
         <img 
             src={fixImagePath(cover)} 
             alt={title}
-            class="w-full aspect-video object-cover hover:opacity-90 transition"
+            class="w-full aspect-video object-cover transition duration-500 transform group-hover:scale-110"
             loading="lazy"
             width="600"
             height="400"
