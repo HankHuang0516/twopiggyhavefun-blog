@@ -250,7 +250,7 @@ const parentOrder = [
                                 return (
                                     <div class="py-0.5">
                                         <div class="flex items-center">
-                                            <button class="toggle-btn w-6 h-6 flex items-center justify-center text-gray-400 hover:text-gray-600 active:bg-gray-100 rounded-full transition-colors -ml-1 text-[10px]" data-target={subId}>
+                                            <button class="toggle-btn w-10 h-10 flex items-center justify-center text-gray-400 hover:text-gray-600 active:bg-gray-100 rounded-full transition-colors -ml-1 text-sm" data-target={subId}>
                                                 <span class="toggle-icon">▶</span>
                                             </button>
                                             <a href={`${BASE_URL}/category/${subName}`} 
@@ -276,7 +276,7 @@ const parentOrder = [
             <!-- 全部文章 -->
             <div class="dtree-node mt-2 pt-2 border-t border-gray-200">
                 <div class="flex items-center py-1">
-                    <button class="toggle-btn w-5 text-gray-500" data-target="cat-all">
+                    <button class="toggle-btn w-10 h-10 flex items-center justify-center text-gray-500" data-target="cat-all">
                         <span class="toggle-icon">▶</span>
                     </button>
                     <span class="font-medium text-blue-600">全部文章</span>
@@ -354,7 +354,7 @@ const parentOrder = [
 
 <style>
     .sub-categories.hidden, .sub-posts.hidden { display: none; }
-    .toggle-btn { cursor: pointer; background: none; border: none; padding: 0; font-size: 10px; }
+    .toggle-btn { cursor: pointer; background: none; border: none; padding: 0; }
     .toggle-icon { display: inline-block; transition: transform 0.2s; }
     .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
