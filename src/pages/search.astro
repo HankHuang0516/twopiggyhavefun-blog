@@ -44,6 +44,18 @@ const serializedPosts = posts.map(post => ({
             <p class="text-gray-500 text-lg mb-4">找不到與 "<span class="font-bold">{query}</span>" 相關文章。</p>
             <a href="/twopiggyhavefun-blog/" class="text-blue-600 hover:underline">返回首頁</a>
         </div>
+
+        <div id="search-suggestions" class="hidden text-center py-12">
+            <p class="text-gray-500 mb-6">或是試試看這些熱門關鍵字：</p>
+            <div class="flex flex-wrap justify-center gap-3">
+                {['台北', '台中', '親子', '日本', '美食'].map(tag => (
+                    <a href={`/twopiggyhavefun-blog/search?q=${tag}`} 
+                       class="px-4 py-2 bg-white border border-gray-200 rounded-full text-gray-600 hover:text-blue-600 hover:border-blue-300 transition shadow-sm">
+                        {tag}
+                    </a>
+                ))}
+            </div>
+        </div>
     </div>
 </Layout>
 
@@ -51,13 +63,18 @@ const serializedPosts = posts.map(post => ({
     import Fuse from 'https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.esm.js';
 
     document.addEventListener('DOMContentLoaded', () => {
+        console.log('Search Script Loaded'); // Debug
+        
         const resultsContainer = document.getElementById('search-results');
         const noResults = document.getElementById('no-results');
+        const suggestions = document.getElementById('search-suggestions');
         
         // Fix: Read query directly from URL on client side (GitHub Pages is static)
         const params = new URLSearchParams(window.location.search);
         const urlQuery = params.get('q') || '';
         
+        console.log('Search Debug:', { urlQuery, postsCount: serializedPosts.length }); // Debug
+
         // Update Title and Input if they exist
         const titleSpan = document.querySelector('header h1 + p span');
         if (titleSpan) titleSpan.textContent = `"${urlQuery}"`;
@@ -69,8 +86,10 @@ const serializedPosts = posts.map(post => ({
         // Logic: if urlQuery is present, we MUST proceed to search.
         if (!urlQuery) {
             resultsContainer.innerHTML = '';
-            noResults.classList.remove('hidden');
-            // Hide the spinner if query is empty
+            // Don't show "No Results" (which implies failure), show suggestions instead
+            if(suggestions) suggestions.classList.remove('hidden');
+            
+            // Hide the spinner
             const spinner = resultsContainer.querySelector('.animate-spin');
             if(spinner) spinner.parentElement.remove();
             return;
@@ -83,12 +102,16 @@ const serializedPosts = posts.map(post => ({
         });
 
         const results = fuse.search(urlQuery);
+        console.log('Search Results:', results.length); // Debug
 
         if (results.length === 0) {
             resultsContainer.innerHTML = '';
             noResults.classList.remove('hidden');
+            if(suggestions) suggestions.classList.remove('hidden'); // Also show suggestions on 0 results
         } else {
             noResults.classList.add('hidden');
+            if(suggestions) suggestions.classList.add('hidden');
+            
             resultsContainer.innerHTML = results.map(result => {
                 const post = result.item;
                 const date = new Date(post.date).toLocaleDateString('zh-TW');
