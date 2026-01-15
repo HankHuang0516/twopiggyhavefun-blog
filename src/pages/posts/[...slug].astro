@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Sidebar from '../../components/Sidebar.astro';
+import PostCard from '../../components/PostCard.astro';
 import BusinessStatus from '../../components/BusinessStatus.astro';
 import { getCategorySlug, SIDEBAR_CATEGORIES } from '../../utils/categories';
 
@@ -13,17 +14,28 @@ export async function getStaticPaths() {
     return new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf();
   });
 
-  return posts.map((post, index) => ({
-    params: { slug: post.slug },
-    props: { 
-        post,
-        prevPost: index < posts.length - 1 ? posts[index + 1] : null,
-        nextPost: index > 0 ? posts[index - 1] : null,
-    },
-  }));
+  return posts.map((post, index) => {
+    // Get related posts (same category, exclude current, random shuffle, max 3)
+    const relatedPosts = posts.filter(p => 
+        p.slug !== post.slug && 
+        p.data.category === post.data.category
+    )
+    .sort(() => 0.5 - Math.random())
+    .slice(0, 3);
+
+    return {
+        params: { slug: post.slug },
+        props: { 
+            post,
+            prevPost: index < posts.length - 1 ? posts[index + 1] : null,
+            nextPost: index > 0 ? posts[index - 1] : null,
+            relatedPosts
+        },
+    };
+  });
 }
 
-const { post, prevPost, nextPost } = Astro.props;
+const { post, prevPost, nextPost, relatedPosts } = Astro.props;
 const { Content, headings } = await post.render();
 
 // Calculate Reading Time (Chinese = ~300-500 chars/min, Code blocks handled roughly)
@@ -85,13 +97,13 @@ const breadcrumbSchema = {
         <!-- Breadcrumbs -->
         <nav class="flex text-sm text-gray-500 mb-6 overflow-x-auto whitespace-nowrap pb-2 gap-2 items-center">
             <a href="/twopiggyhavefun-blog/" class="bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full transition text-gray-700 flex-shrink-0">首頁</a>
-            <span class="text-gray-300 flex-shrink-0">/</span>
+            <span class="text-gray-300 flex-shrink-0">›</span>
             {post.data.category && (
                 <>
                     <a href={`/twopiggyhavefun-blog/category/${getCategorySlug(post.data.category)}`} class="bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1 rounded-full transition font-medium flex-shrink-0">
                         {post.data.category}
                     </a>
-                    <span class="text-gray-300 flex-shrink-0">/</span>
+                    <span class="text-gray-300 flex-shrink-0">›</span>
                 </>
             )}
             <span class="text-gray-500 px-2 py-1 truncate max-w-[150px]">{post.data.title}</span>
@@ -235,14 +247,32 @@ const breadcrumbSchema = {
                         )}
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                         <div class="col-span-1 md:col-span-2 text-center py-4 bg-gray-50 rounded-lg">
-                            <p class="text-gray-500 mb-2">想看更多類似文章嗎？</p>
-                            <a href={`/twopiggyhavefun-blog/category/${post.data.category ? getCategorySlug(post.data.category) : 'domestic-travel'}`} 
-                               class="text-blue-600 font-bold hover:underline">
-                                查看「{post.data.category || '全部文章'}」分類 &rarr;
-                            </a>
-                         </div>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {relatedPosts.length > 0 ? (
+                            <div class="col-span-1 md:col-span-2">
+                                <h4 class="text-lg font-bold text-gray-700 mb-4">猜你喜歡...</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    {relatedPosts.map(p => (
+                                        <PostCard 
+                                            title={p.data.title} 
+                                            slug={p.slug} 
+                                            date={p.data.date} 
+                                            cover={p.data.cover}
+                                            tags={[]} 
+                                            category={p.data.category} 
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        ) : (
+                             <div class="col-span-1 md:col-span-2 text-center py-4 bg-gray-50 rounded-lg">
+                                <p class="text-gray-500 mb-2">想看更多類似文章嗎？</p>
+                                <a href={`/twopiggyhavefun-blog/category/${post.data.category ? getCategorySlug(post.data.category) : 'domestic-travel'}`} 
+                                   class="text-blue-600 font-bold hover:underline">
+                                    查看「{post.data.category || '全部文章'}」分類 &rarr;
+                                </a>
+                             </div>
+                        )}
                     </div>
                 </div>
 
