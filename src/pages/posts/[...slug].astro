@@ -55,6 +55,16 @@ const currentUrl = `https://hankhuang0516.github.io/twopiggyhavefun-blog/posts/$
 const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
 const lineShareUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(currentUrl)}`;
 
+// Helper for Absolute URLs
+function getAbsoluteUrl(path: string | undefined): string {
+    if (!path) return 'https://hankhuang0516.github.io/twopiggyhavefun-blog/placeholder.jpg';
+    if (path.startsWith('http')) return path;
+    const cleanPath = path.startsWith('/') ? path.substring(1) : path;
+    // Fix: Ensure we don't double stack the base path if it's already in the src
+    // But simpliest way for this specific content structure:
+    return new URL(path, 'https://hankhuang0516.github.io/twopiggyhavefun-blog/').href;
+}
+
 // JSON-LD Schema
 const articleSchema = {
   "@context": "https://schema.org",

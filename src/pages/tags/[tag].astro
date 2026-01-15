@@ -43,7 +43,7 @@ const { tag } = Astro.params;
 const { page } = Astro.props;
 const posts = page.data;
 
-const displayTitle = `#${tag}`;
+const displayTitle = tag;
 ---
 
 <Layout title={displayTitle}>
