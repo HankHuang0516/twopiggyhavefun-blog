@@ -430,15 +430,17 @@ const parentOrder = [
         document.querySelectorAll('.toggle-icon').forEach(el => el.textContent = '▶');
     });
 
-    // Auto-close sidebar on mobile when a link is clicked
-    const sidebarLinks = sidebar?.querySelectorAll('a');
-    sidebarLinks?.forEach(link => {
-        link.addEventListener('click', () => {
-            // Only close if we are in mobile view (sidebar is fixed/absolute)
-            // A simple check is if the overlay is visible or if window width is small
-            if (window.innerWidth < 1024) { // lg breakpoint
+    // Auto-close sidebar on mobile when a link is clicked (Event Delegation)
+    sidebar?.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        const link = target.closest('a');
+        
+        // If clicked on a link and we are on mobile
+        if (link && window.innerWidth < 1024) { 
+            // Optional: Don't close if it's just a toggle button acting as a link
+            if (!link.classList.contains('toggle-btn')) {
                 closeSidebar();
             }
-        });
+        }
     });
 </script>
