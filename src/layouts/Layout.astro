@@ -321,6 +321,8 @@ const navLinks = [
     .code-container {
         position: relative;
         margin: 1.5em 0;
+        max-height: 80vh;
+        overflow-y: auto;
     }
     .copy-btn {
         position: absolute;
@@ -385,6 +387,12 @@ const navLinks = [
                 wrapper.className = 'overflow-x-auto my-6';
                 table.parentNode?.insertBefore(wrapper, table);
                 wrapper.appendChild(table);
+                
+                // Add Touch Hint
+                const hint = document.createElement('div');
+                hint.className = 'text-xs text-center text-gray-400 mt-2 italic lg:hidden';
+                hint.textContent = '← 左右滑動查看表格 →';
+                wrapper.parentNode?.insertBefore(hint, wrapper.nextSibling);
             }
         });
 
