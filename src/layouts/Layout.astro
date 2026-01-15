@@ -266,7 +266,58 @@ const navLinks = [
         opacity: 0.6;
     }
 
-    /* Round 36: Code Block Copier */
+    /* Round 39: Responsive Tables & List Polish */
+    .pixnet-content table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        max-width: 100%;
+        margin: 1.5em 0;
+        border-collapse: collapse;
+    }
+    .pixnet-content table th, .pixnet-content table td {
+        border: 1px solid #e5e7eb;
+        padding: 0.75rem;
+    }
+    .pixnet-content table th {
+        background-color: #f9fafb;
+        font-weight: bold;
+    }
+    
+    /* Styled Dividers */
+    .pixnet-content hr {
+        border: 0;
+        text-align: center;
+        margin: 3rem 0;
+        height: 1.5rem;
+    }
+    .pixnet-content hr::before {
+        content: "•••";
+        color: #d1d5db;
+        font-size: 1.5rem;
+        letter-spacing: 0.5rem;
+    }
+
+    /* List Typography */
+    .pixnet-content ul {
+        list-style-type: disc;
+        padding-left: 1.5em;
+        margin: 1em 0;
+    }
+    .pixnet-content ol {
+        list-style-type: decimal;
+        padding-left: 1.5em;
+        margin: 1em 0;
+    }
+    .pixnet-content li {
+        margin-bottom: 0.5em;
+        padding-left: 0.5em;
+    }
+    .pixnet-content li::marker {
+        color: #c9a961; /* Gold markers */
+    }
+
+    /* Copy Code Button */
     .code-container {
         position: relative;
         margin: 1.5em 0;
@@ -325,6 +376,16 @@ const navLinks = [
                 });
             });
             container.appendChild(btn);
+        });
+
+        // Wrap Tables for Responsiveness (Client-side fallback)
+        document.querySelectorAll('.pixnet-content table').forEach(table => {
+            if (!table.parentElement?.classList.contains('overflow-x-auto')) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'overflow-x-auto my-6';
+                table.parentNode?.insertBefore(wrapper, table);
+                wrapper.appendChild(table);
+            }
         });
     });
     // Fade in images and Zoom logic...
