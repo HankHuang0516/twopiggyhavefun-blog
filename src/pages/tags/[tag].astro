@@ -2,8 +2,9 @@
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import PostCard from '../../components/PostCard.astro';
+import Pagination from '../../components/Pagination.astro';
 
-export async function getStaticPaths() {
+export async function getStaticPaths({ paginate }) {
   const allPosts = (await getCollection('posts')).filter(p => p.data);
   
   const allTags: string[] = [];
@@ -19,26 +20,28 @@ export async function getStaticPaths() {
   }
   const uniqueTags = [...new Set(allTags)].filter(tag => !/[*?"<>|\\/:]/.test(tag));
 
-  return uniqueTags.map((tag) => {
+  return uniqueTags.flatMap((tag) => {
     const filteredPosts = allPosts.filter((post) => {
       const tags = post.data.tags;
       return Array.isArray(tags) && tags.includes(tag);
     });
-    return {
+    
+     // Sort by date text descending
+    filteredPosts.sort((a, b) => {
+        if (!a.data?.date || !b.data?.date) return 0;
+        return new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf();
+    });
+
+    return paginate(filteredPosts, {
       params: { tag },
-      props: { posts: filteredPosts },
-    };
+      pageSize: 12
+    });
   });
 }
 
 const { tag } = Astro.params;
-const { posts } = Astro.props;
-
-// Sort by date text descending
-posts.sort((a, b) => {
-    if (!a.data?.date || !b.data?.date) return 0;
-    return new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf();
-});
+const { page } = Astro.props;
+const posts = page.data;
 
 const displayTitle = `#${tag}`;
 ---
@@ -75,5 +78,8 @@ const displayTitle = `#${tag}`;
             </div>
         </div>
     )}
+  </div>
+
+  <Pagination page={page} />
   </div>
 </Layout>
