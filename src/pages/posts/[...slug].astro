@@ -208,17 +208,17 @@ const breadcrumbSchema = {
                     <!-- Next/Prev Custom Navigation -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                         {nextPost && (
-                            <a href={`/twopiggyhavefun-blog/posts/${nextPost.slug}`} class="block p-4 border border-blue-100 rounded-lg bg-blue-50 hover:bg-blue-100 transition group">
-                                <span class="text-xs text-blue-500 font-bold tracking-wider mb-1 block">◀ 上一篇 (Newer)</span>
-                                <span class="text-gray-800 font-medium line-clamp-2 group-hover:text-blue-700">{nextPost.data.title}</span>
+                            <a href={`/twopiggyhavefun-blog/posts/${nextPost.slug}`} class="flex flex-col p-4 border border-blue-100 rounded-lg bg-blue-50 hover:bg-blue-100 transition group h-full">
+                                <span class="text-xs text-blue-500 font-bold tracking-wider mb-2 block">◀ 上一篇 (Newer)</span>
+                                <span class="text-gray-800 font-medium line-clamp-2 group-hover:text-blue-700 mt-auto">{nextPost.data.title}</span>
                             </a>
                         )}
                         {!nextPost && <div class="hidden md:block"></div>}
 
                         {prevPost && (
-                            <a href={`/twopiggyhavefun-blog/posts/${prevPost.slug}`} class="block p-4 border border-blue-100 rounded-lg bg-blue-50 hover:bg-blue-100 transition group text-right">
-                                <span class="text-xs text-blue-500 font-bold tracking-wider mb-1 block">下一篇 (Older) ▶</span>
-                                <span class="text-gray-800 font-medium line-clamp-2 group-hover:text-blue-700">{prevPost.data.title}</span>
+                            <a href={`/twopiggyhavefun-blog/posts/${prevPost.slug}`} class="flex flex-col p-4 border border-blue-100 rounded-lg bg-blue-50 hover:bg-blue-100 transition group text-right h-full">
+                                <span class="text-xs text-blue-500 font-bold tracking-wider mb-2 block">下一篇 (Older) ▶</span>
+                                <span class="text-gray-800 font-medium line-clamp-2 group-hover:text-blue-700 mt-auto">{prevPost.data.title}</span>
                             </a>
                         )}
                     </div>

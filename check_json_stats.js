@@ -1,17 +1,26 @@
 const fs = require('fs');
-const path = require('path');
 
-const DB_PATH = path.join(__dirname, 'pixnet_categories.json');
-const db = JSON.parse(fs.readFileSync(DB_PATH, 'utf-8'));
+const db = JSON.parse(fs.readFileSync('pixnet_articles_db.json', 'utf8'));
+const done = JSON.parse(fs.readFileSync('two_piggy_mark_done.json', 'utf8'));
 
-const total = db.articles.length;
-const withCats = db.articles.filter(a => a.pixnetCategories && a.pixnetCategories.length > 0).length;
-const withTags = db.articles.filter(a => a.pixnetTags && a.pixnetTags.length > 0).length;
+const totalArticles = db[0].articles.length;
+const doneUrls = new Set();
 
-console.log(`Total: ${total}`);
-console.log(`With Categories: ${withCats}`);
-console.log(`With Tags: ${withTags}`);
+done.forEach(item => {
+    if (item.urls) {
+        item.urls.forEach(url => doneUrls.add(url));
+    }
+});
 
-if (withCats > 0) {
-    console.log('Sample Category:', db.articles.find(a => a.pixnetCategories.length > 0).pixnetCategories);
+console.log(`Total Articles in DB: ${totalArticles}`);
+console.log(`Total Done URLs: ${doneUrls.size}`);
+
+const dbUrls = new Set(db[0].articles.map(a => a.articleUrl));
+const pending = [...dbUrls].filter(url => !doneUrls.has(url));
+
+console.log(`Pending Articles: ${pending.length}`);
+
+if (pending.length > 0) {
+    console.log('First 5 pending URLs:');
+    console.log(pending.slice(0, 5));
 }

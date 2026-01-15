@@ -162,9 +162,9 @@ const parentOrder = [
 
 
 <!-- Mobile Overlay -->
-<div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden transition-opacity duration-300"></div>
+<div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden transition-opacity duration-300 opacity-0 backdrop-blur-sm" aria-hidden="true"></div>
 
-<aside id="sidebar-panel" class="sidebar fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-2xl transform -translate-x-full transition-transform duration-300 lg:relative lg:translate-x-0 lg:w-80 lg:shadow-none lg:z-auto space-y-6 overflow-y-auto">
+<aside id="sidebar-panel" class="sidebar fixed inset-y-0 left-0 z-50 w-72 bg-white shadow-2xl transform -translate-x-full transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] lg:relative lg:translate-x-0 lg:w-80 lg:shadow-none lg:z-auto space-y-6 overflow-y-auto">
     <!-- Mobile Header with Close Button -->
     <div class="lg:hidden flex items-center justify-between p-4 bg-gray-50 border-b border-gray-200">
         <span class="font-bold text-gray-700">選單 (Menu)</span>
