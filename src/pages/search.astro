@@ -41,7 +41,18 @@ const serializedPosts = posts.map(post => ({
         </div>
         
         <div id="no-results" class="hidden text-center py-20 bg-gray-50 rounded-lg">
-            <p class="text-gray-500 text-lg mb-4">找不到與 "<span class="font-bold">{query}</span>" 相關文章。</p>
+            <p class="text-gray-500 text-lg mb-6">找不到與 "<span class="font-bold">{query}</span>" 相關文章。</p>
+            
+            <div class="max-w-md mx-auto mb-8">
+                <form action="/twopiggyhavefun-blog/search" method="get" class="flex gap-2">
+                    <input type="text" name="q" placeholder="換個關鍵字試試..." 
+                        class="flex-1 border border-gray-300 px-4 py-2 rounded-full focus:outline-none focus:border-blue-500 shadow-sm" />
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition shadow-sm font-medium">
+                        搜尋
+                    </button>
+                </form>
+            </div>
+
             <a href="/twopiggyhavefun-blog/" class="text-blue-600 hover:underline">返回首頁</a>
         </div>
 
