@@ -47,7 +47,7 @@ const serializedPosts = posts.map(post => ({
     </div>
 </Layout>
 
-<script define:vars={{ serializedPosts, query }}>
+<script define:vars={{ serializedPosts }}>
     import Fuse from 'https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.esm.js';
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -65,6 +65,8 @@ const serializedPosts = posts.map(post => ({
         const searchInput = document.getElementById('search-input');
         if (searchInput && urlQuery) searchInput.value = urlQuery;
 
+        // CRITICAL FIX: Only return early if *both* are empty. 
+        // Logic: if urlQuery is present, we MUST proceed to search.
         if (!urlQuery) {
             resultsContainer.innerHTML = '';
             noResults.classList.remove('hidden');
