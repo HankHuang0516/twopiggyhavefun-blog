@@ -53,10 +53,24 @@ const serializedPosts = posts.map(post => ({
     document.addEventListener('DOMContentLoaded', () => {
         const resultsContainer = document.getElementById('search-results');
         const noResults = document.getElementById('no-results');
+        
+        // Fix: Read query directly from URL on client side (GitHub Pages is static)
+        const params = new URLSearchParams(window.location.search);
+        const urlQuery = params.get('q') || '';
+        
+        // Update Title and Input if they exist
+        const titleSpan = document.querySelector('header h1 + p span');
+        if (titleSpan) titleSpan.textContent = `"${urlQuery}"`;
+        
+        const searchInput = document.getElementById('search-input');
+        if (searchInput && urlQuery) searchInput.value = urlQuery;
 
-        if (!query) {
+        if (!urlQuery) {
             resultsContainer.innerHTML = '';
             noResults.classList.remove('hidden');
+            // Hide the spinner if query is empty
+            const spinner = resultsContainer.querySelector('.animate-spin');
+            if(spinner) spinner.parentElement.remove();
             return;
         }
 
@@ -66,7 +80,7 @@ const serializedPosts = posts.map(post => ({
             includeScore: true
         });
 
-        const results = fuse.search(query);
+        const results = fuse.search(urlQuery);
 
         if (results.length === 0) {
             resultsContainer.innerHTML = '';

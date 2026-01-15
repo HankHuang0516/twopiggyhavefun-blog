@@ -49,7 +49,7 @@ const categoryNames: Record<string, string> = {
     pixnet: '所有文章'
 };
 
-const displayCategory = categoryNames[category] || category;
+const displayCategory = categoryNames[category] || `標籤：${category}`;
 ---
 
 <Layout title={displayCategory}>
