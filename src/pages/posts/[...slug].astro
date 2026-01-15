@@ -232,8 +232,13 @@ const breadcrumbSchema = {
                     <!-- Next/Prev Custom Navigation -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                         {nextPost && (
-                            <a href={`/twopiggyhavefun-blog/posts/${nextPost.slug}`} class="flex flex-col p-4 border border-blue-100 rounded-lg bg-blue-50 hover:bg-blue-100 transition group h-full">
-                                <span class="text-xs text-blue-500 font-bold tracking-wider mb-2 block">◀ 上一篇 (Newer)</span>
+                            <a href={`/twopiggyhavefun-blog/posts/${nextPost.slug}`} class="flex flex-col p-4 border border-blue-100 rounded-lg bg-blue-50 hover:bg-blue-100 transition group text-left h-full">
+                                <span class="text-xs text-blue-500 font-bold tracking-wider mb-2 flex items-center gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                    上一篇 (Newer)
+                                </span>
                                 <span class="text-gray-800 font-medium line-clamp-2 group-hover:text-blue-700 mt-auto">{nextPost.data.title}</span>
                             </a>
                         )}
@@ -241,7 +246,12 @@ const breadcrumbSchema = {
 
                         {prevPost && (
                             <a href={`/twopiggyhavefun-blog/posts/${prevPost.slug}`} class="flex flex-col p-4 border border-blue-100 rounded-lg bg-blue-50 hover:bg-blue-100 transition group text-right h-full">
-                                <span class="text-xs text-blue-500 font-bold tracking-wider mb-2 block">下一篇 (Older) ▶</span>
+                                <span class="text-xs text-blue-500 font-bold tracking-wider mb-2 flex items-center justify-end gap-1">
+                                    下一篇 (Older)
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </span>
                                 <span class="text-gray-800 font-medium line-clamp-2 group-hover:text-blue-700 mt-auto">{prevPost.data.title}</span>
                             </a>
                         )}
