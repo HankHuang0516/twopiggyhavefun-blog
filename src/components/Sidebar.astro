@@ -257,7 +257,7 @@ const parentOrder = [
                                                class="text-blue-600 ml-1 hover:underline">{subName}</a>
                                             <span class="text-gray-400 text-xs ml-1">({uniquePosts.length})</span>
                                         </div>
-                                        <div class="sub-posts ml-4 border-l border-gray-100 pl-2 hidden max-h-32 overflow-y-auto" id={subId}>
+                                        <div class="sub-posts ml-4 border-l border-gray-100 pl-2 max-h-0 overflow-hidden transition-all duration-300 ease-in-out" id={subId}>
                                             {uniquePosts.slice(0, 8).map((post: any) => (
                                                 <a href={`${BASE_URL}/posts/${post.slug}`} class="block text-blue-500 hover:underline text-xs py-0.5 truncate">
                                                     · {post.data.title}
@@ -282,7 +282,7 @@ const parentOrder = [
                     <span class="font-medium text-blue-600">全部文章</span>
                     <span class="text-gray-400 text-xs ml-1">({allPosts.length})</span>
                 </div>
-                <div class="sub-posts ml-5 border-l border-gray-200 pl-3 hidden max-h-60 overflow-y-auto" id="cat-all">
+                <div class="sub-posts ml-5 border-l border-gray-200 pl-3 max-h-0 overflow-hidden transition-all duration-300 ease-in-out" id="cat-all">
                     {allPosts.slice(0, 20).map((post) => (
                         <a href={`${BASE_URL}/posts/${post.slug}`} class="block text-blue-500 hover:underline text-xs py-0.5 truncate">
                             · {post.data.title}
@@ -353,7 +353,8 @@ const parentOrder = [
 </aside>
 
 <style>
-    .sub-categories.hidden, .sub-posts.hidden { display: none; }
+    .sub-categories.hidden { display: none; }
+    .sub-posts.expanded { max-height: 500px; }
     .toggle-btn { cursor: pointer; background: none; border: none; padding: 0; }
     .toggle-icon { display: inline-block; transition: transform 0.2s; }
     .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
@@ -413,20 +414,22 @@ const parentOrder = [
             const target = document.getElementById(targetId);
             const icon = btn.querySelector('.toggle-icon');
             if (target) {
-                const isHidden = target.classList.contains('hidden');
-                target.classList.toggle('hidden');
-                if (icon) icon.textContent = isHidden ? '▼' : '▶';
+                const isExpanded = target.classList.contains('expanded');
+                target.classList.toggle('expanded');
+                if (icon) icon.textContent = isExpanded ? '▶' : '▼';
             }
         });
     });
 
     document.getElementById('expandAll')?.addEventListener('click', () => {
-        document.querySelectorAll('.sub-categories, .sub-posts').forEach(el => el.classList.remove('hidden'));
+        document.querySelectorAll('.sub-categories').forEach(el => el.classList.remove('hidden'));
+        document.querySelectorAll('.sub-posts').forEach(el => el.classList.add('expanded'));
         document.querySelectorAll('.toggle-icon').forEach(el => el.textContent = '▼');
     });
 
     document.getElementById('collapseAll')?.addEventListener('click', () => {
-        document.querySelectorAll('.sub-categories, .sub-posts').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.sub-categories').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.sub-posts').forEach(el => el.classList.remove('expanded'));
         document.querySelectorAll('.toggle-icon').forEach(el => el.textContent = '▶');
     });
 
