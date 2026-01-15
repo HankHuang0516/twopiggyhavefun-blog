@@ -153,6 +153,9 @@ export function getCategorySlug(category: string | undefined): SidebarCategorySl
         return 'tools';
     }
 
+    // Default Fallback
+    // CRITICAL FIX: Do NOT return random category strings as slugs.
+    // Return 'other' for anything not explicitly matched to avoid invalid characters like '*' or '?' in filenames.
     return 'other';
 }
 

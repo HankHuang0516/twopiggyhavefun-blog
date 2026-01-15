@@ -396,8 +396,9 @@ const navLinks = [
         const lightbox = document.createElement('div');
         lightbox.id = 'lightbox-modal';
         lightbox.className = 'fixed inset-0 z-[60] bg-black/90 hidden flex items-center justify-center cursor-zoom-out opacity-0 transition-opacity duration-300';
+        lightbox.innerHTML = `
             <div class="relative w-full h-full flex items-center justify-center p-4">
-                <img class="max-w-full max-h-full object-contain transform scale-95 transition-transform duration-300">
+                <img class="max-w-full max-h-full object-contain transform scale-95 transition-transform duration-300" src="">
                 <button class="absolute top-8 right-6 text-white bg-black/50 w-10 h-10 rounded-full flex items-center justify-center hover:bg-black/70 transition">&times;</button>
             </div>
         `;

@@ -18,7 +18,8 @@ export async function getStaticPaths() {
       }
     }
   }
-  const uniqueTags = [...new Set(allTags)];
+  // Filter out tags with unsafe characters for filenames
+  const uniqueTags = [...new Set(allTags)].filter(tag => !/[*?"<>|\\/:]/.test(tag));
 
   return uniqueTags.map((tag) => {
     const filteredPosts = allPosts.filter((post) => {
