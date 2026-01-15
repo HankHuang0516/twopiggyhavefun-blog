@@ -1,16 +1,20 @@
 import { getCollection } from 'astro:content';
 
 export async function GET() {
-    const posts = await getCollection('posts');
-    const searchIndex = posts.map(post => ({
+    const allPosts = await getCollection('posts');
+    const posts = allPosts.filter(p => p.data).map(post => ({
         title: post.data.title,
+        description: post.data.description,
         slug: post.slug,
-        description: post.body ? post.body.substring(0, 100) : '',
-        tags: post.data.tags || [],
+        date: post.data.date,
         category: post.data.category,
-        date: post.data.date
+        cover: post.data.cover
     }));
-    return new Response(JSON.stringify(searchIndex), {
-        headers: { 'Content-Type': 'application/json' }
+
+    return new Response(JSON.stringify(posts), {
+        status: 200,
+        headers: {
+            "Content-Type": "application/json"
+        }
     });
 }

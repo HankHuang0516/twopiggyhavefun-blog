@@ -59,89 +59,98 @@ const serializedPosts = posts.map(post => ({
     </div>
 </Layout>
 
-<script define:vars={{ serializedPosts }}>
+<script>
     import Fuse from 'https://cdn.jsdelivr.net/npm/fuse.js@6.6.2/dist/fuse.esm.js';
 
-    document.addEventListener('DOMContentLoaded', () => {
-        console.log('Search Script Loaded'); // Debug
+    document.addEventListener('DOMContentLoaded', async () => {
+        console.log('Search Script Loaded (Fetch Mode)');
         
         const resultsContainer = document.getElementById('search-results');
         const noResults = document.getElementById('no-results');
         const suggestions = document.getElementById('search-suggestions');
         
-        // Fix: Read query directly from URL on client side (GitHub Pages is static)
+        // 1. Get Query
         const params = new URLSearchParams(window.location.search);
         const urlQuery = params.get('q') || '';
         
-        console.log('Search Debug:', { urlQuery, postsCount: serializedPosts.length }); // Debug
-
-        // Update Title and Input if they exist
+        // Update UI
         const titleSpan = document.querySelector('header h1 + p span');
         if (titleSpan) titleSpan.textContent = `"${urlQuery}"`;
-        
-        const searchInput = document.getElementById('search-input');
+        const searchInput = document.getElementById('search-input') as HTMLInputElement;
         if (searchInput && urlQuery) searchInput.value = urlQuery;
 
-        // CRITICAL FIX: Only return early if *both* are empty. 
-        // Logic: if urlQuery is present, we MUST proceed to search.
+        // 2. Handle Empty Query
         if (!urlQuery) {
-            resultsContainer.innerHTML = '';
-            // Don't show "No Results" (which implies failure), show suggestions instead
+            if(resultsContainer) resultsContainer.innerHTML = '';
             if(suggestions) suggestions.classList.remove('hidden');
-            
-            // Hide the spinner
-            const spinner = resultsContainer.querySelector('.animate-spin');
-            if(spinner) spinner.parentElement.remove();
+            const spinner = document.querySelector('.animate-spin');
+            if(spinner) spinner.parentElement?.remove();
             return;
         }
 
-        const fuse = new Fuse(serializedPosts, {
-            keys: ['title', 'description', 'category'],
-            threshold: 0.4,
-            includeScore: true
-        });
-
-        const results = fuse.search(urlQuery);
-        console.log('Search Results:', results.length); // Debug
-
-        if (results.length === 0) {
-            resultsContainer.innerHTML = '';
-            noResults.classList.remove('hidden');
-            if(suggestions) suggestions.classList.remove('hidden'); // Also show suggestions on 0 results
-        } else {
-            noResults.classList.add('hidden');
-            if(suggestions) suggestions.classList.add('hidden');
+        // 3. Fetch Data
+        try {
+            const response = await fetch('/twopiggyhavefun-blog/search.json');
+            if (!response.ok) throw new Error('Failed to load search index');
+            const serializedPosts = await response.json();
             
-            resultsContainer.innerHTML = results.map(result => {
-                const post = result.item;
-                const date = new Date(post.date).toLocaleDateString('zh-TW');
-                const cover = post.cover || '/twopiggyhavefun-blog/placeholder.jpg';
-                // Fix path
-                const safeCover = cover.startsWith('/') && !cover.startsWith('/twopiggyhavefun-blog') 
-                    ? `/twopiggyhavefun-blog${cover}` 
-                    : cover;
+            console.log('Search Data Loaded:', serializedPosts.length);
 
-                return `
-                    <article class="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col h-full border border-gray-100 group">
-                        <a href="/twopiggyhavefun-blog/posts/${post.slug}" class="block overflow-hidden h-48 relative">
-                            <img src="${safeCover}" alt="${post.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                        </a>
-                        <div class="p-6 flex-1 flex flex-col">
-                            <div class="mb-2 text-sm text-gray-500 flex justify-between">
-                                <span>${date}</span>
-                                <span class="text-blue-500">${post.category || '未分類'}</span>
-                            </div>
-                            <h2 class="text-xl font-bold mb-3 leading-snug text-gray-800 group-hover:text-blue-600 transition-colors line-clamp-2">
-                                <a href="/twopiggyhavefun-blog/posts/${post.slug}">${post.title}</a>
-                            </h2>
-                            <p class="text-gray-600 text-sm line-clamp-2 mb-4 flex-1">${post.description || ''}</p>
-                            <a href="/twopiggyhavefun-blog/posts/${post.slug}" class="mt-auto text-blue-600 font-medium hover:underline">
-                                繼續閱讀 →
-                            </a>
-                        </div>
-                    </article>
-                `;
-            }).join('');
+            // 4. Perform Search
+            const fuse = new Fuse(serializedPosts, {
+                keys: ['title', 'description', 'category'],
+                threshold: 0.4,
+                includeScore: true
+            });
+
+            const results = fuse.search(urlQuery);
+            console.log('Search Results:', results.length);
+
+            // 5. Render Results
+            if (results.length === 0) {
+                if(resultsContainer) resultsContainer.innerHTML = '';
+                if(noResults) noResults.classList.remove('hidden');
+                if(suggestions) suggestions.classList.remove('hidden');
+            } else {
+                if(noResults) noResults.classList.add('hidden');
+                if(suggestions) suggestions.classList.add('hidden');
+                
+                if(resultsContainer) {
+                    resultsContainer.innerHTML = results.map((result: any) => {
+                        const post = result.item;
+                        const date = new Date(post.date).toLocaleDateString('zh-TW');
+                        const cover = post.cover || '/twopiggyhavefun-blog/placeholder.jpg';
+                        // Fix path
+                        const safeCover = cover.startsWith('/') && !cover.startsWith('/twopiggyhavefun-blog') 
+                            ? `/twopiggyhavefun-blog${cover}` 
+                            : cover;
+
+                        return `
+                            <article class="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col h-full border border-gray-100 group">
+                                <a href="/twopiggyhavefun-blog/posts/${post.slug}" class="block overflow-hidden h-48 relative">
+                                    <img src="${safeCover}" alt="${post.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                                </a>
+                                <div class="p-6 flex-1 flex flex-col">
+                                    <div class="mb-2 text-sm text-gray-500 flex justify-between">
+                                        <span>${date}</span>
+                                        <span class="text-blue-500">${post.category || '未分類'}</span>
+                                    </div>
+                                    <h2 class="text-xl font-bold mb-3 leading-snug text-gray-800 group-hover:text-blue-600 transition-colors line-clamp-2">
+                                        <a href="/twopiggyhavefun-blog/posts/${post.slug}">${post.title}</a>
+                                    </h2>
+                                    <p class="text-gray-600 text-sm line-clamp-2 mb-4 flex-1">${post.description || ''}</p>
+                                    <a href="/twopiggyhavefun-blog/posts/${post.slug}" class="mt-auto text-blue-600 font-medium hover:underline">
+                                        繼續閱讀 →
+                                    </a>
+                                </div>
+                            </article>
+                        `;
+                    }).join('');
+                }
+            }
+        } catch (err) {
+            console.error('Search Load Error:', err);
+            if(resultsContainer) resultsContainer.innerHTML = `<p class="text-red-500 text-center">搜尋功能暫時無法使用，請稍後再試。</p>`;
         }
     });
 </script>

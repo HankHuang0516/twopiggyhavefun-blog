@@ -30,7 +30,7 @@ function fixImagePath(src: string | undefined): string {
         <img 
             src={fixImagePath(cover)} 
             alt={title}
-            class="w-full h-64 md:h-80 object-cover hover:opacity-90 transition"
+            class="w-full aspect-video object-cover hover:opacity-90 transition"
             loading="lazy"
             width="600"
             height="400"

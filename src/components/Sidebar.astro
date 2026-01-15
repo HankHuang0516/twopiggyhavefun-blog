@@ -312,10 +312,10 @@ const parentOrder = [
                     <a href={`${BASE_URL}/posts/${post.slug}`} class="flex gap-3 group">
                         <img src={fixImagePath(post.data.cover)} 
                              alt={post.data.title}
-                             class="w-16 h-16 object-cover flex-shrink-0" />
+                             class="w-16 h-12 object-cover rounded-sm flex-shrink-0 bg-gray-100" />
                         <div class="flex-1 min-w-0">
-                            <p class="text-sm text-gray-800 group-hover:text-blue-600 line-clamp-2 transition">
-                                {post.data.title}
+                            <!-- Use fragment set:html to render title correctly if it has entities, or just standard if not -->
+                            <p class="text-sm text-gray-800 group-hover:text-blue-600 line-clamp-2 transition" set:html={post.data.title}>
                             </p>
                             <span class="text-xs text-gray-400">
                                 {formatDate(post.data.date)}
@@ -326,6 +326,7 @@ const parentOrder = [
             ))}
         </ul>
     </div>
+    <!-- Sidebar v44 Fixed -->
 
     <!-- Tags Cloud -->
     <div class="bg-white border border-gray-200 p-4">
