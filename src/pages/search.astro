@@ -116,7 +116,10 @@ const serializedPosts = posts.map(post => ({
                 if(suggestions) suggestions.classList.add('hidden');
                 
                 if(resultsContainer) {
-                    resultsContainer.innerHTML = results.map((result: any) => {
+                    // Inject Count
+                    const countHtml = `<div class="col-span-full mb-2 text-gray-500 font-medium">共 ${results.length} 筆結果</div>`;
+                    
+                    const itemsHtml = results.map((result: any) => {
                         const post = result.item;
                         const date = new Date(post.date).toLocaleDateString('zh-TW');
                         const cover = post.cover || '/twopiggyhavefun-blog/placeholder.jpg';

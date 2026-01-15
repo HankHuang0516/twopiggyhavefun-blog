@@ -268,9 +268,9 @@ const breadcrumbSchema = {
                              <div class="col-span-1 md:col-span-2 text-center py-4 bg-gray-50 rounded-lg">
                                 <p class="text-gray-500 mb-2">想看更多類似文章嗎？</p>
                                 <a href={`/twopiggyhavefun-blog/category/${post.data.category ? getCategorySlug(post.data.category) : 'domestic-travel'}`} 
-                                   class="text-blue-600 font-bold hover:underline">
-                                    查看「{post.data.category || '全部文章'}」分類 &rarr;
-                                </a>
+               class="bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full transition text-gray-700 flex-shrink-0 font-medium">
+                {post.data.category || '國內旅遊'}
+            </a>
                              </div>
                         )}
                     </div>
