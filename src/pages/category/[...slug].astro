@@ -47,6 +47,15 @@ export async function getStaticPaths() {
     const PAGE_SIZE = 12;
 
     for (const [catSlug, data] of categories.entries()) {
+        // Filter out slugs with unsafe characters for filenames (Windows/General support)
+        if (/[*?"<>|\\/:]/.test(catSlug)) {
+             console.warn(`[Build] Skipping invalid category slug: ${catSlug}`);
+             continue;
+        }
+
+        // Skip 'travel' slug as it is handled by src/pages/category/travel.astro
+        if (catSlug.toLowerCase() === 'travel') continue;
+
         const totalPosts = data.posts.length;
         if (totalPosts === 0) continue; // Skip empty
         const totalPages = Math.ceil(totalPosts / PAGE_SIZE);
