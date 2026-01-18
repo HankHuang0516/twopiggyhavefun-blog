@@ -534,6 +534,17 @@ async function syncPixnetArticles() {
 
                 // 取得完整文章內容
                 const articleHtml = await fetchUrl(article.link);
+
+                // 檢查是否受密碼保護
+                if (articleHtml.includes('此文章受密碼保護') || articleHtml.includes('請輸入密碼以查看內容') || /input\s+type=["']password["']/i.test(articleHtml)) {
+                    log(`跳過受密碼保護的文章: ${article.title}`, 'WARN');
+                    // 標記為已同步以免重複檢查
+                    if (!state.syncedArticles.includes(article.id)) {
+                        state.syncedArticles.push(article.id);
+                    }
+                    continue;
+                }
+
                 const contentInfo = parseArticleContent(articleHtml);
 
                 // 標籤來自列表頁 JSON (article.tags)，分類優先使用文章頁面提取的
