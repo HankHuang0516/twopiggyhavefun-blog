@@ -46,11 +46,22 @@ function normalizePath(filePath, relativeLink) {
     if (relativeLink.startsWith('#') || relativeLink.startsWith('mailto:') || relativeLink.startsWith('javascript:')) return null;
 
     let resolvedPath;
-    if (relativeLink.startsWith('/')) {
-        resolvedPath = path.join(DIST_DIR, relativeLink);
-    } else {
-        const currentDir = path.dirname(filePath);
-        resolvedPath = path.resolve(currentDir, relativeLink);
+    try {
+        const decodedLink = decodeURIComponent(relativeLink);
+        if (decodedLink.startsWith('/')) {
+            resolvedPath = path.join(DIST_DIR, decodedLink);
+        } else {
+            const currentDir = path.dirname(filePath);
+            resolvedPath = path.resolve(currentDir, decodedLink);
+        }
+    } catch (e) {
+        // Fallback if decoding fails
+        if (relativeLink.startsWith('/')) {
+            resolvedPath = path.join(DIST_DIR, relativeLink);
+        } else {
+            const currentDir = path.dirname(filePath);
+            resolvedPath = path.resolve(currentDir, relativeLink);
+        }
     }
     resolvedPath = resolvedPath.split('?')[0].split('#')[0];
     return resolvedPath;
