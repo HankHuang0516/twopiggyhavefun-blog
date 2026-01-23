@@ -1,0 +1,58 @@
+?? Starting Site Verification (Optimized)...
+??Mode: Internal Check Only
+?? Scanning directory: C:\Hank\Other\project\picture\dist
+
+?? Found 1163 HTML pages to scan.
+Checking 496619 internal links...
+Checking 436 internal images...
+?? Skipping external image verification (--internal-only)
+
+
+?? Verification Report
+======================
+Pages Scanned: 1163
+Broken Links: 5814
+Broken Images: 0
+
+??Broken Links Found:
+  - Page: about\index.html
+    Link: /category/?狡/??刻
+  - Page: about\index.html
+    Link: /category/閬芸?擗輒
+  - Page: about\index.html
+    Link: /category/雿挪?刻
+  - Page: about\index.html
+    Link: /category/?交??
+  - Page: about\index.html
+    Link: /category/?啁撠?
+  - Page: category\2016擐葛蝢?\index.html
+    Link: /category/?狡/??刻
+  - Page: category\2016擐葛蝢?\index.html
+    Link: /category/閬芸?擗輒
+  - Page: category\2016擐葛蝢?\index.html
+    Link: /category/雿挪?刻
+  - Page: category\2016擐葛蝢?\index.html
+    Link: /category/?交??
+  - Page: category\2016擐葛蝢?\index.html
+    Link: /category/?啁撠?
+  - Page: category\2019撟???銝剖?皝?\index.html
+    Link: /category/?狡/??刻
+  - Page: category\2019撟???銝剖?皝?\index.html
+    Link: /category/閬芸?擗輒
+  - Page: category\2019撟???銝剖?皝?\index.html
+    Link: /category/雿挪?刻
+  - Page: category\2019撟???銝剖?皝?\index.html
+    Link: /category/?交??
+  - Page: category\2019撟???銝剖?皝?\index.html
+    Link: /category/?啁撠?
+  - Page: category\2019甇行慰?園?\index.html
+    Link: /category/?狡/??刻
+  - Page: category\2019甇行慰?園?\index.html
+    Link: /category/閬芸?擗輒
+  - Page: category\2019甇行慰?園?\index.html
+    Link: /category/雿挪?刻
+  - Page: category\2019甇行慰?園?\index.html
+    Link: /category/?交??
+  - Page: category\2019甇行慰?園?\index.html
+    Link: /category/?啁撠?
+...and 5794 more.

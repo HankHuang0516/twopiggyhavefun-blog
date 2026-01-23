@@ -9,7 +9,7 @@ import {
 } from '../utils/categories';
 import { formatDate } from '../utils/date';
 
-const BASE_URL = '/twopiggyhavefun-blog';
+const BASE_URL = '';
 
 // Helper to fix image paths
 function fixImagePath(src: string | undefined): string {
@@ -200,10 +200,10 @@ const parentOrder = [
     <div class="lg:hidden bg-white border border-gray-200 p-4">
         <h3 class="text-lg font-bold mb-3 text-red-600">主選單</h3>
         <ul class="space-y-2">
-            <li><a href="/twopiggyhavefun-blog/about" class={`block hover:text-blue-600 ${Astro.url.pathname.includes('/about') ? 'text-blue-600 font-bold' : 'text-gray-700'}`}>關於兩隻小豬</a></li>
-            <li><a href="/twopiggyhavefun-blog/category/travel" class={`block hover:text-blue-600 ${Astro.url.pathname.includes('/category/travel') ? 'text-blue-600 font-bold' : 'text-gray-700'}`}>台灣好玩好吃趴趴走</a></li>
-            <li><a href="/twopiggyhavefun-blog/category/parenting" class={`block hover:text-blue-600 ${Astro.url.pathname.includes('/category/parenting') ? 'text-blue-600 font-bold' : 'text-gray-700'}`}>親子育兒</a></li>
-            <li><a href="/twopiggyhavefun-blog/category/domestic-food" class={`block hover:text-blue-600 ${Astro.url.pathname.includes('/category/domestic-food') ? 'text-blue-600 font-bold' : 'text-gray-700'}`}>美食餐廳</a></li>
+            <li><a href="/about" class={`block hover:text-blue-600 ${Astro.url.pathname.includes('/about') ? 'text-blue-600 font-bold' : 'text-gray-700'}`}>關於兩隻小豬</a></li>
+            <li><a href="/category/travel" class={`block hover:text-blue-600 ${Astro.url.pathname.includes('/category/travel') ? 'text-blue-600 font-bold' : 'text-gray-700'}`}>台灣好玩好吃趴趴走</a></li>
+            <li><a href="/category/parenting" class={`block hover:text-blue-600 ${Astro.url.pathname.includes('/category/parenting') ? 'text-blue-600 font-bold' : 'text-gray-700'}`}>親子育兒</a></li>
+            <li><a href="/category/domestic-food" class={`block hover:text-blue-600 ${Astro.url.pathname.includes('/category/domestic-food') ? 'text-blue-600 font-bold' : 'text-gray-700'}`}>美食餐廳</a></li>
         </ul>
     </div>
     <!-- Article Categories -->

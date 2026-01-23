@@ -5,7 +5,7 @@ import PostCard from '../components/PostCard.astro';
 import { getCollection } from 'astro:content';
 
 // Helper to fix image paths
-const BASE_URL = '/twopiggyhavefun-blog';
+const BASE_URL = '';
 function fixImagePath(src: string | undefined): string {
     if (!src) return `${BASE_URL}/placeholder.jpg`;
     if (src.startsWith('http')) return src;
@@ -33,8 +33,8 @@ const recentPosts = posts.slice(0, 12);
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": "兩隻小豬旅行親子生活",
-        "url": "https://hankhuang0516.github.io/twopiggyhavefun-blog/",
-        "logo": "https://hankhuang0516.github.io/twopiggyhavefun-blog/apple-touch-icon.png",
+        "url": "https://twopiggyhavefun.uk/",
+        "logo": "https://twopiggyhavefun.uk/apple-touch-icon.png",
         "sameAs": [
           "https://www.facebook.com/twopiggyhavefun",
           "https://www.instagram.com/twopiggyhavefun"
@@ -92,7 +92,7 @@ const recentPosts = posts.slice(0, 12);
                 )}
                 
                 <div class="mt-8 text-center">
-                    <a href="/twopiggyhavefun-blog/category/domestic-travel" 
+                    <a href="/category/domestic-travel" 
                        class="inline-block px-8 py-3 bg-white border border-gray-300 text-gray-700 font-medium rounded-full shadow-sm hover:bg-gray-50 hover:text-blue-600 transition">
                         瀏覽更多文章 &rarr;
                     </a>

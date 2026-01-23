@@ -6,13 +6,13 @@ interface Props {
 }
 
 const { title, description, image, minimalHeader = false } = Astro.props;
-const isHome = Astro.url.pathname === '/twopiggyhavefun-blog/' || Astro.url.pathname === '/twopiggyhavefun-blog';
+const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
 
 const navLinks = [
-    { name: '關於兩隻小豬', href: '/twopiggyhavefun-blog/about' },
-    { name: '台灣好玩好吃趴趴走', href: '/twopiggyhavefun-blog/category/travel' },
-    { name: '親子育兒', href: '/twopiggyhavefun-blog/category/parenting' },
-    { name: '美食餐廳', href: '/twopiggyhavefun-blog/category/domestic-food' },
+    { name: '關於兩隻小豬', href: '/about' },
+    { name: '台灣好玩好吃趴趴走', href: '/category/travel' },
+    { name: '親子育兒', href: '/category/parenting' },
+    { name: '美食餐廳', href: '/category/domestic-food' },
 ];
 ---
 
@@ -34,7 +34,7 @@ const navLinks = [
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="兩隻小豬" />
         <meta property="og:site_name" content="兩隻小豬" />
-        <meta property="og:image" content={image ? (image.startsWith('/') && !image.startsWith('/twopiggyhavefun-blog') ? `https://twopiggyhavefun.uk${image}` : image) : "https://pimg.1px.tw/lolwarden/logo/lolwarden.png"} />
+        <meta property="og:image" content={image ? (image.startsWith('/') ? `https://twopiggyhavefun.uk${image}` : image) : "https://pimg.1px.tw/lolwarden/logo/lolwarden.png"} />
 
         <!-- Canonical URL -->
         <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
@@ -70,7 +70,7 @@ const navLinks = [
         {minimalHeader && (
             <header class="block lg:hidden bg-black text-white p-3 shadow-md">
                 <div class="container mx-auto flex items-center justify-between">
-                    <a href="/twopiggyhavefun-blog/" class="flex items-center hover:text-gray-300 transition gap-2">
+                    <a href="/" class="flex items-center hover:text-gray-300 transition gap-2">
                         <span class="text-xl">⬅</span>
                         <span class="font-bold text-lg" style="color: #c9a961;">返回主畫面</span>
                     </a>
@@ -83,7 +83,7 @@ const navLinks = [
         <!-- If minimalHeader is true, hide this on mobile (lg:block), otherwise show always -->
         <header class:list={['bg-black text-white', { 'hidden lg:block': minimalHeader }]}>
             <div class="container mx-auto px-4 py-6 text-center relative">
-                <a href="/twopiggyhavefun-blog/" class="inline-block">
+                <a href="/" class="inline-block">
                     {isHome ? (
                         <h1 class="text-xl md:text-3xl font-bold tracking-wide" style="color: #c9a961;">
                             兩隻小豬旅行親子生活
@@ -117,7 +117,7 @@ const navLinks = [
                         {navLinks.map((link) => (
                             <li>
                                 <a href={link.href} 
-                                   class={`block px-4 py-3 text-sm hover:text-white transition ${Astro.url.pathname === link.href || (link.href !== '/twopiggyhavefun-blog/' && Astro.url.pathname.startsWith(link.href)) ? 'text-white font-bold border-b-2 border-[#c9a961]' : 'text-gray-300'}`}>
+                                   class={`block px-4 py-3 text-sm hover:text-white transition ${Astro.url.pathname === link.href || (link.href !== '/' && Astro.url.pathname.startsWith(link.href)) ? 'text-white font-bold border-b-2 border-[#c9a961]' : 'text-gray-300'}`}>
                                     {link.name}
                                 </a>
                             </li>
@@ -138,7 +138,7 @@ const navLinks = [
         </div>
                 <div class="flex flex-wrap justify-center gap-6">
                     <span class="text-gray-600">佈景：Flavor</span> 
-                    <a href="/twopiggyhavefun-blog/about" style="color: #c9a961;" class="hover:underline hover:text-white transition p-2">
+                    <a href="/about" style="color: #c9a961;" class="hover:underline hover:text-white transition p-2">
                         網頁設計：兩隻小豬
                     </a>
                 </div>
@@ -149,7 +149,7 @@ const navLinks = [
         <div id="achang-ft-btn" class="fixed right-2 top-1/2 -translate-y-1/2 z-50 hidden lg:block">
             <ul class="flex flex-col gap-2">
                 <li class="w-12 h-12 rounded-full overflow-hidden" style="background-color: #f9cd9a;">
-                    <a href="/twopiggyhavefun-blog/" class="block w-full h-full flex items-center justify-center">
+                    <a href="/" class="block w-full h-full flex items-center justify-center">
                         <span class="text-2xl">🐷</span>
                     </a>
                 </li>

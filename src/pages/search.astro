@@ -44,7 +44,7 @@ const serializedPosts = posts.map(post => ({
             <p class="text-gray-500 text-lg mb-6">找不到與 "<span class="font-bold">{query}</span>" 相關文章。</p>
             
             <div class="max-w-md mx-auto mb-8">
-                <form action="/twopiggyhavefun-blog/search" method="get" class="flex gap-2">
+                <form action="/search" method="get" class="flex gap-2">
                     <input type="text" name="q" placeholder="換個關鍵字試試..." 
                         class="flex-1 border border-gray-300 px-4 py-2 rounded-full focus:outline-none focus:border-blue-500 shadow-sm" />
                     <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition shadow-sm font-medium">
@@ -53,14 +53,14 @@ const serializedPosts = posts.map(post => ({
                 </form>
             </div>
 
-            <a href="/twopiggyhavefun-blog/" class="text-blue-600 hover:underline">返回首頁</a>
+            <a href="/" class="text-blue-600 hover:underline">返回首頁</a>
         </div>
 
         <div id="search-suggestions" class="hidden text-center py-12">
             <p class="text-gray-500 mb-6">或是試試看這些熱門關鍵字：</p>
             <div class="flex flex-wrap justify-center gap-3">
                 {['台北', '台中', '親子', '日本', '美食'].map(tag => (
-                    <a href={`/twopiggyhavefun-blog/search?q=${tag}`} 
+                    <a href={`/search?q=${tag}`} 
                        class="px-4 py-2 bg-white border border-gray-200 rounded-full text-gray-600 hover:text-blue-600 hover:border-blue-300 transition shadow-sm">
                         {tag}
                     </a>
@@ -101,7 +101,7 @@ const serializedPosts = posts.map(post => ({
 
         // 3. Fetch Data
         try {
-            const response = await fetch('/twopiggyhavefun-blog/search.json');
+            const response = await fetch('/search.json');
             if (!response.ok) throw new Error('Failed to load search index');
             const serializedPosts = await response.json();
             
@@ -133,15 +133,13 @@ const serializedPosts = posts.map(post => ({
                     const itemsHtml = results.map((result: any) => {
                         const post = result.item;
                         const date = new Date(post.date).toLocaleDateString('zh-TW');
-                        const cover = post.cover || '/twopiggyhavefun-blog/placeholder.jpg';
+                        const cover = post.cover || '/placeholder.jpg';
                         // Fix path
-                        const safeCover = cover.startsWith('/') && !cover.startsWith('/twopiggyhavefun-blog') 
-                            ? `/twopiggyhavefun-blog${cover}` 
-                            : cover;
+                        const safeCover = cover;
 
                         return `
                             <article class="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col h-full border border-gray-100 group">
-                                <a href="/twopiggyhavefun-blog/posts/${post.slug}" class="block overflow-hidden h-48 relative">
+                                <a href="/posts/${post.slug}" class="block overflow-hidden h-48 relative">
                                     <img src="${safeCover}" alt="${post.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
                                 </a>
                                 <div class="p-6 flex-1 flex flex-col">
@@ -150,10 +148,10 @@ const serializedPosts = posts.map(post => ({
                                         <span class="text-blue-500">${post.category || '未分類'}</span>
                                     </div>
                                     <h2 class="text-xl font-bold mb-3 leading-snug text-gray-800 group-hover:text-blue-600 transition-colors line-clamp-2">
-                                        <a href="/twopiggyhavefun-blog/posts/${post.slug}">${post.title}</a>
+                                        <a href="/posts/${post.slug}">${post.title}</a>
                                     </h2>
                                     <p class="text-gray-600 text-sm line-clamp-2 mb-4 flex-1">${post.description || ''}</p>
-                                    <a href="/twopiggyhavefun-blog/posts/${post.slug}" class="mt-auto text-blue-600 font-medium hover:underline">
+                                    <a href="/posts/${post.slug}" class="mt-auto text-blue-600 font-medium hover:underline">
                                         繼續閱讀 →
                                     </a>
                                 </div>
