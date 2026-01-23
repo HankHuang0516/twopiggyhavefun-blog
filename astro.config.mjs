@@ -7,6 +7,5 @@ export default defineConfig({
     integrations: [tailwind(), sitemap()],
     // Replace with your GitHub username and repository name
     // Example: https://my-username.github.io/my-repo/
-    site: 'https://HankHuang0516.github.io',
-    base: '/twopiggyhavefun-blog',
+    site: 'https://twopiggyhavefun.uk',
 });
