@@ -234,8 +234,10 @@ import Layout from '../layouts/Layout.astro';
 </style>
 
 <script is:inline>
-    // Configuration - Point to the production Railway backend
-    const API_BASE = 'https://twopiggyhavefun-blog-production.up.railway.app';
+    // Configuration - Dynamic backend selection
+    const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:3456'
+        : 'https://twopiggyhavefun-blog-production.up.railway.app';
     
     let currentSlug = null;
     let allPosts = [];
@@ -262,6 +264,10 @@ import Layout from '../layouts/Layout.astro';
 
     // Save password to local storage and load
     function handleLogin() {
+        if (!authPasswordInput.value) {
+            alert('請輸入密碼');
+            return;
+        }
         localStorage.setItem('editor_password', authPasswordInput.value);
         loadPosts();
     }
@@ -293,7 +299,7 @@ import Layout from '../layouts/Layout.astro';
             renderList(allPosts);
         } catch (err) {
             console.error('API Error:', err);
-            // alert('無法連線至後端 API，請確認 Railway 服務是否正常。');
+            alert(`無法連線至後端 API (${API_BASE})，請確認服務是否運作中。\n錯誤：${err.message}`);
         }
         showLoading(false);
     }
