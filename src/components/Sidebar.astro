@@ -4,6 +4,7 @@ import { getCollection } from 'astro:content';
 import SearchWidget from './SearchWidget.astro';
 import { 
     getCategorySlug,
+    slugify,
     PIXNET_CATEGORY_HIERARCHY,
     regionNames 
 } from '../utils/categories';
@@ -242,7 +243,7 @@ const parentOrder = [
                             </a>
                             <span class="text-gray-400 text-xs ml-1">({stats.total})</span>
                         </div>
-                        <div class="sub-categories ml-5 border-l border-gray-200 pl-3 hidden" id={catId}>
+                        <div class="sub-categories ml-5 border-l border-gray-200 pl-3 max-h-0 overflow-hidden transition-all duration-300 ease-in-out" id={catId}>
                             {subsWithPosts.map(([subName, posts]) => {
                                 const uniquePosts = getUniquePosts(posts);
                                 const subId = `sub-${parentSlug}-${subName.replace(/[^\w\u4e00-\u9fff]/g, '')}`;
@@ -253,7 +254,7 @@ const parentOrder = [
                                             <button class="toggle-btn w-10 h-10 flex items-center justify-center text-gray-400 hover:text-gray-600 active:bg-gray-100 rounded-full transition-colors -ml-1 text-sm" data-target={subId}>
                                                 <span class="toggle-icon">▶</span>
                                             </button>
-                                            <a href={`${BASE_URL}/category/${subName}`} 
+                                            <a href={`${BASE_URL}/category/${slugify(subName)}`} 
                                                class="text-blue-600 ml-1 hover:underline">{subName}</a>
                                             <span class="text-gray-400 text-xs ml-1">({uniquePosts.length})</span>
                                         </div>
@@ -332,9 +333,16 @@ const parentOrder = [
     <div class="bg-white border border-gray-200 p-4">
         <h3 class="text-lg font-bold mb-4 text-red-600">熱門標籤</h3>
         <div class="flex flex-wrap gap-2">
-            {['台北美食', '台中景點', '親子餐廳', '住宿推薦', '日本旅遊', '台灣小吃'].map(tag => (
-                <a href={`${BASE_URL}/category/${tag}`} class="text-sm bg-white border border-gray-200 text-gray-600 px-3 py-2 rounded-md hover:border-red-300 hover:text-red-500 transition shadow-sm">
-                    #{tag}
+            {[
+                { name: '台北美食', slug: 'domestic-food' }, 
+                { name: '親子旅遊', slug: 'parenting' }, 
+                { name: '國內住宿', slug: 'domestic-hotel' }, 
+                { name: '日本旅遊', slug: 'foreign-travel' }, 
+                { name: '台灣小吃', slug: 'domestic-food' },
+                { name: '開箱分享', slug: 'unboxing' }
+            ].map(tag => (
+                <a href={`${BASE_URL}/category/${tag.slug}`} class="text-sm bg-white border border-gray-200 text-gray-600 px-3 py-2 rounded-md hover:border-red-300 hover:text-red-500 transition shadow-sm">
+                    #{tag.name}
                 </a>
             ))}
         </div>
@@ -353,8 +361,8 @@ const parentOrder = [
 </aside>
 
 <style>
-    .sub-categories.hidden { display: none; }
-    .sub-posts.expanded { max-height: 500px; }
+    .sub-categories.expanded,
+    .sub-posts.expanded { max-height: 5000px !important; }
     .toggle-btn { cursor: pointer; background: none; border: none; padding: 0; }
     .toggle-icon { display: inline-block; transition: transform 0.2s; }
     .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
@@ -368,82 +376,102 @@ const parentOrder = [
     }
 </style>
 
-<script>
-    // Close Sidebar Logic
-    const closeBtn = document.getElementById('close-sidebar-btn');
-    const sidebar = document.getElementById('sidebar-panel');
-    const overlay = document.getElementById('sidebar-overlay');
-    
-    function closeSidebar() {
-        sidebar?.classList.add('-translate-x-full');
-        overlay?.classList.add('hidden');
-    }
+<script is:inline>
+    // Robust Sidebar Toggle Logic (Event Delegation)
+    document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.toggle-btn');
+        if (!btn) return;
+        
+        e.preventDefault();
+        const targetId = btn.getAttribute('data-target');
+        console.log('[Sidebar] Toggle clicked, target:', targetId);
+        if (!targetId) return;
+        
+        const target = document.getElementById(targetId);
+        const icon = btn.querySelector('.toggle-icon');
+        
+        if (target) {
+            const isCollapsing = target.classList.contains('expanded');
+            target.classList.toggle('expanded');
+            if (icon) icon.textContent = isCollapsing ? '▶' : '▼';
+            console.log('[Sidebar] Toggled expanded to:', !isCollapsing);
+        } else {
+            console.warn('[Sidebar] Target element not found:', targetId);
+        }
+    });
+
+    // Expand/Collapse All
+    document.addEventListener('click', (e) => {
+        const expandBtn = e.target.closest('#expandAll');
+        const collapseBtn = e.target.closest('#collapseAll');
+        
+        if (expandBtn) {
+            console.log('[Sidebar] Expand All clicked');
+            document.querySelectorAll('.sub-categories, .sub-posts').forEach(el => el.classList.add('expanded'));
+            document.querySelectorAll('.toggle-icon').forEach(el => el.textContent = '▼');
+        }
+        
+        if (collapseBtn) {
+            console.log('[Sidebar] Collapse All clicked');
+            document.querySelectorAll('.sub-categories, .sub-posts').forEach(el => el.classList.remove('expanded'));
+            document.querySelectorAll('.toggle-icon').forEach(el => el.textContent = '▶');
+        }
+    });
+
+    // Mobile Sidebar panel logic
+    // Using simple selectors to match existing IDs in the template
+    const getSidebarElements = () => ({
+        panel: document.getElementById('sidebar-panel'),
+        overlay: document.getElementById('sidebar-overlay'),
+        closeBtns: document.querySelectorAll('#close-sidebar-btn, #close-sidebar')
+    });
 
     function openSidebar() {
-        sidebar?.classList.remove('-translate-x-full');
+        const { panel, overlay } = getSidebarElements();
+        panel?.classList.remove('-translate-x-full');
         overlay?.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
     }
-    
-    closeBtn?.addEventListener('click', closeSidebar);
-    overlay?.addEventListener('click', closeSidebar);
 
-    // Listen for Open events from other components
+    function closeSidebar() {
+        const { panel, overlay } = getSidebarElements();
+        panel?.classList.add('-translate-x-full');
+        overlay?.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    // Listen for custom open events
     document.addEventListener('open-sidebar', openSidebar);
     
-    // Legacy support for "Gear" button if it exists and we can attach to it
-    // (Assuming the Gear button might be dynamically handled, we'll try to find it)
+    // Global delegation for sidebar controls
     document.addEventListener('click', (e) => {
-        const target = e.target as HTMLElement;
+        const target = e.target;
+        
+        // Open button
+        if (target.closest('#open-sidebar')) {
+            openSidebar();
+        }
+        
+        // Close controls
+        if (target.closest('#sidebar-overlay') || target.closest('#close-sidebar-btn') || target.closest('#close-sidebar')) {
+            closeSidebar();
+        }
+        
+        // Mobile auto-close on link click
+        const link = target.closest('a');
+        if (link && !link.classList.contains('toggle-btn') && window.innerWidth < 1024) {
+            if (document.getElementById('sidebar-panel')?.contains(link)) {
+                closeSidebar();
+            }
+        }
+        
+        // Legacy "Gear" button support
         const gearBtn = target.closest('button, a');
-        // Heuristic for Gear icon or Setup button
         if (gearBtn && (gearBtn.innerHTML.includes('card-text') || gearBtn.innerHTML.includes('gear') || gearBtn.innerText.includes('設定'))) {
-            // Prevent default navigation if it's just a toggle
              if (gearBtn.getAttribute('href') === '#' || !gearBtn.getAttribute('href')) {
                 e.preventDefault();
                 openSidebar();
              }
-        }
-    });
-
-    // Existing sidebar toggle logic...
-    document.querySelectorAll('.toggle-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const targetId = btn.getAttribute('data-target');
-            if (!targetId) return;
-            const target = document.getElementById(targetId);
-            const icon = btn.querySelector('.toggle-icon');
-            if (target) {
-                const isExpanded = target.classList.contains('expanded');
-                target.classList.toggle('expanded');
-                if (icon) icon.textContent = isExpanded ? '▶' : '▼';
-            }
-        });
-    });
-
-    document.getElementById('expandAll')?.addEventListener('click', () => {
-        document.querySelectorAll('.sub-categories').forEach(el => el.classList.remove('hidden'));
-        document.querySelectorAll('.sub-posts').forEach(el => el.classList.add('expanded'));
-        document.querySelectorAll('.toggle-icon').forEach(el => el.textContent = '▼');
-    });
-
-    document.getElementById('collapseAll')?.addEventListener('click', () => {
-        document.querySelectorAll('.sub-categories').forEach(el => el.classList.add('hidden'));
-        document.querySelectorAll('.sub-posts').forEach(el => el.classList.remove('expanded'));
-        document.querySelectorAll('.toggle-icon').forEach(el => el.textContent = '▶');
-    });
-
-    // Auto-close sidebar on mobile when a link is clicked (Event Delegation)
-    sidebar?.addEventListener('click', (e) => {
-        const target = e.target as HTMLElement;
-        const link = target.closest('a');
-        
-        // If clicked on a link and we are on mobile
-        if (link && window.innerWidth < 1024) { 
-            // Optional: Don't close if it's just a toggle button acting as a link
-            if (!link.classList.contains('toggle-btn')) {
-                closeSidebar();
-            }
         }
     });
 </script>

@@ -1,0 +1,417 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="文章編輯器 | TwoPiggyHaveFun">
+    <div id="loading" class="loading-overlay">
+        <div>載入中...</div>
+    </div>
+
+    <div class="editor-wrapper">
+        <header class="editor-header-nav">
+            <h1>📝 文章管理系統</h1>
+            <div class="controls">
+                <input type="password" id="auth-password" class="auth-box" placeholder="輸入密碼...">
+                <button class="btn btn-primary" id="new-post-btn">+ 新增文章</button>
+                <button class="btn btn-primary" id="deploy-btn">🚀 部署網站</button>
+            </div>
+        </header>
+
+        <div class="main-container">
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <input type="text" id="search-input" class="search-box" placeholder="搜尋標題...">
+                </div>
+                <div id="post-list" class="post-list">
+                    <!-- Posts will be loaded here -->
+                </div>
+            </div>
+
+            <div class="editor-area">
+                <div id="editor-view" style="display: none;">
+                    <div class="editor-title-container">
+                        <h2 id="editor-title-display">編輯文章</h2>
+                    </div>
+                    
+                    <div class="editor-field">
+                        <label>檔案名稱 (Slug)</label>
+                        <input type="text" id="post-slug" disabled>
+                    </div>
+
+                    <div id="markdown-editor" class="editor-field" style="flex: 1; display: flex; flex-direction: column;">
+                        <label>文章內容 (Markdown)</label>
+                        <textarea id="editor-content" placeholder="在此輸入文章內容..."></textarea>
+                    </div>
+
+                    <div class="controls" style="margin-top: 2rem;">
+                        <button class="btn btn-primary" id="save-btn">儲存修改</button>
+                        <button class="btn btn-danger" id="delete-btn">刪除文章</button>
+                    </div>
+                </div>
+                
+                <div id="empty-state" style="flex: 1; display: flex; justify-content: center; align-items: center; color: #64748b;">
+                    <p>請從左側選擇文章進行編輯，或點擊「新增文章」</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</Layout>
+
+<style is:global>
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255,255,255,0.8);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-weight: bold;
+    }
+
+    .editor-wrapper {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 64px); /* Subtract layout header height if any */
+        background: #f8fafc;
+    }
+
+    .editor-header-nav {
+        background: white;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .editor-header-nav h1 {
+        font-size: 1.25rem;
+        margin: 0;
+    }
+
+    .main-container {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+    }
+
+    .sidebar {
+        width: 320px;
+        background: white;
+        border-right: 1px solid #e2e8f0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sidebar-header {
+        padding: 1rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .search-box, .auth-box {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    .auth-box {
+        width: 150px;
+        margin-right: 1rem;
+    }
+
+    .post-list {
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    .post-item {
+        padding: 1rem;
+        border-bottom: 1px solid #e2e8f0;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .post-item:hover {
+        background: #f1f5f9;
+    }
+
+    .post-item.active {
+        background: #eff6ff;
+        border-left: 4px solid #2563eb;
+    }
+
+    .post-title {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        display: block;
+        color: #1e293b;
+    }
+
+    .post-meta {
+        font-size: 0.8rem;
+        color: #64748b;
+    }
+
+    .editor-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 2rem;
+        background: white;
+        overflow-y: auto;
+    }
+
+    .editor-field {
+        margin-bottom: 1rem;
+    }
+
+    .editor-field label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #64748b;
+        margin-bottom: 0.5rem;
+    }
+
+    .editor-field input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        background: #f8fafc;
+    }
+
+    #editor-content {
+        flex: 1;
+        width: 100%;
+        font-family: 'JetBrains Mono', 'Fira Code', monospace;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        padding: 1rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        min-height: 400px;
+        resize: vertical;
+    }
+
+    .btn {
+        padding: 0.625rem 1.25rem;
+        border-radius: 4px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        transition: all 0.2s;
+    }
+
+    .btn-primary {
+        background: #2563eb;
+        color: white;
+    }
+
+    .btn-danger {
+        background: #ef4444;
+        color: white;
+    }
+
+    .controls {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
+</style>
+
+<script is:inline>
+    // Configuration - Point to the production Railway backend
+    const API_BASE = 'https://twopiggyhavefun-blog-production.up.railway.app';
+    
+    let currentSlug = null;
+    let allPosts = [];
+
+    // Elements
+    const postListEl = document.getElementById('post-list');
+    const searchInput = document.getElementById('search-input');
+    const authPasswordInput = document.getElementById('auth-password');
+    const editorView = document.getElementById('editor-view');
+    const emptyState = document.getElementById('empty-state');
+    const slugInput = document.getElementById('post-slug');
+    const contentInput = document.getElementById('editor-content');
+    const loading = document.getElementById('loading');
+
+    // Helper to get headers
+    function getHeaders() {
+        return {
+            'Content-Type': 'application/json',
+            'X-Auth-Password': authPasswordInput.value || localStorage.getItem('editor_password')
+        };
+    }
+
+    // Save password to local storage on change
+    authPasswordInput.addEventListener('change', () => {
+        localStorage.setItem('editor_password', authPasswordInput.value);
+        loadPosts(); // Reload on password change
+    });
+
+    // Load saved password
+    if (localStorage.getItem('editor_password')) {
+        authPasswordInput.value = localStorage.getItem('editor_password');
+    }
+
+    // Initial Load
+    async function loadPosts() {
+        showLoading(true);
+        try {
+            const res = await fetch(`${API_BASE}/api/posts`, { headers: getHeaders() });
+            if (res.status === 401) {
+                alert('密碼錯誤或未輸入');
+                showLoading(false);
+                return;
+            }
+            allPosts = await res.json();
+            renderList(allPosts);
+        } catch (err) {
+            console.error('API Error:', err);
+            // alert('無法連線至後端 API，請確認 Railway 服務是否正常。');
+        }
+        showLoading(false);
+    }
+
+    function renderList(posts) {
+        postListEl.innerHTML = posts.map(post => `
+            <div class="post-item ${currentSlug === post.slug ? 'active' : ''}" onclick="selectPost('${post.slug}')">
+                <span class="post-title">${post.title}</span>
+                <span class="post-meta">${post.date || '無日期'} | ${post.category}</span>
+            </div>
+        `).join('');
+    }
+
+    window.selectPost = async function(slug) {
+        currentSlug = slug;
+        showLoading(true);
+        try {
+            const res = await fetch(`${API_BASE}/api/posts/${slug}`, { headers: getHeaders() });
+            if (res.status === 401) {
+                alert('密碼驗證失敗');
+                showLoading(false);
+                return;
+            }
+            const data = await res.json();
+            
+            slugInput.value = data.slug;
+            contentInput.value = data.content;
+            
+            editorView.style.display = 'flex';
+            emptyState.style.display = 'none';
+            renderList(allPosts);
+        } catch (err) {
+            alert('載入文章失敗');
+        }
+        showLoading(false);
+    }
+
+    async function savePost() {
+        if (!currentSlug) return;
+        showLoading(true);
+        try {
+            const res = await fetch(`${API_BASE}/api/posts/${currentSlug}`, {
+                method: 'PUT',
+                headers: getHeaders(),
+                body: JSON.stringify({ content: contentInput.value })
+            });
+            if (res.status === 401) {
+                alert('密碼錯誤，無法儲存');
+                showLoading(false);
+                return;
+            }
+            const result = await res.json();
+            if (result.success) {
+                alert('文章已儲存');
+                loadPosts();
+            } else {
+                alert('儲存失敗: ' + result.error);
+            }
+        } catch (err) {
+            alert('連線失敗');
+        }
+        showLoading(false);
+    }
+
+    async function deletePost() {
+        if (!currentSlug || !confirm('確定要刪除這篇文章嗎？此動作無法復原。')) return;
+        showLoading(true);
+        try {
+            const res = await fetch(`${API_BASE}/api/posts/${currentSlug}`, { 
+                method: 'DELETE',
+                headers: getHeaders()
+            });
+            if (res.status === 401) {
+                alert('密碼錯誤，無法刪除');
+                showLoading(false);
+                return;
+            }
+            const result = await res.json();
+            if (result.success) {
+                alert('文章已刪除');
+                currentSlug = null;
+                editorView.style.display = 'none';
+                emptyState.style.display = 'flex';
+                loadPosts();
+            }
+        } catch (err) {
+            alert('刪除失敗');
+        }
+        showLoading(false);
+    }
+
+    async function triggerDeploy() {
+        if (!confirm('即將推送改動並重新編譯網站，確定嗎？')) return;
+        showLoading(true);
+        try {
+            const res = await fetch(`${API_BASE}/api/deploy`, { 
+                method: 'POST',
+                headers: getHeaders()
+            });
+            if (res.status === 401) {
+                alert('密碼錯誤，無法部署');
+                showLoading(false);
+                return;
+            }
+            const result = await res.json();
+            if (result.success) {
+                alert('部署已觸發！請等待幾分鐘讓網站更新。');
+            } else {
+                alert('部署失敗: ' + result.error);
+            }
+        } catch (err) {
+            alert('部署連線失敗');
+        }
+        showLoading(false);
+    }
+
+    function showLoading(show) {
+        loading.style.display = show ? 'flex' : 'none';
+    }
+
+    // Event Listeners
+    document.getElementById('save-btn').addEventListener('click', savePost);
+    document.getElementById('delete-btn').addEventListener('click', deletePost);
+    document.getElementById('deploy-btn').addEventListener('click', triggerDeploy);
+    
+    searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        const filtered = allPosts.filter(p => p.title.toLowerCase().includes(query));
+        renderList(filtered);
+    });
+
+    document.getElementById('new-post-btn').addEventListener('click', () => {
+        alert('新增文章功能請繼續使用現有的 API 或自動同步機制，此介面優先提供修改與刪除。');
+    });
+
+    // Bootstrap
+    loadPosts();
+</script>

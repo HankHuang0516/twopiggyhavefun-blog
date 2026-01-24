@@ -20,6 +20,18 @@ const path = require('path');
 const PORT = process.env.PORT || 3456;
 const POSTS_DIR = path.join(__dirname, 'src', 'content', 'posts');
 
+const AUTH_PASSWORD = process.env.AUTH_PASSWORD || 'asasas123';
+
+function checkAuth(req, res) {
+    const auth = req.headers['x-auth-password'];
+    if (auth !== AUTH_PASSWORD) {
+        res.writeHead(401, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ success: false, error: 'Unauthorized' }));
+        return false;
+    }
+    return true;
+}
+
 // 有效的分類
 const VALID_CATEGORIES = [
     'taipei-food', 'taipei-attractions',
@@ -249,8 +261,9 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
-    // 新增文章
+    // 新增文章 (Original endpoint)
     if (url === '/api/article' && req.method === 'POST') {
+        if (!checkAuth(req, res)) return;
         try {
             const data = await parseBody(req);
             const result = createArticle(data);
@@ -266,6 +279,97 @@ const server = http.createServer(async (req, res) => {
             console.error(`❌ 錯誤: ${err.message}`);
             sendJson(res, 500, { success: false, error: err.message });
         }
+        return;
+    }
+    if (url === '/api/posts' && req.method === 'GET') {
+        try {
+            if (!fs.existsSync(POSTS_DIR)) return sendJson(res, 200, []);
+            const files = fs.readdirSync(POSTS_DIR).filter(f => f.endsWith('.md'));
+            const posts = files.map(filename => {
+                const content = fs.readFileSync(path.join(POSTS_DIR, filename), 'utf8');
+                const titleMatch = content.match(/title:\s*['"](.*?)['"]/);
+                const dateMatch = content.match(/date:\s*['"](.*?)['"]/);
+                const catMatch = content.match(/category:\s*(.*)/);
+                return {
+                    filename,
+                    slug: filename.replace('.md', ''),
+                    title: titleMatch ? titleMatch[1] : filename,
+                    date: dateMatch ? dateMatch[1] : null,
+                    category: catMatch ? catMatch[1].trim() : 'travel'
+                };
+            }).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+            sendJson(res, 200, posts);
+        } catch (err) {
+            sendJson(res, 500, { error: err.message });
+        }
+        return;
+    }
+
+    // Get specific article
+    if (url.startsWith('/api/posts/') && req.method === 'GET') {
+        if (!checkAuth(req, res)) return;
+        const slug = url.replace('/api/posts/', '');
+        const filepath = path.join(POSTS_DIR, `${slug}.md`);
+        if (!fs.existsSync(filepath)) return sendJson(res, 404, { error: 'Not found' });
+
+        try {
+            const content = fs.readFileSync(filepath, 'utf8');
+            sendJson(res, 200, { slug, content });
+        } catch (err) {
+            sendJson(res, 500, { error: err.message });
+        }
+        return;
+    }
+
+    // Update article
+    if (url.startsWith('/api/posts/') && req.method === 'PUT') {
+        if (!checkAuth(req, res)) return;
+        const slug = url.replace('/api/posts/', '');
+        const filepath = path.join(POSTS_DIR, `${slug}.md`);
+        if (!fs.existsSync(filepath)) return sendJson(res, 404, { error: 'Not found' });
+
+        try {
+            const { content } = await parseBody(req);
+            if (!content) return sendJson(res, 400, { error: 'Content required' });
+
+            fs.writeFileSync(filepath, content, 'utf8');
+            console.log(`✅ 文章已更新: ${slug}.md`);
+            sendJson(res, 200, { success: true, slug });
+        } catch (err) {
+            sendJson(res, 500, { error: err.message });
+        }
+        return;
+    }
+
+    // Delete article
+    if (url.startsWith('/api/posts/') && req.method === 'DELETE') {
+        if (!checkAuth(req, res)) return;
+        const slug = url.replace('/api/posts/', '');
+        const filepath = path.join(POSTS_DIR, `${slug}.md`);
+        if (!fs.existsSync(filepath)) return sendJson(res, 404, { error: 'Not found' });
+
+        try {
+            fs.unlinkSync(filepath);
+            console.log(`🗑️ 文章已刪除: ${slug}.md`);
+            sendJson(res, 200, { success: true, slug });
+        } catch (err) {
+            sendJson(res, 500, { error: err.message });
+        }
+        return;
+    }
+
+    // Trigger Deploy (Git Push)
+    if (url === '/api/deploy' && req.method === 'POST') {
+        if (!checkAuth(req, res)) return;
+        const { exec } = require('child_process');
+        exec('git add . && git commit -m "Manual content update via API" && git push', (err, stdout, stderr) => {
+            if (err) {
+                console.error(`❌ 部署失敗: ${stderr}`);
+                return sendJson(res, 500, { success: false, error: stderr });
+            }
+            console.log('🚀 部署成功');
+            sendJson(res, 200, { success: true });
+        });
         return;
     }
 
