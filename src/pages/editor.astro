@@ -362,7 +362,10 @@ import Layout from '../layouts/Layout.astro';
             }
             const result = await res.json();
             if (result.success) {
-                alert('文章已儲存');
+                const msg = result.deploying
+                    ? '文章已儲存！正在自動部署，請稍候幾分鐘讓網站更新。'
+                    : '文章已儲存（自動部署未啟用）';
+                alert(msg);
                 loadPosts();
             } else {
                 alert('儲存失敗: ' + result.error);
@@ -388,7 +391,10 @@ import Layout from '../layouts/Layout.astro';
             }
             const result = await res.json();
             if (result.success) {
-                alert('文章已刪除');
+                const msg = result.deploying
+                    ? '文章已刪除！正在自動部署，請稍候幾分鐘讓網站更新。'
+                    : '文章已刪除（自動部署未啟用）';
+                alert(msg);
                 currentSlug = null;
                 editorView.style.display = 'none';
                 emptyState.style.display = 'flex';

@@ -20,9 +20,49 @@ const path = require('path');
 const PORT = process.env.PORT || 3456;
 const POSTS_DIR = path.join(__dirname, 'src', 'content', 'posts');
 const DIST_DIR = path.join(__dirname, 'dist');
-const VERSION = "20260124-2158-UnifiedServer"; // 版本標記
+const VERSION = "20260125-AutoDeploy"; // 版本標記
 
 const AUTH_PASSWORD = process.env.AUTH_PASSWORD || 'asasas123';
+const GIT_TOKEN = process.env.GIT_TOKEN || '';
+const GIT_REPO = 'HankHuang0516/twopiggyhavefun-blog';
+
+/**
+ * 自動部署到 GitHub
+ */
+function autoDeploy(action, filename) {
+    if (!GIT_TOKEN) {
+        console.log('⚠️ GIT_TOKEN 未設定，跳過自動部署');
+        return Promise.resolve({ skipped: true });
+    }
+
+    const { exec } = require('child_process');
+    const repoUrl = `https://${GIT_TOKEN}@github.com/${GIT_REPO}.git`;
+
+    return new Promise((resolve, reject) => {
+        // 設定 git 使用者資訊
+        const setupCmd = `git config user.email "bot@railway.app" && git config user.name "Railway Bot"`;
+        const commitMsg = `[Auto] ${action}: ${filename}`;
+        const deployCmd = `${setupCmd} && git add -A && git commit -m "${commitMsg}" && git push ${repoUrl} HEAD:main`;
+
+        console.log(`🚀 開始自動部署: ${action} ${filename}`);
+
+        exec(deployCmd, { cwd: __dirname }, (err, stdout, stderr) => {
+            if (err) {
+                // 如果沒有變更需要 commit，不算錯誤
+                if (stderr.includes('nothing to commit')) {
+                    console.log('ℹ️ 沒有變更需要部署');
+                    resolve({ success: true, message: 'No changes to deploy' });
+                } else {
+                    console.error(`❌ 部署失敗: ${stderr}`);
+                    reject(new Error(stderr));
+                }
+                return;
+            }
+            console.log(`✅ 自動部署成功`);
+            resolve({ success: true });
+        });
+    });
+}
 
 function checkAuth(req, res) {
     const auth = req.headers['x-auth-password'];
@@ -388,7 +428,13 @@ const server = http.createServer(async (req, res) => {
 
             fs.writeFileSync(filepath, content, 'utf8');
             console.log(`✅ 文章已更新: ${slug}.md`);
-            sendJson(res, 200, { success: true, slug });
+
+            // 自動部署
+            autoDeploy('Update', `${slug}.md`).catch(err => {
+                console.error('自動部署失敗:', err.message);
+            });
+
+            sendJson(res, 200, { success: true, slug, deploying: !!GIT_TOKEN });
         } catch (err) {
             sendJson(res, 500, { error: err.message });
         }
@@ -405,7 +451,13 @@ const server = http.createServer(async (req, res) => {
         try {
             fs.unlinkSync(filepath);
             console.log(`🗑️ 文章已刪除: ${slug}.md`);
-            sendJson(res, 200, { success: true, slug });
+
+            // 自動部署
+            autoDeploy('Delete', `${slug}.md`).catch(err => {
+                console.error('自動部署失敗:', err.message);
+            });
+
+            sendJson(res, 200, { success: true, slug, deploying: !!GIT_TOKEN });
         } catch (err) {
             sendJson(res, 500, { error: err.message });
         }
