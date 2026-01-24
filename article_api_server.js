@@ -20,6 +20,7 @@ const path = require('path');
 const PORT = process.env.PORT || 3456;
 const POSTS_DIR = path.join(__dirname, 'src', 'content', 'posts');
 const DIST_DIR = path.join(__dirname, 'dist');
+const VERSION = "20260124-2158-UnifiedServer"; // 版本標記
 
 const AUTH_PASSWORD = process.env.AUTH_PASSWORD || 'asasas123';
 
@@ -432,17 +433,17 @@ const server = http.createServer(async (req, res) => {
 });
 
 // 啟動伺服器
-server.listen(PORT, () => {
-    console.log('='.repeat(50));
-    console.log('📝 Article API Server');
-    console.log('='.repeat(50));
-    console.log(`🚀 伺服器運行於: http://localhost:${PORT}`);
-    console.log(`📁 文章儲存目錄: ${POSTS_DIR}`);
+server.listen(PORT, '0.0.0.0', () => {
+    console.log(`==========================================`);
+    console.log(`Article API Server (Unified) is running`);
+    console.log(`Version: ${VERSION}`);
+    console.log(`Local: http://localhost:${PORT}`);
+    console.log(`Serving static files from: ${DIST_DIR}`);
+    console.log(`==========================================`);
     console.log('');
     console.log('可用端點:');
     console.log(`  POST http://localhost:${PORT}/api/article - 新增文章`);
     console.log(`  GET  http://localhost:${PORT}/api/health  - 健康檢查`);
     console.log('');
     console.log('按 Ctrl+C 停止伺服器');
-    console.log('='.repeat(50));
 });
