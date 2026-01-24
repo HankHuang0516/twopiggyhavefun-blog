@@ -27,3 +27,6 @@ This workflow automatically builds the project, runs the internal verification s
 
 3. Push to repository
    > git push
+
+4. Deploy to Railway (Manual Backend Update)
+   > railway up

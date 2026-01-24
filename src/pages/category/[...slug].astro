@@ -11,7 +11,8 @@ import {
     regionNames,
     regionKeywords,
     PIXNET_CATEGORY_HIERARCHY,
-    getCategorySlug
+    getCategorySlug,
+    slugify
 } from '../../utils/categories';
 
 const { slug } = Astro.params;
@@ -39,8 +40,17 @@ export async function getStaticPaths() {
 
     // 2. Sub/Tags
     allPosts.forEach(p => {
-        if (p.data.category) addToBucket(p.data.category, p.data.category, p);
-        (p.data.tags || []).forEach(t => addToBucket(t, t, p));
+        // For subcategories, we slugify the name to ensure valid URLs
+        if (p.data.category) {
+            const catSlug = slugify(p.data.category);
+            addToBucket(catSlug, p.data.category, p);
+        }
+        
+        // Similarly for tags
+        (p.data.tags || []).forEach(t => {
+            const tagSlug = slugify(t);
+            addToBucket(tagSlug, t, p);
+        });
     });
 
     const paths = [];
