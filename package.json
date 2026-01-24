@@ -8,7 +8,9 @@
     "start": "node -e \"var fs=require('fs'); try{fs.rmSync('.astro',{recursive:true,force:true})}catch(e){}\" && astro dev",
     "build": "node -e \"var fs=require('fs'); try{fs.rmSync('.astro',{recursive:true,force:true})}catch(e){}\" && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test:build": "node tests/verify_build.js",
+    "prebuild": "node tests/verify_build.js"
   },
   "keywords": [],
   "author": "",
