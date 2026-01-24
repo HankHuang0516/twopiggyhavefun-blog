@@ -3,6 +3,353 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="文章編輯器 | TwoPiggyHaveFun">
+    <!-- Toast UI Editor CSS -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/theme/toastui-editor-dark.min.css" />
+
+    <div id="loading" class="loading-overlay">
+        <div>載入中...</div>
+    </div>
+
+    <div class="editor-wrapper">
+        <header class="editor-header-nav">
+            <h1>📝 文章管理系統</h1>
+            <div class="controls">
+                <div class="auth-container">
+                    <input type="password" id="auth-password" class="auth-box" placeholder="輸入密碼...">
+                    <button class="btn btn-primary" id="auth-btn">確認</button>
+                </div>
+                <button class="btn btn-primary" id="new-post-btn">+ 新增文章</button>
+                <button class="btn btn-primary" id="deploy-btn">🚀 部署網站</button>
+            </div>
+        </header>
+
+        <div class="main-container">
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <input type="text" id="search-input" class="search-box" placeholder="搜尋標題...">
+                </div>
+                <div id="post-list" class="post-list">
+                    <!-- Posts will be loaded here -->
+                </div>
+            </div>
+
+            <div class="editor-area">
+                <div id="editor-view" style="display: none;">
+                    <div class="editor-title-container">
+                        <h2 id="editor-title-display">編輯文章</h2>
+                    </div>
+                    
+                    <div class="editor-field">
+                        <label>檔案名稱 (Slug)</label>
+                        <input type="text" id="post-slug" disabled>
+                    </div>
+
+                    <div id="toast-editor-container" style="flex: 1; margin-bottom: 1rem;"></div>
+
+                    <div class="controls" style="margin-top: 1rem;">
+                        <button class="btn btn-primary" id="save-btn">儲存修改</button>
+                        <button class="btn btn-danger" id="delete-btn">刪除文章</button>
+                    </div>
+                </div>
+                
+                <div id="empty-state" style="flex: 1; display: flex; justify-content: center; align-items: center; color: #64748b;">
+                    <p>請從左側選擇文章進行編輯，或點擊「新增文章」</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</Layout>
+
+<style is:global>
+    .auth-container { display: flex; gap: 0.25rem; }
+    .loading-overlay {
+        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(255,255,255,0.8); display: none;
+        justify-content: center; align-items: center; z-index: 9999; font-weight: bold;
+    }
+    .editor-wrapper {
+        display: flex; flex-direction: column;
+        height: calc(100vh - 64px); background: #f8fafc;
+    }
+    .editor-header-nav {
+        background: white; border-bottom: 1px solid #e2e8f0; padding: 1rem 2rem;
+        display: flex; justify-content: space-between; align-items: center;
+    }
+    .editor-header-nav h1 { font-size: 1.25rem; margin: 0; }
+    .main-container { display: flex; flex: 1; overflow: hidden; }
+    .sidebar { width: 320px; background: white; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; }
+    .sidebar-header { padding: 1rem; border-bottom: 1px solid #e2e8f0; }
+    .search-box, .auth-box { width: 100%; padding: 0.5rem; border: 1px solid #e2e8f0; border-radius: 4px; box-sizing: border-box; }
+    .auth-box { width: 150px; margin-right: 1rem; }
+    .post-list { flex: 1; overflow-y: auto; }
+    .post-item { padding: 1rem; border-bottom: 1px solid #e2e8f0; cursor: pointer; transition: background 0.2s; }
+    .post-item:hover { background: #f1f5f9; }
+    .post-item.active { background: #eff6ff; border-left: 4px solid #2563eb; }
+    .post-title { font-weight: 600; margin-bottom: 0.25rem; display: block; color: #1e293b; }
+    .post-meta { font-size: 0.8rem; color: #64748b; }
+    .editor-area { flex: 1; display: flex; flex-direction: column; padding: 2rem; background: white; overflow-y: auto; }
+    .editor-field { margin-bottom: 1rem; }
+    .editor-field label { display: block; font-size: 0.875rem; font-weight: 600; color: #64748b; margin-bottom: 0.5rem; }
+    .editor-field input { width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 4px; background: #f8fafc; }
+    .btn { padding: 0.625rem 1.25rem; border-radius: 4px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; }
+    .btn-primary { background: #2563eb; color: white; }
+    .btn-danger { background: #ef4444; color: white; }
+    .controls { display: flex; gap: 0.5rem; align-items: center; }
+    
+    /* Toast UI Fixes */
+    .toastui-editor-defaultUI { border: 1px solid #e2e8f0 !important; border-radius: 4px; }
+</style>
+
+<!-- Toast UI Editor JS -->
+<script is:inline src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+
+<script is:inline>
+    // Configuration - Dynamic backend selection
+    const RAILWAY_API = 'https://twopiggyhavefun-blog-production.up.railway.app';
+    const isLocalDev = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+    const API_BASE = isLocalDev ? 'http://localhost:3456' : RAILWAY_API;
+    
+    let currentSlug = null;
+    let allPosts = [];
+    let editor = null;
+
+    // Elements
+    const postListEl = document.getElementById('post-list');
+    const searchInput = document.getElementById('search-input');
+    const authPasswordInput = document.getElementById('auth-password');
+    const editorView = document.getElementById('editor-view');
+    const emptyState = document.getElementById('empty-state');
+    const slugInput = document.getElementById('post-slug');
+    const loading = document.getElementById('loading');
+    const authBtn = document.getElementById('auth-btn');
+
+    // Initialize Toast UI Editor
+    function initEditor() {
+        // @ts-ignore
+        const Editor = toastui.Editor;
+        editor = new Editor({
+            el: document.querySelector('#toast-editor-container'),
+            height: '600px',
+            initialEditType: 'wysiwyg', // Default to Visual mode
+            previewStyle: 'vertical',
+            language: 'zh-TW',
+            theme: 'light', // Can be toggled to 'dark'
+            initialValue: ' ',
+            usageStatistics: false
+        });
+    }
+
+    // Helper to get headers
+    function getHeaders() {
+        return {
+            'Content-Type': 'application/json',
+            'X-Auth-Password': authPasswordInput.value || localStorage.getItem('editor_password')
+        };
+    }
+
+    // Save password to local storage and load
+    function handleLogin() {
+        if (!authPasswordInput.value) {
+            alert('請輸入密碼');
+            return;
+        }
+        localStorage.setItem('editor_password', authPasswordInput.value);
+        loadPosts();
+    }
+
+    authBtn.addEventListener('click', handleLogin);
+    
+    authPasswordInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') handleLogin();
+    });
+
+    if (localStorage.getItem('editor_password')) {
+        authPasswordInput.value = localStorage.getItem('editor_password');
+    }
+
+    async function loadPosts() {
+        showLoading(true);
+        try {
+            const url = `${API_BASE}/api/posts`;
+            const res = await fetch(url, { headers: getHeaders() });
+            const text = await res.text();
+            
+            if (res.status === 401) {
+                alert('密碼錯誤或未輸入');
+                showLoading(false);
+                return;
+            }
+            
+            try {
+                allPosts = JSON.parse(text);
+                renderList(allPosts);
+            } catch (jsonErr) {
+                console.error('JSON Parse Error:', jsonErr, 'Raw Content:', text);
+                alert(`API 回傳格式錯誤。\n${text.substring(0, 200)}...`);
+            }
+        } catch (err) {
+            console.error('API Error:', err);
+            alert(`無法連線至後端 API (${API_BASE})。\n錯誤：${err.message}`);
+        }
+        showLoading(false);
+    }
+
+    function renderList(posts) {
+        postListEl.innerHTML = posts.map(post => `
+            <div class="post-item ${currentSlug === post.slug ? 'active' : ''}" onclick="selectPost('${post.slug}')">
+                <span class="post-title">${post.title}</span>
+                <span class="post-meta">${post.date || '無日期'} | ${post.category}</span>
+            </div>
+        `).join('');
+    }
+
+    window.selectPost = async function(slug) {
+        currentSlug = slug;
+        showLoading(true);
+        try {
+            const res = await fetch(`${API_BASE}/api/posts/${slug}`, { headers: getHeaders() });
+            if (res.status === 401) {
+                alert('密碼驗證失敗');
+                showLoading(false);
+                return;
+            }
+            const data = await res.json();
+            
+            slugInput.value = data.slug;
+            
+            // Set content to Editor
+            if (editor) {
+                editor.setMarkdown(data.content);
+                // Switch to WYSIWYG mode explicitly if needed
+                editor.changeMode('wysiwyg');
+            }
+            
+            editorView.style.display = 'flex';
+            emptyState.style.display = 'none';
+            renderList(allPosts);
+        } catch (err) {
+            alert('載入文章失敗: ' + err.message);
+        }
+        showLoading(false);
+    }
+
+    async function savePost() {
+        if (!currentSlug) return;
+        
+        // Get content from Editor
+        const content = editor.getMarkdown();
+
+        showLoading(true);
+        try {
+            const res = await fetch(`${API_BASE}/api/posts/${currentSlug}`, {
+                method: 'PUT',
+                headers: getHeaders(),
+                body: JSON.stringify({ content: content })
+            });
+            if (res.status === 401) {
+                alert('密碼錯誤，無法儲存');
+                showLoading(false);
+                return;
+            }
+            const result = await res.json();
+            if (result.success) {
+                const msg = result.deploying
+                    ? '文章已儲存！正在自動部署，請稍候幾分鐘讓網站更新。'
+                    : '文章已儲存（自動部署未啟用）';
+                alert(msg);
+                loadPosts();
+            } else {
+                alert('儲存失敗: ' + result.error);
+            }
+        } catch (err) {
+            alert('連線失敗');
+        }
+        showLoading(false);
+    }
+
+    async function deletePost() {
+        if (!currentSlug || !confirm('確定要刪除這篇文章嗎？此動作無法復原。')) return;
+        showLoading(true);
+        try {
+            const res = await fetch(`${API_BASE}/api/posts/${currentSlug}`, { 
+                method: 'DELETE',
+                headers: getHeaders()
+            });
+            if (res.status === 401) {
+                alert('密碼錯誤，無法刪除');
+                showLoading(false);
+                return;
+            }
+            const result = await res.json();
+            if (result.success) {
+                const msg = result.deploying
+                    ? '文章已刪除！正在自動部署，請稍候幾分鐘讓網站更新。'
+                    : '文章已刪除（自動部署未啟用）';
+                alert(msg);
+                currentSlug = null;
+                editorView.style.display = 'none';
+                emptyState.style.display = 'flex';
+                loadPosts();
+            }
+        } catch (err) {
+            alert('刪除失敗');
+        }
+        showLoading(false);
+    }
+
+    async function triggerDeploy() {
+        if (!confirm('即將推送改動並重新編譯網站，確定嗎？')) return;
+        showLoading(true);
+        try {
+            const res = await fetch(`${API_BASE}/api/deploy`, { 
+                method: 'POST',
+                headers: getHeaders()
+            });
+            if (res.status === 401) {
+                alert('密碼錯誤，無法部署');
+                showLoading(false);
+                return;
+            }
+            const result = await res.json();
+            if (result.success) {
+                alert('部署已觸發！請等待幾分鐘讓網站更新。');
+            } else {
+                alert('部署失敗: ' + result.error);
+            }
+        } catch (err) {
+            alert('部署連線失敗');
+        }
+        showLoading(false);
+    }
+
+    function showLoading(show) {
+        loading.style.display = show ? 'flex' : 'none';
+    }
+
+    // Event Listeners
+    document.getElementById('save-btn').addEventListener('click', savePost);
+    document.getElementById('delete-btn').addEventListener('click', deletePost);
+    document.getElementById('deploy-btn').addEventListener('click', triggerDeploy);
+    
+    searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        const filtered = allPosts.filter(p => p.title.toLowerCase().includes(query));
+        renderList(filtered);
+    });
+
+    document.getElementById('new-post-btn').addEventListener('click', () => {
+        alert('新增文章功能請繼續使用現有的 API 或自動同步機制，此介面優先提供修改與刪除。');
+    });
+
+    // Bootstrap
+    window.onload = function() {
+        initEditor();
+        loadPosts();
+    };
+</script>
+
+<Layout title="文章編輯器 | TwoPiggyHaveFun">
     <div id="loading" class="loading-overlay">
         <div>載入中...</div>
     </div>
@@ -54,6 +401,73 @@ import Layout from '../layouts/Layout.astro';
                 
                 <div id="empty-state" style="flex: 1; display: flex; justify-content: center; align-items: center; color: #64748b;">
                     <p>請從左側選擇文章進行編輯，或點擊「新增文章」</p>
+                </div>
+
+                <!-- 新增文章表單 -->
+                <div id="new-post-view" style="display: none;">
+                    <h2>📝 新增文章</h2>
+
+                    <div class="editor-field">
+                        <label>文章標題 *</label>
+                        <input type="text" id="new-title" placeholder="輸入文章標題...">
+                    </div>
+
+                    <div class="editor-field">
+                        <label>分類 *</label>
+                        <select id="new-category">
+                            <optgroup label="台北">
+                                <option value="taipei-food">台北美食</option>
+                                <option value="taipei-attractions">台北景點</option>
+                            </optgroup>
+                            <optgroup label="新北">
+                                <option value="newtaipei-food">新北美食</option>
+                                <option value="newtaipei-attractions">新北景點</option>
+                            </optgroup>
+                            <optgroup label="桃園">
+                                <option value="taoyuan-food">桃園美食</option>
+                                <option value="taoyuan-attractions">桃園景點</option>
+                            </optgroup>
+                            <optgroup label="其他地區">
+                                <option value="hsinchu-food">新竹美食</option>
+                                <option value="hsinchu-attractions">新竹景點</option>
+                                <option value="taichung-food">台中美食</option>
+                                <option value="taichung-attractions">台中景點</option>
+                                <option value="tainan-food">台南美食</option>
+                                <option value="tainan-attractions">台南景點</option>
+                                <option value="kaohsiung-food">高雄美食</option>
+                                <option value="kaohsiung-attractions">高雄景點</option>
+                                <option value="yilan-food">宜蘭美食</option>
+                                <option value="yilan-attractions">宜蘭景點</option>
+                            </optgroup>
+                            <optgroup label="通用分類">
+                                <option value="travel">旅遊</option>
+                                <option value="food">美食</option>
+                                <option value="parenting">親子</option>
+                                <option value="life">生活</option>
+                                <option value="hotel">住宿</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div class="editor-field">
+                        <label>原文連結 *</label>
+                        <input type="text" id="new-link" placeholder="https://...">
+                    </div>
+
+                    <div class="editor-field">
+                        <label>標籤（用逗號分隔）</label>
+                        <input type="text" id="new-tags" placeholder="美食, 推薦, 必吃...">
+                    </div>
+
+                    <div class="editor-field" style="flex: 1; display: flex; flex-direction: column;">
+                        <label>文章內容 *</label>
+                        <textarea id="new-content" placeholder="在此輸入文章內容..." style="flex: 1; min-height: 300px;"></textarea>
+                    </div>
+
+                    <div class="controls" style="margin-top: 1rem;">
+                        <button class="btn btn-primary" id="create-btn">建立文章</button>
+                        <button class="btn" id="cancel-new-btn" style="background: #94a3b8;">取消</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -446,8 +860,77 @@ import Layout from '../layouts/Layout.astro';
         renderList(filtered);
     });
 
+    // 新增文章相關元素
+    const newPostView = document.getElementById('new-post-view');
+    const newTitleInput = document.getElementById('new-title');
+    const newCategorySelect = document.getElementById('new-category');
+    const newLinkInput = document.getElementById('new-link');
+    const newTagsInput = document.getElementById('new-tags');
+    const newContentInput = document.getElementById('new-content');
+
+    // 顯示新增文章表單
     document.getElementById('new-post-btn').addEventListener('click', () => {
-        alert('新增文章功能請繼續使用現有的 API 或自動同步機制，此介面優先提供修改與刪除。');
+        currentSlug = null;
+        editorView.style.display = 'none';
+        emptyState.style.display = 'none';
+        newPostView.style.display = 'block';
+        // 清空表單
+        newTitleInput.value = '';
+        newLinkInput.value = '';
+        newTagsInput.value = '';
+        newContentInput.value = '';
+        newCategorySelect.value = 'taipei-food';
+    });
+
+    // 取消新增
+    document.getElementById('cancel-new-btn').addEventListener('click', () => {
+        newPostView.style.display = 'none';
+        emptyState.style.display = 'flex';
+    });
+
+    // 建立文章
+    document.getElementById('create-btn').addEventListener('click', async () => {
+        const title = newTitleInput.value.trim();
+        const category = newCategorySelect.value;
+        const link = newLinkInput.value.trim();
+        const tags = newTagsInput.value.trim();
+        const content = newContentInput.value.trim();
+
+        if (!title || !link || !content) {
+            alert('請填寫標題、原文連結和內容');
+            return;
+        }
+
+        showLoading(true);
+        try {
+            const res = await fetch(`${API_BASE}/api/article`, {
+                method: 'POST',
+                headers: getHeaders(),
+                body: JSON.stringify({ title, category, link, tags, content })
+            });
+
+            if (res.status === 401) {
+                alert('密碼錯誤，無法建立文章');
+                showLoading(false);
+                return;
+            }
+
+            const result = await res.json();
+            if (result.success) {
+                const msg = result.deploying
+                    ? `文章「${result.title}」已建立！正在自動部署，請稍候幾分鐘讓網站更新。`
+                    : `文章「${result.title}」已建立（自動部署未啟用）`;
+                alert(msg);
+                newPostView.style.display = 'none';
+                emptyState.style.display = 'flex';
+                loadPosts();
+            } else {
+                alert('建立失敗: ' + result.error);
+            }
+        } catch (err) {
+            alert('連線失敗: ' + err.message);
+        }
+        showLoading(false);
     });
 
     // Bootstrap
