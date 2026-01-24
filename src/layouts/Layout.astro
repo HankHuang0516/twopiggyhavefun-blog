@@ -10,10 +10,11 @@ const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
 
 const navLinks = [
     { name: '關於兩隻小豬', href: '/about' },
-    { name: '台灣好玩好吃趴趴走', href: '/category/travel' },
+    { name: '台灣好玩好吃趴趴走', href: '/category/domestic-travel' },
     { name: '親子育兒', href: '/category/parenting' },
     { name: '美食餐廳', href: '/category/domestic-food' },
 ];
+
 ---
 
 <!doctype html>
@@ -493,9 +494,10 @@ const navLinks = [
                 };
             }
 
-            // Lightbox Click (only for content images or large images)
-            // We exclude iconic svgs or small icons if possible, but for simplicity let's apply to all larger images
-            if (img.width > 100 || img.classList.contains('object-cover')) {
+            // Lightbox Click (only for content images not inside links)
+            // Exclude images inside <a> tags to prevent conflicts with navigation
+            const isInsideLink = img.closest('a');
+            if ((img.width > 100 || img.classList.contains('object-cover')) && !isInsideLink) {
                 img.style.cursor = 'zoom-in';
                 img.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -503,7 +505,7 @@ const navLinks = [
                     lightboxImg.src = img.src;
                     lightbox.classList.remove('hidden');
                     // Force reflow
-                    void lightbox.offsetWidth; 
+                    void lightbox.offsetWidth;
                     lightbox.classList.remove('opacity-0');
                     lightbox.classList.add('opacity-100');
                     lightboxImg.classList.remove('scale-95');

@@ -10,6 +10,7 @@ interface Props {
 
 const { title, slug, date, cover, tags = [] } = Astro.props;
 import { formatDate } from '../utils/date';
+import { slugify } from '../utils/categories';
 const formattedDate = formatDate(date);
 
 // Helper to fix image paths
@@ -51,9 +52,9 @@ function fixImagePath(src: string | undefined): string {
         <div class="flex flex-wrap items-center gap-2 mb-4 text-sm">
             <span class="text-gray-500">{formattedDate}</span>
             {tags.map((tag) => (
-                <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">
+                <a href={`/category/${slugify(tag)}`} class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs hover:bg-gray-200 transition">
                     {tag}
-                </span>
+                </a>
             ))}
         </div>
         
@@ -63,6 +64,4 @@ function fixImagePath(src: string | undefined): string {
         </a>
     </div>
     
-    <!-- Full Card Clickable Overlay -->
-    <a href={`/posts/${slug}`} class="absolute inset-0 z-0" aria-label={`閱讀文章: ${title}`}></a>
 </article>
