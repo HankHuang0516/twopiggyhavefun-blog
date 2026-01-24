@@ -81,8 +81,10 @@ const { exec } = require('child_process');
 const server = exec('node article_api_server.js');
 
 server.stdout.on('data', (data) => {
-    if (data.includes('伺服器運行於')) {
+    // Look for "is running" (English) or "伺服器運行" (Chinese) to be safe
+    if (data.includes('running') || data.includes('運行')) {
         test().finally(() => {
+            console.log('🛑 Stopping test server...');
             server.kill();
         });
     }

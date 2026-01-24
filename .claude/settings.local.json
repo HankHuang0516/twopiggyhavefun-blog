@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build:*)",
+      "Bash(node verify_site.js:*)",
+      "Bash(ls:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nFix high-severity CSS/UX bugs: remove overlay conflicts and image lightbox issues\n\n- Remove full-card overlay in PostCard to prevent accidental navigation clicks\n- Add link detection for image lightbox to avoid conflicts with navigation\n- Convert PostCard tags from spans to clickable category links\n- Fix navigation link from /category/travel to /category/domestic-travel\n- Add deployment verification checklist for testing on production\n\nThese fixes resolve issues where users would accidentally trigger navigation\nwhen clicking on empty card areas or experience inconsistent image behavior.\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push)",
+      "Bash(dir:*)",
+      "Bash(node diagnose_click_issue.js:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nFix critical UX bug: Lightbox overlay intercepting all clicks on article pages\n\nProblem:\n- Lightbox modal had conflicting CSS classes \\(hidden + flex\\) causing display issues\n- The invisible overlay remained active and intercepted clicks on whitespace\n- Users clicking article content areas would trigger unexpected navigation\n\nRoot Cause:\n- In Layout.astro:447, lightbox used both ''hidden'' and ''flex'' classes simultaneously\n- CSS cascade caused ''flex'' to override ''hidden'', leaving an invisible clickable layer\n- z-index: 60 ensured the overlay stayed above all content\n\nSolution:\n- Removed conflicting CSS classes from lightbox initialization\n- Changed to inline style: display: none for reliable hiding\n- Updated show/hide logic to use display: flex/none instead of CSS classes\n- Prevents overlay from intercepting clicks when lightbox is closed\n\nFiles Modified:\n- src/layouts/Layout.astro: Fixed lightbox display logic \\(lines 447-448, 466, 520\\)\n- diagnose_click_issue.js: Added diagnostic tool for future debugging\n\nThis resolves the TODO.md issue: \"UI Bug: Clickable Whitespace causing unintended navigation\"\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git commit:*)",
+      "WebFetch(domain:twopiggyhavefun.uk)",
+      "Bash(gh run list:*)",
+      "Bash(node tests/verify_build.js:*)",
+      "Bash(npm run test:build:*)",
+      "Bash(grep:*)",
+      "Bash(Select-String \"nul\")",
+      "Bash(cmd /c \"cd /d C:\\\\Hank\\\\Other\\\\project\\\\picture && del \\\\?\\\\C:\\\\Hank\\\\Other\\\\project\\\\picture\\\\nul\")",
+      "Bash(cmd /c \"cd /d C:\\\\Hank\\\\Other\\\\project\\\\picture && dir /s /a:-d 2>nul | findstr /r \"\"^[0-9].*File\"\"\")",
+      "Bash(cmd /c \"cd /d C:\\\\Hank\\\\Other\\\\project\\\\picture && dir /s /a:-d\")",
+      "Bash(du:*)"
+    ]
+  }
+}

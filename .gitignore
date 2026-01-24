@@ -3,3 +3,4 @@ node_modules
 gen_*
 dist
 .DS_Store
+nul

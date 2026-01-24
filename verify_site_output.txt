@@ -1,0 +1,29 @@
+🔍 Starting Site Verification (Optimized)...
+⚡ Mode: Internal Check Only
+📂 Scanning directory: C:\Hank\Other\project\picture\dist
+
+📄 Found 1165 HTML pages to scan.
+Checking 495291 internal links...
+Checking 434 internal images...
+⚠️ Skipping external image verification (--internal-only)
+
+
+📊 Verification Report
+======================
+Pages Scanned: 1165
+Broken Links: 6
+Broken Images: 0
+
+❌ Broken Links Found:
+  - Page: posts\12204962857\index.html
+    Link: 特有種商行咖啡%20%20地址：台北市中正區臨沂街27巷4-1號%20%20電話：02%202341-1785%20%20營業時間：11:30%20–%2021:30%20(週一公休)%20%20粉絲團：https://www.facebook.com/realguts/?fref=ts
+  - Page: posts\12212917852\index.html
+    Link: %20http://lolwarden.pixnet.net/blog/post/213121687
+  - Page: posts\12213123751\index.html
+    Link: %20http://lolwarden.pixnet.net/blog/post/212917852
+  - Page: posts\12213327118\index.html
+    Link: %20http://lolwarden.pixnet.net/blog/post/212917852
+  - Page: posts\12214429172\index.html
+    Link: 	%20https://s.openrice.com/cHRSm028aO600~ulHzXKQ
+  - Page: posts\12214429172\index.html
+    Link: 	%20https://s.openrice.com/cHRSm028aO600~ulHzXKQ

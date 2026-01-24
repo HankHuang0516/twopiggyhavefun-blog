@@ -27,40 +27,111 @@ const GIT_TOKEN = process.env.GIT_TOKEN || '';
 const GIT_REPO = 'HankHuang0516/twopiggyhavefun-blog';
 
 /**
- * 自動部署到 GitHub
+ * 自動部署到 GitHub (使用 GitHub API)
  */
-function autoDeploy(action, filename) {
+async function autoDeploy(action, filename) {
     if (!GIT_TOKEN) {
         console.log('⚠️ GIT_TOKEN 未設定，跳過自動部署');
-        return Promise.resolve({ skipped: true });
+        return { skipped: true };
     }
 
-    const { exec } = require('child_process');
-    const repoUrl = `https://${GIT_TOKEN}@github.com/${GIT_REPO}.git`;
+    const commitMsg = `[Auto] ${action}: ${filename}`;
 
-    return new Promise((resolve, reject) => {
-        // 設定 git 使用者資訊
-        const setupCmd = `git config user.email "bot@railway.app" && git config user.name "Railway Bot"`;
-        const commitMsg = `[Auto] ${action}: ${filename}`;
-        const deployCmd = `${setupCmd} && git add -A && git commit -m "${commitMsg}" && git push ${repoUrl} HEAD:main`;
+    console.log(`🚀 開始自動部署: ${action} ${filename}`);
 
-        console.log(`🚀 開始自動部署: ${action} ${filename}`);
+    try {
+        const refData = await githubApi('GET', `/repos/${GIT_REPO}/git/ref/heads/main`);
+        const latestCommitSha = refData.object.sha;
 
-        exec(deployCmd, { cwd: __dirname }, (err, stdout, stderr) => {
-            if (err) {
-                // 如果沒有變更需要 commit，不算錯誤
-                if (stderr.includes('nothing to commit')) {
-                    console.log('ℹ️ 沒有變更需要部署');
-                    resolve({ success: true, message: 'No changes to deploy' });
-                } else {
-                    console.error(`❌ 部署失敗: ${stderr}`);
-                    reject(new Error(stderr));
-                }
-                return;
-            }
-            console.log(`✅ 自動部署成功`);
-            resolve({ success: true });
+        // 2. 取得目前的 tree
+        const commitData = await githubApi('GET', `/repos/${GIT_REPO}/git/commits/${latestCommitSha}`);
+        const baseTreeSha = commitData.tree.sha;
+
+        // 3. 讀取所有 posts 檔案並建立新的 tree
+        const postsFiles = fs.readdirSync(POSTS_DIR).filter(f => f.endsWith('.md'));
+        const treeItems = postsFiles.map(file => {
+            const content = fs.readFileSync(path.join(POSTS_DIR, file), 'utf8');
+            return {
+                path: `src/content/posts/${file}`,
+                mode: '100644',
+                type: 'blob',
+                content: content
+            };
         });
+
+        // 4. 建立新的 tree
+        const newTree = await githubApi('POST', `/repos/${GIT_REPO}/git/trees`, {
+            base_tree: baseTreeSha,
+            tree: treeItems
+        });
+
+        // 5. 建立新的 commit
+        const newCommit = await githubApi('POST', `/repos/${GIT_REPO}/git/commits`, {
+            message: commitMsg,
+            tree: newTree.sha,
+            parents: [latestCommitSha],
+            author: {
+                name: 'Railway Bot',
+                email: 'bot@railway.app',
+                date: new Date().toISOString()
+            }
+        });
+
+        // 6. 更新 ref 指向新的 commit
+        await githubApi('PATCH', `/repos/${GIT_REPO}/git/refs/heads/main`, {
+            sha: newCommit.sha
+        });
+
+        console.log(`✅ 自動部署成功: ${newCommit.sha.substring(0, 7)}`);
+        return { success: true, sha: newCommit.sha };
+
+    } catch (err) {
+        console.error(`❌ 部署失敗: ${err.message}`);
+        throw err;
+    }
+}
+
+/**
+ * GitHub API 請求工具
+ */
+function githubApi(method, endpoint, data = null) {
+    return new Promise((resolve, reject) => {
+        const https = require('https');
+        const options = {
+            hostname: 'api.github.com',
+            path: endpoint,
+            method: method,
+            headers: {
+                'Authorization': `token ${GIT_TOKEN}`,
+                'User-Agent': 'Railway-Bot',
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            }
+        };
+
+        const req = https.request(options, (res) => {
+            let body = '';
+            res.on('data', chunk => body += chunk);
+            res.on('end', () => {
+                try {
+                    const json = JSON.parse(body);
+                    if (res.statusCode >= 200 && res.statusCode < 300) {
+                        resolve(json);
+                    } else {
+                        reject(new Error(json.message || `GitHub API error: ${res.statusCode}`));
+                    }
+                } catch (e) {
+                    reject(new Error(`Failed to parse response: ${body}`));
+                }
+            });
+        });
+
+        req.on('error', reject);
+
+        if (data) {
+            req.write(JSON.stringify(data));
+        }
+        req.end();
     });
 }
 
@@ -364,7 +435,13 @@ const server = http.createServer(async (req, res) => {
 
             if (result.success) {
                 console.log(`✅ 文章已建立: ${result.file}`);
-                sendJson(res, 200, result);
+
+                // 自動部署
+                autoDeploy('Create', result.file).catch(err => {
+                    console.error('自動部署失敗:', err.message);
+                });
+
+                sendJson(res, 200, { ...result, deploying: !!GIT_TOKEN });
             } else {
                 console.log(`❌ 建立失敗: ${result.error}`);
                 sendJson(res, 400, result);
