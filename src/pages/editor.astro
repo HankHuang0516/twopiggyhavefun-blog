@@ -235,9 +235,9 @@ import Layout from '../layouts/Layout.astro';
 
 <script is:inline>
     // Configuration - Dynamic backend selection
-    const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '4321'
-        ? 'http://localhost:3456'
-        : window.location.origin;
+    const RAILWAY_API = 'https://twopiggyhavefun-blog-production.up.railway.app';
+    const isLocalDev = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+    const API_BASE = isLocalDev ? 'http://localhost:3456' : RAILWAY_API;
     
     let currentSlug = null;
     let allPosts = [];

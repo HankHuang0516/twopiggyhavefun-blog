@@ -38,6 +38,7 @@ This workflow automatically builds the project, runs the internal verification s
 - **Project Name:** twopiggy-blog-v2
 - **Workspace:** hankhuang0516's Projects
 - **Dashboard:** https://railway.com/project/6f0d1867-a4b3-4262-a303-5a6cff2308c3
+- **API URL:** https://twopiggyhavefun-blog-production.up.railway.app
 - **部署方式:** GitHub 連接自動部署
 - **注意事項:**
   - `.gitignore` 已排除 `gen_*`, `node_modules`, `dist`, `nul`
