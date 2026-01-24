@@ -241,6 +241,7 @@ const MIME_TYPES = {
 
 function serveStatic(req, res) {
     let url = req.url.split('?')[0];
+    console.log(`Debug serveStatic: url=${url}, startsWith(/api/)=${url.startsWith('/api/')}`);
     if (url.startsWith('/api/')) return false; // 不要將 API 路徑當作靜態檔案處理
     if (url === '/') url = '/index.html';
 
@@ -427,8 +428,13 @@ const server = http.createServer(async (req, res) => {
     }
 
     // 404 or Static Files
-    if (serveStatic(req, res)) return;
+    console.log(`Debug: Calling serveStatic for ${url}`);
+    if (serveStatic(req, res)) {
+        console.log(`Debug: serveStatic returned true for ${url}`);
+        return;
+    }
 
+    console.log(`Debug: match failed, sending 404 JSON for ${url}`);
     sendJson(res, 404, { error: 'Not found' });
 });
 
