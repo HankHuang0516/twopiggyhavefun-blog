@@ -369,6 +369,19 @@ const navLinks = [
         color: #4b5563;
         border-radius: 0 0.5rem 0.5rem 0;
     }
+
+    /* Accessibility */
+    .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+    }
 </style>
 
 <script>
@@ -431,7 +444,8 @@ const navLinks = [
         // Create Lightbox Elements
         const lightbox = document.createElement('div');
         lightbox.id = 'lightbox-modal';
-        lightbox.className = 'fixed inset-0 z-[60] bg-black/90 hidden flex items-center justify-center cursor-zoom-out opacity-0 transition-opacity duration-300';
+        lightbox.className = 'fixed inset-0 z-[60] bg-black/90 items-center justify-center cursor-zoom-out opacity-0 transition-opacity duration-300';
+        lightbox.style.display = 'none';
         lightbox.innerHTML = `
             <div class="relative w-full h-full flex items-center justify-center p-4">
                 <img class="max-w-full max-h-full object-contain transform scale-95 transition-transform duration-300" src="">
@@ -449,7 +463,7 @@ const navLinks = [
             lightboxImg.classList.remove('scale-100');
             lightboxImg.classList.add('scale-95');
             setTimeout(() => {
-                lightbox.classList.add('hidden');
+                lightbox.style.display = 'none';
             }, 300);
         }
 
@@ -503,7 +517,7 @@ const navLinks = [
                     e.preventDefault();
                     e.stopPropagation();
                     lightboxImg.src = img.src;
-                    lightbox.classList.remove('hidden');
+                    lightbox.style.display = 'flex';
                     // Force reflow
                     void lightbox.offsetWidth;
                     lightbox.classList.remove('opacity-0');
