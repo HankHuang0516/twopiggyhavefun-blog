@@ -6,6 +6,417 @@ import Layout from '../layouts/Layout.astro';
     <!-- Toast UI Editor CSS -->
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/theme/toastui-editor-dark.min.css" />
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <div id="loading" class="loading-overlay">
+        <div>載入中...</div>
+    </div>
+
+    <div class="editor-wrapper">
+        <header class="editor-header-nav">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <button id="sidebar-toggle" class="icon-btn" title="切換側邊欄">
+                    <i class="ph ph-list" style="font-size: 1.5rem;"></i>
+                </button>
+                <h1>📝 文章管理系統</h1>
+            </div>
+            
+            <div class="controls">
+                <div class="auth-container">
+                    <div class="password-wrapper">
+                        <input type="password" id="auth-password" class="auth-box" placeholder="輸入密碼...">
+                        <button id="toggle-password" class="icon-btn-small" title="顯示密碼">
+                            <i class="ph ph-eye"></i>
+                        </button>
+                    </div>
+                    <button class="btn btn-primary" id="auth-btn">確認</button>
+                </div>
+                
+                <div class="divider"></div>
+
+                <div id="action-buttons" style="display: none; gap: 0.5rem;">
+                   <button class="btn btn-primary" id="save-btn">
+                        <i class="ph ph-floppy-disk"></i> 儲存
+                    </button>
+                    <button class="btn btn-danger" id="delete-btn">
+                        <i class="ph ph-trash"></i> 刪除
+                    </button>
+                </div>
+
+                <button class="btn btn-secondary" id="new-post-btn">+ 新增文章</button>
+            </div>
+        </header>
+
+        <div class="main-container">
+            <div id="sidebar" class="sidebar">
+                <div class="sidebar-header">
+                    <input type="text" id="search-input" class="search-box" placeholder="搜尋標題...">
+                </div>
+                <div id="post-list" class="post-list">
+                    <!-- Posts will be loaded here -->
+                </div>
+            </div>
+
+            <div class="editor-area">
+                <div id="editor-view" style="display: none; flex-direction: column; height: 100%;">
+                    <div class="editor-field slug-field">
+                        <span class="label">Slug:</span>
+                        <input type="text" id="post-slug" disabled>
+                    </div>
+
+                    <div id="toast-editor-container" style="flex: 1;"></div>
+                </div>
+                
+                <div id="empty-state" style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #64748b; gap: 1rem;">
+                    <i class="ph ph-article" style="font-size: 4rem; opacity: 0.5;"></i>
+                    <p>請從左側選擇文章進行編輯</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</Layout>
+
+<style is:global>
+    :root {
+        --primary: #2563eb;
+        --danger: #ef4444; 
+        --border: #e2e8f0;
+        --bg-light: #f8fafc;
+        --text-main: #1e293b;
+        --text-sub: #64748b;
+    }
+
+    body { margin: 0; overflow: hidden; }
+
+    .loading-overlay {
+        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(255,255,255,0.8); display: none;
+        justify-content: center; align-items: center; z-index: 9999; font-weight: bold;
+    }
+    
+    .editor-wrapper {
+        display: flex; flex-direction: column;
+        height: 100vh; background: var(--bg-light);
+    }
+
+    .editor-header-nav {
+        background: white; border-bottom: 1px solid var(--border); padding: 0.75rem 1.5rem;
+        display: flex; justify-content: space-between; align-items: center;
+        height: 60px; box-sizing: border-box;
+    }
+
+    .editor-header-nav h1 { font-size: 1.1rem; margin: 0; color: var(--text-main); }
+
+    .main-container { display: flex; flex: 1; overflow: hidden; position: relative; }
+
+    /* Sidebar */
+    .sidebar { 
+        width: 300px; background: white; border-right: 1px solid var(--border); 
+        display: flex; flex-direction: column; transition: transform 0.3s ease, width 0.3s ease;
+        flex-shrink: 0;
+    }
+
+    .sidebar.collapsed {
+        transform: translateX(-300px);
+        width: 0; border: none;
+    }
+
+    .sidebar-header { padding: 1rem; border-bottom: 1px solid var(--border); }
+    
+    .search-box { 
+        width: 100%; padding: 0.5rem; border: 1px solid var(--border); 
+        border-radius: 6px; box-sizing: border-box; font-size: 0.9rem;
+    }
+
+    .post-list { flex: 1; overflow-y: auto; }
+    
+    .post-item { 
+        padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); 
+        cursor: pointer; transition: background 0.1s;
+    }
+    
+    .post-item:hover { background: #f1f5f9; }
+    
+    .post-item.active { 
+        background: #eff6ff; border-left: 3px solid var(--primary);
+    }
+    
+    .post-title { 
+        font-weight: 500; margin-bottom: 0.25rem; display: block; 
+        color: var(--text-main); font-size: 0.95rem;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    
+    .post-meta { font-size: 0.8rem; color: var(--text-sub); }
+
+    /* Editor Area */
+    .editor-area { 
+        flex: 1; display: flex; flex-direction: column; 
+        padding: 1.5rem; background: var(--bg-light); 
+        overflow: hidden; 
+    }
+
+    .slug-field {
+        display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;
+        background: white; padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid var(--border);
+    }
+
+    .slug-field .label { font-size: 0.85rem; color: var(--text-sub); font-weight: 600; }
+    
+    .slug-field input { 
+        border: none; background: transparent; flex: 1; 
+        color: var(--text-main); font-family: monospace; font-size: 0.9rem;
+    }
+
+    /* Controls */
+    .controls { display: flex; gap: 1rem; align-items: center; }
+    
+    .divider { width: 1px; height: 24px; background: var(--border); }
+
+    .auth-container { display: flex; gap: 0.5rem; align-items: center; }
+    
+    .password-wrapper { position: relative; display: flex; align-items: center; }
+    .auth-box { 
+        width: 140px; padding: 0.5rem; padding-right: 2rem;
+        border: 1px solid var(--border); border-radius: 6px; 
+    }
+    
+    .icon-btn, .icon-btn-small {
+        background: none; border: none; cursor: pointer; color: var(--text-sub);
+        display: flex; align-items: center; justify-content: center;
+        border-radius: 4px; transition: background 0.2s;
+    }
+
+    .icon-btn:hover { background: #f1f5f9; color: var(--text-main); }
+    
+    .icon-btn-small {
+        position: absolute; right: 4px; padding: 4px;
+    }
+
+    .btn { 
+        padding: 0.5rem 1rem; border-radius: 6px; font-weight: 500; cursor: pointer; 
+        border: none; transition: opacity 0.2s; display: flex; align-items: center; gap: 0.4rem;
+        font-size: 0.9rem;
+    }
+    
+    .btn:hover { opacity: 0.9; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-secondary { background: white; border: 1px solid var(--border); color: var(--text-main); }
+
+    /* Toast UI Customization */
+    .toastui-editor-defaultUI { 
+        border: 1px solid var(--border) !important; 
+        border-radius: 6px; 
+        background: white;
+    }
+    .toastui-editor-defaultUI .toastui-editor-md-container,
+    .toastui-editor-defaultUI .toastui-editor-ww-container {
+        border-radius: 0 0 6px 6px;
+    }
+</style>
+
+<!-- Toast UI Editor JS -->
+<script is:inline src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+
+<script is:inline>
+    // Config
+    const RAILWAY_API = 'https://twopiggyhavefun-blog-production.up.railway.app';
+    const isLocalDev = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+    const API_BASE = isLocalDev ? 'http://localhost:3456' : RAILWAY_API;
+    
+    let currentSlug = null;
+    let allPosts = [];
+    let editor = null;
+    let isSidebarOpen = true;
+
+    // Elements
+    const views = {
+        editor: document.getElementById('editor-view'),
+        empty: document.getElementById('empty-state'),
+        actions: document.getElementById('action-buttons')
+    };
+    
+    // Initialize Toast UI
+    function initEditor() {
+        // @ts-ignore
+        const Editor = toastui.Editor;
+        editor = new Editor({
+            el: document.querySelector('#toast-editor-container'),
+            height: '100%',
+            minHeight: '400px',
+            initialEditType: 'wysiwyg',
+            previewStyle: 'vertical',
+            language: 'zh-TW',
+            theme: 'light',
+            initialValue: ' ',
+            usageStatistics: false,
+            toolbarItems: [
+                ['heading', 'bold', 'italic', 'strike'],
+                ['hr', 'quote'],
+                ['ul', 'ol', 'task', 'indent', 'outdent'],
+                ['table', 'image', 'link'],
+                ['code', 'codeblock']
+            ]
+        });
+    }
+
+    // UI Toggles
+    document.getElementById('sidebar-toggle').addEventListener('click', () => {
+        isSidebarOpen = !isSidebarOpen;
+        const sidebar = document.getElementById('sidebar');
+        if (isSidebarOpen) sidebar.classList.remove('collapsed');
+        else sidebar.classList.add('collapsed');
+    });
+
+    document.getElementById('toggle-password').addEventListener('click', (e) => {
+        const input = document.getElementById('auth-password');
+        const icon = e.currentTarget.querySelector('i');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.replace('ph-eye', 'ph-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.replace('ph-eye-slash', 'ph-eye');
+        }
+    });
+
+    // API & Logic (Reused from previous version but adapted for new UI)
+    const authPasswordInput = document.getElementById('auth-password');
+    
+    function getHeaders() {
+        return {
+            'Content-Type': 'application/json',
+            'X-Auth-Password': authPasswordInput.value || localStorage.getItem('editor_password')
+        };
+    }
+
+    function handleLogin() {
+        if (!authPasswordInput.value) return alert('請輸入密碼');
+        localStorage.setItem('editor_password', authPasswordInput.value);
+        loadPosts();
+    }
+
+    document.getElementById('auth-btn').addEventListener('click', handleLogin);
+    authPasswordInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') handleLogin() });
+    
+    if (localStorage.getItem('editor_password')) {
+        authPasswordInput.value = localStorage.getItem('editor_password');
+    }
+
+    async function loadPosts() {
+        showLoading(true);
+        try {
+            const res = await fetch(`${API_BASE}/api/posts`, { headers: getHeaders() });
+            if (res.status === 401) { alert('密碼錯誤'); showLoading(false); return; }
+            allPosts = await res.json();
+            renderList(allPosts);
+        } catch (err) {
+            console.error(err);
+        }
+        showLoading(false);
+    }
+
+    function renderList(posts) {
+        document.getElementById('post-list').innerHTML = posts.map(post => `
+            <div class="post-item ${currentSlug === post.slug ? 'active' : ''}" onclick="selectPost('${post.slug}')">
+                <span class="post-title">${post.title}</span>
+                <span class="post-meta">${post.date || '--'}</span>
+            </div>
+        `).join('');
+    }
+
+    window.selectPost = async function(slug) {
+        currentSlug = slug;
+        showLoading(true);
+        try {
+            const res = await fetch(`${API_BASE}/api/posts/${slug}`, { headers: getHeaders() });
+            const data = await res.json();
+            
+            document.getElementById('post-slug').value = data.slug;
+            if (editor) {
+                editor.setMarkdown(data.content);
+                editor.changeMode('wysiwyg');
+                editor.scrollTop(0);
+            }
+            
+            views.editor.style.display = 'flex';
+            views.empty.style.display = 'none';
+            views.actions.style.display = 'flex';
+            renderList(allPosts);
+        } catch (err) {
+            alert('載入失敗');
+        }
+        showLoading(false);
+    }
+
+    async function savePost() {
+        if (!currentSlug) return;
+        showLoading(true);
+        try {
+            const content = editor.getMarkdown();
+            const res = await fetch(`${API_BASE}/api/posts/${currentSlug}`, {
+                method: 'PUT',
+                headers: getHeaders(),
+                body: JSON.stringify({ content })
+            });
+            const result = await res.json();
+            if (result.success) {
+                const msg = result.deploying ? '儲存成功！正在自動部署...' : '儲存成功';
+                // Use a non-blocking notification if possible, but alert matches existing behavior
+                alert(msg);
+                loadPosts();
+            } else {
+                alert('失敗: ' + result.error);
+            }
+        } catch (err) {
+            alert('連線失敗');
+        }
+        showLoading(false);
+    }
+
+    async function deletePost() {
+        if (!currentSlug || !confirm('確定刪除？')) return;
+        showLoading(true);
+        try {
+            const res = await fetch(`${API_BASE}/api/posts/${currentSlug}`, { 
+                method: 'DELETE', headers: getHeaders() 
+            });
+            const result = await res.json();
+            if (result.success) {
+                alert('刪除成功');
+                currentSlug = null;
+                views.editor.style.display = 'none';
+                views.empty.style.display = 'flex';
+                views.actions.style.display = 'none';
+                loadPosts();
+            }
+        } catch (err) {
+            alert('刪除失敗');
+        }
+        showLoading(false);
+    }
+
+    function showLoading(show) {
+        document.getElementById('loading').style.display = show ? 'flex' : 'none';
+    }
+
+    document.getElementById('save-btn').addEventListener('click', savePost);
+    document.getElementById('delete-btn').addEventListener('click', deletePost);
+    document.getElementById('search-input').addEventListener('input', (e) => {
+        const q = e.target.value.toLowerCase();
+        renderList(allPosts.filter(p => p.title.toLowerCase().includes(q)));
+    });
+
+    window.onload = function() {
+        initEditor();
+        loadPosts();
+    };
+</script>
+    <!-- Toast UI Editor CSS -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/theme/toastui-editor-dark.min.css" />
 
     <div id="loading" class="loading-overlay">
         <div>載入中...</div>
