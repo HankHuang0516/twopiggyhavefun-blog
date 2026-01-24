@@ -11,7 +11,10 @@ import Layout from '../layouts/Layout.astro';
         <header class="editor-header-nav">
             <h1>📝 文章管理系統</h1>
             <div class="controls">
-                <input type="password" id="auth-password" class="auth-box" placeholder="輸入密碼...">
+                <div class="auth-container">
+                    <input type="password" id="auth-password" class="auth-box" placeholder="輸入密碼...">
+                    <button class="btn btn-primary" id="auth-btn">確認</button>
+                </div>
                 <button class="btn btn-primary" id="new-post-btn">+ 新增文章</button>
                 <button class="btn btn-primary" id="deploy-btn">🚀 部署網站</button>
             </div>
@@ -58,6 +61,10 @@ import Layout from '../layouts/Layout.astro';
 </Layout>
 
 <style is:global>
+    .auth-container {
+        display: flex;
+        gap: 0.25rem;
+    }
     .loading-overlay {
         position: fixed;
         top: 0;
@@ -251,10 +258,20 @@ import Layout from '../layouts/Layout.astro';
         };
     }
 
-    // Save password to local storage on change
-    authPasswordInput.addEventListener('change', () => {
+    const authBtn = document.getElementById('auth-btn');
+
+    // Save password to local storage and load
+    function handleLogin() {
         localStorage.setItem('editor_password', authPasswordInput.value);
-        loadPosts(); // Reload on password change
+        loadPosts();
+    }
+
+    authBtn.addEventListener('click', handleLogin);
+    
+    authPasswordInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            handleLogin();
+        }
     });
 
     // Load saved password
