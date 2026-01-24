@@ -159,6 +159,30 @@ export function getCategorySlug(category: string | undefined): SidebarCategorySl
     return 'other';
 }
 
+/**
+ * Normalizes a string into an ASCII-safe slug.
+ * This is used for tags and categories that don't have a predefined mapping.
+ */
+export function slugify(text: string): string {
+    if (!text) return 'other';
+
+    // If it's Chinese, we can't easily turn it into English, so we'll encode it
+    // or use a simple replacement. To keep paths short and clean, 
+    // we'll replace non-ASCII with their hex representation or a placeholder.
+    // For this blog, we'll try to keep it readable if it's already ASCII, 
+    // otherwise we use the original text which Astro will URL-encode.
+    // HOWEVER, to fix the specific 404 bug where files were not being matched,
+    // we need to ensure the slug used in the URL matches the filename on disk.
+
+    return text.toString().toLowerCase().trim()
+        .replace(/\s+/g, '-')           // Replace spaces with -
+        .replace(/[^\w\u4e00-\u9fff\-]/g, '') // Remove all non-word chars (keep Chinese but remove special chars like * ?)
+        .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+        .replace(/^-+/, '')             // Trim - from start of text
+        .replace(/-+$/, '');            // Trim - from end of text
+}
+
+
 // Get parent category name from slug
 export function getParentCategoryName(slug: SidebarCategorySlug): ParentCategoryName {
     for (const [name, config] of Object.entries(PIXNET_CATEGORY_HIERARCHY)) {
