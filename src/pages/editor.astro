@@ -237,7 +237,7 @@ import Layout from '../layouts/Layout.astro';
     // Configuration - Dynamic backend selection
     const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '4321'
         ? 'http://localhost:3456'
-        : '';
+        : window.location.origin;
     
     let currentSlug = null;
     let allPosts = [];
@@ -289,14 +289,23 @@ import Layout from '../layouts/Layout.astro';
     async function loadPosts() {
         showLoading(true);
         try {
-            const res = await fetch(`${API_BASE}/api/posts`, { headers: getHeaders() });
+            const url = `${API_BASE}/api/posts`;
+            const res = await fetch(url, { headers: getHeaders() });
+            const text = await res.text();
+            
             if (res.status === 401) {
                 alert('密碼錯誤或未輸入');
                 showLoading(false);
                 return;
             }
-            allPosts = await res.json();
-            renderList(allPosts);
+            
+            try {
+                allPosts = JSON.parse(text);
+                renderList(allPosts);
+            } catch (jsonErr) {
+                console.error('JSON Parse Error:', jsonErr, 'Raw Content:', text);
+                alert(`API 回傳格式錯誤 (HTTP ${res.status})。\n網址: ${url}\n預期 JSON，但收到：\n${text.substring(0, 200)}...`);
+            }
         } catch (err) {
             console.error('API Error:', err);
             alert(`無法連線至後端 API (${API_BASE})，請確認服務是否運作中。\n錯誤：${err.message}`);

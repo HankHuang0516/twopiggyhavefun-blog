@@ -240,6 +240,7 @@ const MIME_TYPES = {
 
 function serveStatic(req, res) {
     let url = req.url.split('?')[0];
+    if (url.startsWith('/api/')) return false; // 不要將 API 路徑當作靜態檔案處理
     if (url === '/') url = '/index.html';
 
     // 如果路徑不含副檔名，且不是以 / 結尾，可能是 Astro 路由，試著尋找 .html 檔案
@@ -298,9 +299,13 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
-    const url = req.url.split('?')[0];
+    let url = req.url.split('?')[0];
+    // 標準化 URL: 移除結尾斜線 (除非只是 /)
+    if (url.length > 1 && url.endsWith('/')) {
+        url = url.slice(0, -1);
+    }
 
-    console.log(`${new Date().toISOString()} - ${req.method} ${url}`);
+    console.log(`${new Date().toISOString()} - [${req.method}] ${url}`);
 
     // 健康檢查
     if (url === '/api/health' && req.method === 'GET') {
