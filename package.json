@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "node -e \"var fs=require('fs'); try{fs.rmSync('.astro',{recursive:true,force:true})}catch(e){}\" && astro dev",
-    "start": "node -e \"var fs=require('fs'); try{fs.rmSync('.astro',{recursive:true,force:true})}catch(e){}\" && astro dev",
+    "start": "node article_api_server.js",
     "build": "node -e \"var fs=require('fs'); try{fs.rmSync('.astro',{recursive:true,force:true})}catch(e){}\" && astro build",
     "preview": "astro preview",
     "astro": "astro",

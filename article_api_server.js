@@ -19,6 +19,7 @@ const path = require('path');
 // 設定
 const PORT = process.env.PORT || 3456;
 const POSTS_DIR = path.join(__dirname, 'src', 'content', 'posts');
+const DIST_DIR = path.join(__dirname, 'dist');
 
 const AUTH_PASSWORD = process.env.AUTH_PASSWORD || 'asasas123';
 
@@ -221,6 +222,52 @@ function sendJson(res, statusCode, data) {
 }
 
 /**
+ * 伺服器靜態檔案
+ */
+const MIME_TYPES = {
+    '.html': 'text/html',
+    '.js': 'text/javascript',
+    '.css': 'text/css',
+    '.json': 'application/json',
+    '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+    '.gif': 'image/gif',
+    '.svg': 'image/svg+xml',
+    '.ico': 'image/x-icon',
+    '.txt': 'text/plain',
+    '.xml': 'application/xml'
+};
+
+function serveStatic(req, res) {
+    let url = req.url.split('?')[0];
+    if (url === '/') url = '/index.html';
+
+    // 如果路徑不含副檔名，且不是以 / 結尾，可能是 Astro 路由，試著尋找 .html 檔案
+    let filePath = path.join(DIST_DIR, url);
+
+    if (!path.extname(filePath)) {
+        // 嘗試目錄下的 index.html 或 直接加 .html
+        const dirIndex = path.join(filePath, 'index.html');
+        if (fs.existsSync(dirIndex)) {
+            filePath = dirIndex;
+        } else if (fs.existsSync(filePath + '.html')) {
+            filePath = filePath + '.html';
+        }
+    }
+
+    if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+        const ext = path.extname(filePath).toLowerCase();
+        const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+
+        res.writeHead(200, { 'Content-Type': contentType });
+        const stream = fs.createReadStream(filePath);
+        stream.pipe(res);
+        return true;
+    }
+    return false;
+}
+
+/**
  * 解析 JSON body
  */
 function parseBody(req) {
@@ -373,7 +420,9 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
-    // 404
+    // 404 or Static Files
+    if (serveStatic(req, res)) return;
+
     sendJson(res, 404, { error: 'Not found' });
 });
 
