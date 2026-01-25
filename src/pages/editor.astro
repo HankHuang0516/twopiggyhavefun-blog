@@ -547,7 +547,17 @@ import Layout from '../layouts/Layout.astro';
         
         showLoading(true);
         try {
-            const payload = { title, category, slug: customSlug };
+            // Generate a placeholder link (required by backend)
+            const tempSlug = customSlug || `draft-${Date.now()}`;
+            const link = `https://twopiggyhavefun.uk/posts/${tempSlug}`;
+
+            const payload = { 
+                title, 
+                category, 
+                slug: customSlug,
+                content: '\n\n在此開始撰寫您的文章...',
+                link: link
+            };
             const res = await fetch(`${API_BASE}/api/posts`, {
                 method: 'POST',
                 headers: getHeaders(),
