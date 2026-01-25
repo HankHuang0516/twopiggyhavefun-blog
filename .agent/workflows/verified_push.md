@@ -27,7 +27,10 @@ This workflow automatically builds the project, runs the internal verification s
    > node tests/verify_regression.js
    > node tests/verify_titles.js
 
-3. Push to repository
+3. Sync with Remote (Crucial for Auto-Deploy)
+   > git pull --rebase
+
+4. Push to repository
    > git push
 
 4. Deploy to Railway
