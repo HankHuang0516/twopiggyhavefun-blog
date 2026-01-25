@@ -33,6 +33,9 @@ This workflow automatically builds the project, runs the internal verification s
 4. Push to repository
    > git push
 
+5. Verify Git Active (Confirm Push)
+   > git log -n 1 --stat origin/main
+
 4. Deploy to Railway
    - **自動部署**: Push 到 GitHub 後 Railway 會自動部署（推薦）
    - **手動部署**: `railway up` (有 100MB 限制，不建議使用)
