@@ -240,42 +240,89 @@ import Layout from '../layouts/Layout.astro';
     let allPosts = [];
     let editor = null;
     let isSidebarOpen = true;
-
-    // --- Elements ---
-    const els = {
-        loading: document.getElementById('loading'),
-        authPassword: document.getElementById('auth-password'),
-        authBtn: document.getElementById('auth-btn'),
-        togglePw: document.getElementById('toggle-password'),
-        
-        postList: document.getElementById('post-list'),
-        searchInput: document.getElementById('search-input'),
-        
-        saveBtn: document.getElementById('save-btn'),
-        deleteBtn: document.getElementById('delete-btn'),
-        newPostBtn: document.getElementById('new-post-btn'),
-        actionButtons: document.getElementById('action-buttons'),
-        
-        sidebar: document.getElementById('sidebar'),
-        sidebarToggle: document.getElementById('sidebar-toggle'),
-        
-        // Views
-        editorView: document.getElementById('editor-view'),
-        emptyState: document.getElementById('empty-state'),
-        newPostView: document.getElementById('new-post-view'),
-        
-        // Inputs
-        postSlug: document.getElementById('post-slug'),
-        
-        // New Post Form
-        newTitle: document.getElementById('new-title'),
-        newCategory: document.getElementById('new-category'),
-        newSlug: document.getElementById('new-slug'),
-        createPostBtn: document.getElementById('create-post-btn'),
-        cancelNewBtn: document.getElementById('cancel-new-btn'),
-    };
+    let els = {}; // Initialize empty
 
     // --- Initialization ---
+    // Ensure DOM is ready before querying elements
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('DOM Content Loaded - Initializing Editor...');
+        
+        // 1. Query Elements
+        els = {
+            loading: document.getElementById('loading'),
+            authPassword: document.getElementById('auth-password'),
+            authBtn: document.getElementById('auth-btn'),
+            togglePw: document.getElementById('toggle-password'),
+            
+            postList: document.getElementById('post-list'),
+            searchInput: document.getElementById('search-input'),
+            
+            saveBtn: document.getElementById('save-btn'),
+            deleteBtn: document.getElementById('delete-btn'),
+            newPostBtn: document.getElementById('new-post-btn'),
+            actionButtons: document.getElementById('action-buttons'),
+            
+            sidebar: document.getElementById('sidebar'),
+            sidebarToggle: document.getElementById('sidebar-toggle'),
+            
+            // Views
+            editorView: document.getElementById('editor-view'),
+            emptyState: document.getElementById('empty-state'),
+            newPostView: document.getElementById('new-post-view'),
+            
+            // Inputs
+            postSlug: document.getElementById('post-slug'),
+            
+            // New Post Form
+            newTitle: document.getElementById('new-title'),
+            newCategory: document.getElementById('new-category'),
+            newSlug: document.getElementById('new-slug'),
+            createPostBtn: document.getElementById('create-post-btn'),
+            cancelNewBtn: document.getElementById('cancel-new-btn'),
+        };
+
+        // 2. Attach Event Listeners (safely)
+        if (els.authBtn) els.authBtn.addEventListener('click', handleLogin);
+        else console.error('Auth Button not found!');
+
+        if (els.authPassword) els.authPassword.addEventListener('keydown', (e) => { if(e.key === 'Enter') handleLogin() });
+        
+        if (els.togglePw) els.togglePw.addEventListener('click', () => {
+            const type = els.authPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+            els.authPassword.setAttribute('type', type);
+            els.togglePw.querySelector('i').classList.toggle('ph-eye');
+            els.togglePw.querySelector('i').classList.toggle('ph-eye-slash');
+        });
+
+        if (els.sidebarToggle) els.sidebarToggle.addEventListener('click', () => {
+            isSidebarOpen = !isSidebarOpen;
+            if (isSidebarOpen) els.sidebar.classList.remove('collapsed');
+            else els.sidebar.classList.add('collapsed');
+        });
+
+        if (els.saveBtn) els.saveBtn.addEventListener('click', savePost);
+        if (els.deleteBtn) els.deleteBtn.addEventListener('click', deletePost);
+        
+        if (els.searchInput) els.searchInput.addEventListener('input', (e) => {
+            const q = e.target.value.toLowerCase();
+            renderList(allPosts.filter(p => p.title.toLowerCase().includes(q)));
+        });
+
+        if (els.newPostBtn) els.newPostBtn.addEventListener('click', () => showView('new'));
+        if (els.cancelNewBtn) els.cancelNewBtn.addEventListener('click', () => showView('empty'));
+        if (els.createPostBtn) els.createPostBtn.addEventListener('click', textCreatePost);
+
+        // 3. Restore Password
+        if (localStorage.getItem('editor_password') && els.authPassword) {
+            els.authPassword.value = localStorage.getItem('editor_password');
+        }
+
+        // 4. Start App
+        initEditor();
+        loadPosts();
+    });
+
+    // --- Toast UI ---
     function initEditor() {
         // @ts-ignore
         const Editor = toastui.Editor;
@@ -314,17 +361,7 @@ import Layout from '../layouts/Layout.astro';
     function insertFlickrAlbum() {
         const url = prompt('請輸入 Flickr 相簿或相片網址:\n(例如: https://www.flickr.com/photos/user/albums/12345)');
         if (!url) return;
-        
-        // Handle Album URLs
-        // Format: https://www.flickr.com/photos/{user_id}/albums/{album_id}
-        // Embed format: <a data-flickr-embed="true" href="{url}" title="Flickr Album"><img src="..." alt=""></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
-        
-        // Since we cannot easily fetch the cover image ID without API key here, 
-        // we will use a text link fallback if the script doesn't auto-expand properly, 
-        // but typically the script works on the A tag.
-        
         const embedCode = `<a data-flickr-embed="true" href="${url}" title="Flickr Album (Click to view)">[Flickr Album]</a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"><\/script>`;
-        
         editor.exec('htmlBlock', { html: embedCode });
     }
 
@@ -332,12 +369,12 @@ import Layout from '../layouts/Layout.astro';
     function getHeaders() {
         return {
             'Content-Type': 'application/json',
-            'X-Auth-Password': els.authPassword.value || localStorage.getItem('editor_password')
+            'X-Auth-Password': (els.authPassword && els.authPassword.value) || localStorage.getItem('editor_password')
         };
     }
 
     function showLoading(show) {
-        els.loading.style.display = show ? 'flex' : 'none';
+        if (els.loading) els.loading.style.display = show ? 'flex' : 'none';
     }
 
     // --- Core Logic ---
@@ -361,6 +398,7 @@ import Layout from '../layouts/Layout.astro';
     }
 
     function renderList(posts) {
+        if (!els.postList) return;
         els.postList.innerHTML = posts.map(post => `
             <div class="post-item ${currentSlug === post.slug ? 'active' : ''}" onclick="selectPost('${post.slug}')">
                 <span class="post-title">${post.title}</span>
@@ -393,7 +431,7 @@ import Layout from '../layouts/Layout.astro';
                  throw new Error('Invalid Data format received');
             }
             
-            els.postSlug.value = data.slug;
+            if (els.postSlug) els.postSlug.value = data.slug;
             if (editor) {
                 // Ensure content is a string
                 editor.setMarkdown(String(data.content));
@@ -401,8 +439,8 @@ import Layout from '../layouts/Layout.astro';
             }
             renderList(allPosts);
             
-             // Mobile check: collapse sidebar on selection if on small screen
-            if (window.innerWidth < 768) {
+             // Mobile check
+            if (window.innerWidth < 768 && els.sidebar) {
                 els.sidebar.classList.add('collapsed');
             }
             
@@ -414,27 +452,24 @@ import Layout from '../layouts/Layout.astro';
     }
     
     function showView(viewName) {
-        els.editorView.style.display = 'none';
-        els.emptyState.style.display = 'none';
-        els.newPostView.style.display = 'none';
-        els.actionButtons.style.display = 'none';
-        // 'new-post-btn' is always visible? Yes.
+        if (els.editorView) els.editorView.style.display = 'none';
+        if (els.emptyState) els.emptyState.style.display = 'none';
+        if (els.newPostView) els.newPostView.style.display = 'none';
+        if (els.actionButtons) els.actionButtons.style.display = 'none';
         
         if (viewName === 'editor') {
-            els.editorView.style.display = 'flex'; // It's a flex column in CSS? 
-            // Wait, #editor-view style is display:none in HTML. 
-            // In CSS: #editor-view is just a div.
-            // But editor-area is flex column. 
-            els.editorView.style.display = 'flex';
-            els.editorView.style.flexDirection = 'column';
-            els.editorView.style.flex = '1';
-            els.actionButtons.style.display = 'flex';
+            if (els.editorView) {
+                els.editorView.style.display = 'flex';
+                els.editorView.style.flexDirection = 'column';
+                els.editorView.style.flex = '1';
+            }
+            if (els.actionButtons) els.actionButtons.style.display = 'flex';
         } else if (viewName === 'new') {
-            els.newPostView.style.display = 'block';
+            if (els.newPostView) els.newPostView.style.display = 'block';
             currentSlug = null;
-            renderList(allPosts); // Clear selection
+            renderList(allPosts);
         } else {
-            els.emptyState.style.display = 'flex';
+            if (els.emptyState) els.emptyState.style.display = 'flex';
             currentSlug = null;
             renderList(allPosts);
         }
@@ -456,7 +491,7 @@ import Layout from '../layouts/Layout.astro';
             if (result.success) {
                 const msg = result.deploying ? '儲存成功！正在自動部署...' : '儲存成功';
                 alert(msg);
-                loadPosts(); // Refresh list to update date/title if changed? (Title usually in frontmatter)
+                loadPosts();
             } else {
                 alert('失敗: ' + result.error);
             }
@@ -486,12 +521,9 @@ import Layout from '../layouts/Layout.astro';
             if (result.success) {
                 const msg = result.deploying ? '文章建立成功！正在自動部署...' : '文章建立成功';
                 alert(msg);
-                // Reset form
-                els.newTitle.value = '';
-                els.newSlug.value = '';
-                // Reload and select new post
+                if (els.newTitle) els.newTitle.value = '';
+                if (els.newSlug) els.newSlug.value = '';
                 await loadPosts();
-                // Select the new post (assuming result returns slug, which it should)
                 if (result.slug) {
                     selectPost(result.slug);
                 } else {
@@ -530,49 +562,8 @@ import Layout from '../layouts/Layout.astro';
 
     // --- Authentication ---
     function handleLogin() {
-        if (!els.authPassword.value) { alert('請輸入密碼'); return; }
-        localStorage.setItem('editor_password', els.authPassword.value);
+        if (els.authPassword && !els.authPassword.value) { alert('請輸入密碼'); return; }
+        if (els.authPassword) localStorage.setItem('editor_password', els.authPassword.value);
         loadPosts();
     }
-
-    // --- Event Listeners ---
-    els.authBtn.addEventListener('click', handleLogin);
-    els.authPassword.addEventListener('keydown', (e) => { if(e.key === 'Enter') handleLogin() });
-    
-    if (localStorage.getItem('editor_password')) {
-        els.authPassword.value = localStorage.getItem('editor_password');
-    }
-
-    els.togglePw.addEventListener('click', () => {
-        const type = els.authPassword.getAttribute('type') === 'password' ? 'text' : 'password';
-        els.authPassword.setAttribute('type', type);
-        els.togglePw.querySelector('i').classList.toggle('ph-eye');
-        els.togglePw.querySelector('i').classList.toggle('ph-eye-slash');
-    });
-
-    els.sidebarToggle.addEventListener('click', () => {
-        isSidebarOpen = !isSidebarOpen;
-        if (isSidebarOpen) els.sidebar.classList.remove('collapsed');
-        else els.sidebar.classList.add('collapsed');
-    });
-
-    els.saveBtn.addEventListener('click', savePost);
-    els.deleteBtn.addEventListener('click', deletePost);
-    
-    // Search
-    els.searchInput.addEventListener('input', (e) => {
-        const q = e.target.value.toLowerCase();
-        renderList(allPosts.filter(p => p.title.toLowerCase().includes(q)));
-    });
-
-    // New Post Logic
-    els.newPostBtn.addEventListener('click', () => showView('new'));
-    els.cancelNewBtn.addEventListener('click', () => showView('empty'));
-    els.createPostBtn.addEventListener('click', textCreatePost);
-
-    // Bootstrap
-    window.onload = function() {
-        initEditor();
-        loadPosts();
-    };
 </script>
