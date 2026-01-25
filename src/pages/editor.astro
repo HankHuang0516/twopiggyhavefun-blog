@@ -556,7 +556,7 @@ import Layout from '../layouts/Layout.astro';
         els.backToAlbums.innerText = `< 回到相簿列表 (${title})`;
         
         try {
-            const res = await fetch(`${API_BASE}/api/flickr/album/${albumId}`);
+            const res = await fetch(`${API_BASE}/api/flickr/album/${albumId}/photos`);
             const data = await res.json();
             
             const photos = data.photoset && data.photoset.photo ? data.photoset.photo : [];
