@@ -541,6 +541,33 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
+    // Flickr OEmbed Proxy
+    if (url === '/api/flickr-proxy' && req.method === 'GET') {
+        const urlObj = new URL(req.url, `http://${req.headers.host}`);
+        const targetUrl = urlObj.searchParams.get('url');
+
+        if (!targetUrl) return sendJson(res, 400, { error: 'Missing url parameter' });
+
+        const flickrApi = `https://www.flickr.com/services/oembed/?format=json&url=${encodeURIComponent(targetUrl)}`;
+
+        const https = require('https');
+        https.get(flickrApi, (resp) => {
+            let data = '';
+            resp.on('data', (chunk) => data += chunk);
+            resp.on('end', () => {
+                try {
+                    const json = JSON.parse(data);
+                    sendJson(res, 200, json);
+                } catch (e) {
+                    sendJson(res, 500, { error: 'Failed to parse Flickr response' + data });
+                }
+            });
+        }).on('error', (err) => {
+            sendJson(res, 500, { error: err.message });
+        });
+        return;
+    }
+
     // Trigger Deploy (Git Push)
     if (url === '/api/deploy' && req.method === 'POST') {
         if (!checkAuth(req, res)) return;

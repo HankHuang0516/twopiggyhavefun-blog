@@ -158,12 +158,13 @@ import Layout from '../layouts/Layout.astro';
     }
     .editor-wrapper {
         display: flex; flex-direction: column;
-        height: 100vh; background: var(--bg-light);
+        min-height: 100vh; background: var(--bg-light);
     }
     .editor-header-nav {
         background: white; border-bottom: 1px solid var(--border); padding: 0.75rem 1.5rem;
         display: flex; justify-content: space-between; align-items: center;
         height: 64px; box-sizing: border-box;
+        position: sticky; top: 0; z-index: 100;
     }
     .editor-header-nav h1 { font-size: 1.25rem; margin: 0; color: var(--text-main); }
     
@@ -179,12 +180,14 @@ import Layout from '../layouts/Layout.astro';
     
     .divider { width: 1px; height: 24px; background: var(--border); margin: 0 0.5rem; }
     
-    .main-container { display: flex; flex: 1; overflow: hidden; }
+    .main-container { display: flex; flex: 1; position: relative; }
     .sidebar { 
         width: 300px; background: white; border-right: 1px solid var(--border); 
         display: flex; flex-direction: column; transition: margin-left 0.3s ease;
+        position: fixed; top: 64px; bottom: 0; z-index: 50;
     }
-    .sidebar.collapsed { margin-left: -300px; }
+    .main-container.sidebar-open { padding-left: 300px; }
+    .sidebar.collapsed { transform: translateX(-100%); }
     
     .sidebar-header { padding: 1rem; border-bottom: 1px solid var(--border); }
     .search-box, .auth-box { 
@@ -201,7 +204,12 @@ import Layout from '../layouts/Layout.astro';
     .post-title { font-weight: 600; margin-bottom: 0.25rem; display: block; color: var(--text-main); }
     .post-meta { font-size: 0.8rem; color: var(--text-muted); }
     
-    .editor-area { flex: 1; display: flex; flex-direction: column; padding: 0.5rem; background: white; overflow-y: hidden; position: relative; }
+    .editor-area { 
+        flex: 1; display: flex; flex-direction: column; padding: 0.5rem; 
+        background: white; position: relative; min-height: 300vh;
+        margin-left: 300px; transition: margin-left 0.3s ease;
+    }
+    .sidebar.collapsed + .editor-area, .editor-area.full-width { margin-left: 0; }
     
     .editor-field { margin-bottom: 0.5rem; }
     .editor-field label { display: block; font-size: 0.875rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem; }
@@ -333,8 +341,8 @@ import Layout from '../layouts/Layout.astro';
         flickrButton.style.backgroundImage = 'none'; 
         flickrButton.style.margin = '0';
         flickrButton.innerHTML = '<i class="ph ph-image-square" style="font-size: 18px; color: #555;"></i>';
-        flickrButton.title = '插入 Flickr 相簿';
-        flickrButton.addEventListener('click', insertFlickrAlbum);
+        flickrButton.title = '插入 Flickr 相片/相簿';
+        flickrButton.addEventListener('click', insertFlickrPhoto);
 
         editor = new Editor({
             el: document.querySelector('#toast-editor-container'),
@@ -358,11 +366,36 @@ import Layout from '../layouts/Layout.astro';
         });
     }
     
-    function insertFlickrAlbum() {
-        const url = prompt('請輸入 Flickr 相簿或相片網址:\n(例如: https://www.flickr.com/photos/user/albums/12345)');
+    async function insertFlickrPhoto() {
+        const url = prompt('請輸入 Flickr 相片網址 (例如: https://www.flickr.com/photos/user/12345/):\n也可以直接貼上 Flickr 的嵌入代碼。');
         if (!url) return;
-        const embedCode = `<a data-flickr-embed="true" href="${url}" title="Flickr Album (Click to view)">[Flickr Album]</a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"><\/script>`;
-        editor.insertText(embedCode);
+        
+        // Handle direct HTML embed
+        if (url.trim().startsWith('<a data-flickr-embed')) {
+            editor.insertText(url);
+            return;
+        }
+
+        showLoading(true);
+        try {
+            const res = await fetch(`/api/flickr-proxy?url=${encodeURIComponent(url)}`);
+            if (!res.ok) throw new Error('無法取得 Flickr 資料');
+            const data = await res.json();
+            
+            if (data.type === 'photo') {
+                const embedHtml = `<a href="${data.web_page}" title="${data.title}"><img src="${data.url}" width="${data.width || 'auto'}" height="${data.height || 'auto'}" alt="${data.title}"></a><br><small>Photo by <a href="${data.author_url}">${data.author_name}</a></small>`;
+                editor.insertText(embedHtml);
+            } else {
+                 const embedCode = `<a data-flickr-embed="true" href="${url}" title="Flickr Album">[Flickr Album]</a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"><\/script>`;
+                 editor.insertText(embedCode);
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Flickr 轉換失敗，將插入原始連結。');
+             editor.insertText(url);
+        } finally {
+            showLoading(false);
+        }
     }
 
     // --- API Helpers ---
