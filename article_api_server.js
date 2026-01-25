@@ -155,13 +155,28 @@ app.get('/api/auth/status', (req, res) => {
     });
 });
 
+// 信任 Proxy (Railway Load Balancer)
+app.set('trust proxy', 1);
+
 // 開始 OAuth 流程
 app.get('/api/auth/start', (req, res) => {
-    const callbackUrl = `${req.protocol}://${req.get('host')}/api/auth/callback`;
+    if (!process.env.FLICKR_API_KEY || !process.env.FLICKR_API_SECRET) {
+        console.error('❌ Missing FLICKR_API_KEY or FLICKR_API_SECRET');
+        return res.status(500).json({ error: 'Flickr API Key/Secret 未設定' });
+    }
+
+    // 強制使用 HTTPS (若是 Railway environment)
+    const host = req.get('host');
+    const isRailway = host && host.includes('railway.app');
+    const protocol = isRailway ? 'https' : (req.headers['x-forwarded-proto'] || 'http');
+
+    const callbackUrl = `${protocol}://${host}/api/auth/callback`;
+    console.log(`[OAuth] Starting auth with callback: ${callbackUrl}`);
+
     oauth.getOAuthRequestToken({ oauth_callback: callbackUrl }, (error, token, tokenSecret) => {
         if (error) {
             console.error('OAuth Request Token Error:', error);
-            return res.status(500).json({ error: '無法開始授權流程' });
+            return res.status(500).json({ error: '無法開始授權流程 (OAuth Request Failed)' });
         }
         tempRequestTokens[token] = tokenSecret;
         res.json({ authUrl: `https://www.flickr.com/services/oauth/authorize?oauth_token=${token}&perms=delete` });
