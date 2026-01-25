@@ -584,11 +584,50 @@ const server = http.createServer(async (req, res) => {
         if (!targetUrl) return sendJson(res, 400, { error: 'Missing url parameter' });
 
         const flickrApi = `https://www.flickr.com/services/oembed/?format=json&url=${encodeURIComponent(targetUrl)}`;
+        proxyRequest(res, flickrApi);
+        return;
+    }
 
-        const https = require('https');
-        https.get(flickrApi, (resp) => {
+    // Flickr API: Get Recent Photos
+    if (url === '/api/flickr/recent' && req.method === 'GET') {
+        const apiKey = process.env.FLICKR_API_KEY;
+        const userId = process.env.FLICKR_USER_ID || '158881690@N04'; // Default to known user
+        if (!apiKey) return sendJson(res, 500, { error: 'Server missing FLICKR_API_KEY' });
+
+        const apiEndpoint = `https://www.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=${apiKey}&user_id=${userId}&format=json&nojsoncallback=1&extras=url_m,url_o,date_upload`;
+        proxyRequest(res, apiEndpoint);
+        return;
+    }
+
+    // Flickr API: Get Albums (Photosets)
+    if (url === '/api/flickr/albums' && req.method === 'GET') {
+        const apiKey = process.env.FLICKR_API_KEY;
+        const userId = process.env.FLICKR_USER_ID || '158881690@N04';
+        if (!apiKey) return sendJson(res, 500, { error: 'Server missing FLICKR_API_KEY' });
+
+        const apiEndpoint = `https://www.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=${apiKey}&user_id=${userId}&format=json&nojsoncallback=1&primary_photo_extras=url_m`;
+        proxyRequest(res, apiEndpoint);
+        return;
+    }
+
+    // Flickr API: Get Photos in Album
+    if (url.startsWith('/api/flickr/album/') && req.method === 'GET') {
+        const apiKey = process.env.FLICKR_API_KEY;
+        const userId = process.env.FLICKR_USER_ID || '158881690@N04';
+        const albumId = url.split('/')[4]; // /api/flickr/album/:id
+        if (!apiKey) return sendJson(res, 500, { error: 'Server missing FLICKR_API_KEY' });
+        if (!albumId) return sendJson(res, 400, { error: 'Missing album ID' });
+
+        const apiEndpoint = `https://www.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=${apiKey}&photoset_id=${albumId}&user_id=${userId}&format=json&nojsoncallback=1&extras=url_m,url_o`;
+        proxyRequest(res, apiEndpoint);
+        return;
+    }
+
+    // Helper for Proxying
+    function proxyRequest(res, targetUrl) {
+        require('https').get(targetUrl, (resp) => {
             let data = '';
-            resp.on('data', (chunk) => data += chunk);
+            resp.on('data', chunk => data += chunk);
             resp.on('end', () => {
                 try {
                     const json = JSON.parse(data);
@@ -597,10 +636,9 @@ const server = http.createServer(async (req, res) => {
                     sendJson(res, 500, { error: 'Failed to parse Flickr response' + data });
                 }
             });
-        }).on('error', (err) => {
+        }).on('error', err => {
             sendJson(res, 500, { error: err.message });
         });
-        return;
     }
 
     // Trigger Deploy (Git Push)

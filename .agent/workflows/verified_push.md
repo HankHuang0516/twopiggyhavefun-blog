@@ -31,7 +31,12 @@ This workflow automatically builds the project, runs the internal verification s
    > git pull --rebase
 
 4. Push to repository
+   > $PRE_COMMIT = git rev-parse origin/main
+   > echo "Previous Deploy Commit: $PRE_COMMIT"
    > git push
+   > $POST_COMMIT = git rev-parse origin/main
+   > echo "Current Deploy Commit: $POST_COMMIT"
+   > if ($PRE_COMMIT -ne $POST_COMMIT) { echo "✅ Deployment Updated: $PRE_COMMIT -> $POST_COMMIT" } else { echo "⚠️ No changes pushed or verified." }
 
 5. Verify Git Active (Confirm Push)
    > git log -n 1 --stat origin/main
