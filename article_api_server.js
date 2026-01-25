@@ -625,18 +625,29 @@ const server = http.createServer(async (req, res) => {
 
     // Helper for Proxying
     function proxyRequest(res, targetUrl) {
-        require('https').get(targetUrl, (resp) => {
+        console.log(`[Proxy] Requesting: ${targetUrl}`);
+        const https = require('https'); // Ensure https is available
+        https.get(targetUrl, (resp) => {
             let data = '';
             resp.on('data', chunk => data += chunk);
             resp.on('end', () => {
                 try {
+                    console.log(`[Proxy] Response status: ${resp.statusCode}`);
                     const json = JSON.parse(data);
+                    // Check for Flickr API error
+                    if (json.stat === 'fail') {
+                        console.error(`[Proxy] Flickr API Error: ${json.message}`);
+                        sendJson(res, 400, { error: `Flickr Error: ${json.message} (Code: ${json.code})` });
+                        return;
+                    }
                     sendJson(res, 200, json);
                 } catch (e) {
-                    sendJson(res, 500, { error: 'Failed to parse Flickr response' + data });
+                    console.error('[Proxy] Parse Error:', e.message);
+                    sendJson(res, 500, { error: 'Failed to parse Flickr response: ' + data.substring(0, 100) });
                 }
             });
         }).on('error', err => {
+            console.error('[Proxy] Network Error:', err.message);
             sendJson(res, 500, { error: err.message });
         });
     }

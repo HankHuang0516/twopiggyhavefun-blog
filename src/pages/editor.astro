@@ -84,8 +84,11 @@ import Layout from '../layouts/Layout.astro';
 
             <div class="main-container">
                 <div id="sidebar" class="sidebar">
-                    <div class="sidebar-header">
-                        <input type="text" id="search-input" class="search-box" placeholder="搜尋標題...">
+                    <div class="sidebar-header" style="justify-content: space-between;">
+                        <input type="text" id="search-input" class="search-box" placeholder="搜尋標題..." style="flex:1; margin-right:0.5rem;">
+                         <button id="sidebar-close-btn" class="icon-btn-small" title="收合選單">
+                            <i class="ph ph-caret-left"></i>
+                        </button>
                     </div>
                     <div id="post-list" class="post-list">
                         <!-- Posts will be loaded here -->
@@ -350,7 +353,10 @@ import Layout from '../layouts/Layout.astro';
             
             // App Elements
             sidebar: document.getElementById('sidebar'),
+            // App Elements
+            sidebar: document.getElementById('sidebar'),
             sidebarToggle: document.getElementById('sidebar-toggle'),
+            sidebarCloseBtn: document.getElementById('sidebar-close-btn'),
             postList: document.getElementById('post-list'),
             searchInput: document.getElementById('search-input'),
             
@@ -394,8 +400,26 @@ import Layout from '../layouts/Layout.astro';
         if (els.sidebarToggle) {
             els.sidebarToggle.addEventListener('click', () => {
                 isSidebarOpen = !isSidebarOpen;
-                if (els.sidebar) els.sidebar.classList.toggle('collapsed', !isSidebarOpen);
+                toggleSidebar();
             });
+        }
+        
+        if (els.sidebarCloseBtn) {
+            els.sidebarCloseBtn.addEventListener('click', () => {
+                isSidebarOpen = false;
+                toggleSidebar();
+            });
+        }
+        
+        function toggleSidebar() {
+             if (els.sidebar) els.sidebar.classList.toggle('collapsed', !isSidebarOpen);
+             if (els.appContainer) {
+                 // Adjust margin using class or inline
+                 // Actually relying on CSS adjacency might not work if structure changed.
+                 // Let's use a class on wrapper
+                 const wrapper = document.querySelector('.main-container');
+                 if(wrapper) wrapper.classList.toggle('sidebar-closed', !isSidebarOpen);
+             }
         }
         
         if (els.newPostBtn) els.newPostBtn.addEventListener('click', () => showView('new'));
