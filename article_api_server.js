@@ -160,9 +160,13 @@ app.set('trust proxy', 1);
 
 // 開始 OAuth 流程
 app.get('/api/auth/start', (req, res) => {
-    if (!process.env.FLICKR_API_KEY || !process.env.FLICKR_API_SECRET) {
-        console.error('❌ Missing FLICKR_API_KEY or FLICKR_API_SECRET');
-        return res.status(500).json({ error: 'Flickr API Key/Secret 未設定' });
+    const missing = [];
+    if (!process.env.FLICKR_API_KEY) missing.push('FLICKR_API_KEY');
+    if (!process.env.FLICKR_API_SECRET) missing.push('FLICKR_API_SECRET');
+
+    if (missing.length > 0) {
+        console.error(`❌ Missing Env Vars: ${missing.join(', ')}`);
+        return res.status(500).json({ error: `未設定變數: ${missing.join(', ')}` });
     }
 
     // 強制使用 HTTPS (若是 Railway environment)
