@@ -122,7 +122,15 @@ async function verifySite() {
 
     // Phase 1: Collect all links
     for (const file of htmlFiles) {
-        const content = fs.readFileSync(file, 'utf8');
+        let content;
+        try {
+            content = fs.readFileSync(file, 'utf8');
+        } catch (e) {
+            console.error(`❌ Failed to read file: ${file} (${e.message})`);
+            stats.errors++;
+            continue;
+        }
+
         const $ = cheerio.load(content);
         const relativeDisplayPath = path.relative(DIST_DIR, file);
 
