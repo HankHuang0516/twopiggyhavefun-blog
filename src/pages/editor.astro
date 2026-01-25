@@ -407,10 +407,14 @@ import Layout from '../layouts/Layout.astro';
     }
 
     // Auth & View Switching
+    // Auth & View Switching
     function checkAuthStatus() {
         const savedPwd = localStorage.getItem('editor_password');
         if (savedPwd) {
-            loadPosts(); // Attempt to load
+            // Found saved password, try auto-login.
+            // Show loading to prevent user from typing in login form while we verify.
+            showLoading(true);
+            loadPosts(true); 
         } else {
             showLogin();
         }
@@ -419,6 +423,8 @@ import Layout from '../layouts/Layout.astro';
     function showLogin() {
         if (els.loginView) els.loginView.style.display = 'flex';
         if (els.appContainer) els.appContainer.style.display = 'none';
+        // Focus password input
+        if (els.loginPassword) els.loginPassword.focus();
     }
     
     function showApp() {
@@ -431,7 +437,7 @@ import Layout from '../layouts/Layout.astro';
         if (!pwd) { alert('請輸入密碼'); return; }
         
         localStorage.setItem('editor_password', pwd);
-        await loadPosts();
+        await loadPosts(false);
     }
     
     function handleLogout() {
@@ -442,7 +448,7 @@ import Layout from '../layouts/Layout.astro';
         }
     }
 
-    async function loadPosts() {
+    async function loadPosts(isAutoLogin = false) {
         showLoading(true);
         try {
             const res = await fetch(`${API_BASE}/api/posts`, {
@@ -450,7 +456,9 @@ import Layout from '../layouts/Layout.astro';
             });
             if (res.status === 401) {
                 if (localStorage.getItem('editor_password')) {
-                    alert('密碼錯誤，請重新登入');
+                    // Only alert if it was a manual login attempt. 
+                    // If auto-login, just silently fail back to login screen.
+                     if (!isAutoLogin) alert('密碼錯誤，請重新登入');
                     localStorage.removeItem('editor_password');
                 }
                 showLogin();
@@ -465,7 +473,7 @@ import Layout from '../layouts/Layout.astro';
             
         } catch (err) {
             console.error(err);
-            alert('無法載入文章列表 (或網路連線錯誤)');
+            if (!isAutoLogin) alert('無法載入文章列表 (或網路連線錯誤)');
             showLogin(); // Fallback
         }
         showLoading(false);
