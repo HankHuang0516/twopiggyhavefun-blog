@@ -255,7 +255,7 @@ import Layout from '../layouts/Layout.astro';
     .sidebar { 
         width: 300px; background: white; border-right: 1px solid var(--border); 
         display: flex; flex-direction: column; transition: margin-left 0.3s ease;
-        position: fixed; top: 64px; bottom: 0; z-index: 50;
+        position: fixed; top: 0; bottom: 0; z-index: 2000;
     }
     .main-container.sidebar-open { padding-left: 300px; }
     .sidebar.collapsed { transform: translateX(-100%); }
