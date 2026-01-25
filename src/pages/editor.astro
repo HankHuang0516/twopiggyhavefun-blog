@@ -61,36 +61,16 @@ import Layout from '../layouts/Layout.astro';
             <div class="editor-area">
                 <!-- Editor View -->
                 <div id="editor-view" style="display: none;">
-                    <div class="editor-title-container">
-                        <h2 id="editor-title-display">編輯文章</h2>
-                    </div>
                     
-                    <div class="editor-field">
-                        <label>檔案名稱 (Slug)</label>
-                        <input type="text" id="post-slug" disabled class="input-light">
-                    </div>
-
-                    <div id="toast-editor-container" style="flex: 1; margin-bottom: 1rem;"></div>
-                </div>
-                
-                <!-- Empty State -->
-                <div id="empty-state" style="flex: 1; display: flex; justify-content: center; align-items: center; color: #64748b;">
-                    <p>請從左側選擇文章進行編輯，或點擊「新增文章」</p>
-                </div>
-
-                <!-- New Post View -->
-                <div id="new-post-view" style="display: none;">
-                    <div class="form-container">
-                        <h2>📝 新增文章</h2>
-                        
-                        <div class="form-group">
-                            <label>文章標題 *</label>
-                            <input type="text" id="new-title" placeholder="輸入文章標題..." class="input-clean">
-                        </div>
-
-                        <div class="form-group">
-                            <label>分類 *</label>
-                            <select id="new-category" class="input-clean">
+                    <!-- Metadata Fields (Integrated) -->
+                    <div class="editor-metadata" style="display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                         <div style="flex: 2; min-width: 200px;">
+                            <label style="display:block; font-size:0.8rem; color:#666; margin-bottom:0.25rem;">文章標題 *</label>
+                            <input type="text" id="post-title-input" class="input-clean" placeholder="輸入文章標題...">
+                         </div>
+                         <div style="flex: 1; min-width: 150px;">
+                            <label style="display:block; font-size:0.8rem; color:#666; margin-bottom:0.25rem;">分類 *</label>
+                            <select id="post-category-input" class="input-clean">
                                 <optgroup label="台北">
                                     <option value="taipei-food">台北美食</option>
                                     <option value="taipei-attractions">台北景點</option>
@@ -105,7 +85,7 @@ import Layout from '../layouts/Layout.astro';
                                 </optgroup>
                                 <optgroup label="其他地區">
                                     <option value="hsinchu-food">新竹美食</option>
-                                    <option value="hsinchu-attractions">新竹景點</option>
+                                    <option value="hsinchu-attractions">新竹景點</label>
                                     <option value="taichung-food">台中美食</option>
                                     <option value="taichung-attractions">台中景點</option>
                                     <option value="tainan-food">台南美食</option>
@@ -120,19 +100,19 @@ import Layout from '../layouts/Layout.astro';
                                     <option value="uncategorized">未分類</option>
                                 </optgroup>
                             </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>自訂檔名 (Slug, 選填)</label>
-                            <input type="text" id="new-slug" placeholder="例如: taipei-101-visit (留空則自動產生)" class="input-clean">
-                            <small>只允許英文、數字與連字號</small>
-                        </div>
-                        
-                        <div class="form-actions">
-                            <button class="btn btn-primary" id="create-post-btn">建立文章</button>
-                            <button class="btn btn-secondary" id="cancel-new-btn">取消</button>
-                        </div>
+                         </div>
+                         <div style="flex: 1; min-width: 150px;">
+                             <label style="display:block; font-size:0.8rem; color:#666; margin-bottom:0.25rem;">自訂網址 (Slug)</label>
+                             <input type="text" id="post-slug-input" class="input-clean" placeholder="留空自動產生">
+                         </div>
                     </div>
+
+                    <div id="toast-editor-container" style="flex: 1 1 0%; margin-bottom: 1rem; height: 100%;"></div>
+                </div>
+                
+                <!-- Empty State -->
+                <div id="empty-state" style="flex: 1 1 0%; display: flex; justify-content: center; align-items: center; color: rgb(100, 116, 139);">
+                    <p>請從左側選擇文章進行編輯，或點擊「新增文章」</p>
                 </div>
             </div>
         </div>
@@ -279,81 +259,57 @@ import Layout from '../layouts/Layout.astro';
             // Views
             editorView: document.getElementById('editor-view'),
             emptyState: document.getElementById('empty-state'),
-            newPostView: document.getElementById('new-post-view'),
             
-            // Inputs
-            postSlug: document.getElementById('post-slug'),
-            
-            // New Post Form
-            newTitle: document.getElementById('new-title'),
-            newCategory: document.getElementById('new-category'),
-            newSlug: document.getElementById('new-slug'),
-            createPostBtn: document.getElementById('create-post-btn'),
-            cancelNewBtn: document.getElementById('cancel-new-btn'),
+            // Unified Inputs
+            postTitle: document.getElementById('post-title-input'),
+            postCategory: document.getElementById('post-category-input'),
+            postSlugInput: document.getElementById('post-slug-input'),
         };
 
         // 2. Attach Event Listeners (safely)
         if (els.authBtn) els.authBtn.addEventListener('click', handleLogin);
-        else console.error('Auth Button not found!');
-
         if (els.authPassword) els.authPassword.addEventListener('keydown', (e) => { if(e.key === 'Enter') handleLogin() });
         
         if (els.togglePw) els.togglePw.addEventListener('click', () => {
             const type = els.authPassword.getAttribute('type') === 'password' ? 'text' : 'password';
             els.authPassword.setAttribute('type', type);
-            els.togglePw.querySelector('i').classList.toggle('ph-eye');
-            els.togglePw.querySelector('i').classList.toggle('ph-eye-slash');
         });
 
-        if (els.sidebarToggle) els.sidebarToggle.addEventListener('click', () => {
-            isSidebarOpen = !isSidebarOpen;
-            if (isSidebarOpen) els.sidebar.classList.remove('collapsed');
-            else els.sidebar.classList.add('collapsed');
-        });
-
+        if (els.sidebarToggle) {
+            els.sidebarToggle.addEventListener('click', () => {
+                isSidebarOpen = !isSidebarOpen;
+                if (els.sidebar) els.sidebar.classList.toggle('collapsed', !isSidebarOpen);
+            });
+        }
+        
+        if (els.newPostBtn) els.newPostBtn.addEventListener('click', () => showView('new'));
+        
         if (els.saveBtn) els.saveBtn.addEventListener('click', savePost);
         if (els.deleteBtn) els.deleteBtn.addEventListener('click', deletePost);
-        
-        if (els.searchInput) els.searchInput.addEventListener('input', (e) => {
-            const q = e.target.value.toLowerCase();
-            renderList(allPosts.filter(p => p.title.toLowerCase().includes(q)));
-        });
 
-        if (els.newPostBtn) els.newPostBtn.addEventListener('click', () => showView('new'));
-        if (els.cancelNewBtn) els.cancelNewBtn.addEventListener('click', () => showView('empty'));
-        if (els.createPostBtn) els.createPostBtn.addEventListener('click', textCreatePost);
-
-        // 3. Restore Password
-        if (localStorage.getItem('editor_password') && els.authPassword) {
-            els.authPassword.value = localStorage.getItem('editor_password');
+        if (els.searchInput) {
+            els.searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                const filtered = allPosts.filter(p => p.title.toLowerCase().includes(term));
+                renderList(filtered);
+            });
         }
 
-        // 4. Start App
-        initEditor();
-        loadPosts();
-    });
-
-    // --- Toast UI ---
-    function initEditor() {
-        // @ts-ignore
-        const Editor = toastui.Editor;
+        // Auto login check
+        if (localStorage.getItem('editor_password')) {
+            if (els.authPassword) els.authPassword.value = localStorage.getItem('editor_password');
+            loadPosts();
+        }
         
-        // Custom Flickr Button
-        const flickrButton = document.createElement('button');
-        flickrButton.className = 'image toastui-editor-toolbar-icons';
-        flickrButton.style.backgroundImage = 'none'; 
-        flickrButton.style.margin = '0';
-        flickrButton.innerHTML = '<i class="ph ph-image-square" style="font-size: 18px; color: #555;"></i>';
-        flickrButton.title = '插入 Flickr 相片/相簿';
-        flickrButton.addEventListener('click', insertFlickrPhoto);
-
+        // Initialize Editor
+        const Editor = toastui.Editor;
         editor = new Editor({
             el: document.querySelector('#toast-editor-container'),
             height: '100%',
             initialEditType: 'markdown',
             previewStyle: 'vertical',
-            language: 'zh-TW',
             initialValue: '',
+            theme: 'dark',
             toolbarItems: [
                 ['heading', 'bold', 'italic', 'strike'],
                 ['hr', 'quote'],
@@ -361,19 +317,40 @@ import Layout from '../layouts/Layout.astro';
                 ['table', 'image', 'link'],
                 ['code', 'codeblock'],
                 [{
-                    el: flickrButton,
-                    command: 'flickr',
-                    tooltip: '插入 Flickr 相簿'
+                    el: createFlickrButton(),
+                    tooltip: '插入 Flickr 相片/相簿'
                 }]
-            ]
+            ],
+            events: {
+                change: () => {
+                    // Auto-save draft to local storage? (Optional future feature)
+                }
+            }
         });
-    }
+
+        // 3. Flickr Button Logic
+        function createFlickrButton() {
+            const button = document.createElement('button');
+            button.className = 'image toastui-editor-toolbar-icons';
+            button.style.backgroundImage = 'none'; 
+            button.style.margin = '0';
+            button.innerHTML = '<i class="ph ph-image-square" style="font-size: 18px; color: #555;"></i>';
+            
+            button.addEventListener('click', insertFlickrPhoto);
+            return button;
+        }
+
+        // ... insertFlickrPhoto function remains same (omitted for brevity, assume it exists in scope or is global) ...
+
+        console.log('Editor Initialized');
+        showLoading(false);
+    });
     
+    // ... Flickr functions ...
     async function insertFlickrPhoto() {
-        const url = prompt('請輸入 Flickr 相片網址 (例如: https://www.flickr.com/photos/user/12345/):\n也可以直接貼上 Flickr 的嵌入代碼。');
+         const url = prompt('請輸入 Flickr 相片網址 (例如: https://www.flickr.com/photos/user/12345/):\n也可以直接貼上 Flickr 的嵌入代碼。');
         if (!url) return;
         
-        // Handle direct HTML embed
         if (url.trim().startsWith('<a data-flickr-embed')) {
             editor.insertText(url);
             return;
@@ -381,7 +358,7 @@ import Layout from '../layouts/Layout.astro';
 
         showLoading(true);
         try {
-            const res = await fetch(`/api/flickr-proxy?url=${encodeURIComponent(url)}`);
+            const res = await fetch(`${API_BASE}/api/flickr-proxy?url=${encodeURIComponent(url)}`);
             if (!res.ok) throw new Error('無法取得 Flickr 資料');
             const data = await res.json();
             
@@ -401,34 +378,34 @@ import Layout from '../layouts/Layout.astro';
         }
     }
 
-    // --- API Helpers ---
+
+    // --- Logic ---
+
+    // 取得 Header (Auth)
     function getHeaders() {
-        return {
-            'Content-Type': 'application/json',
-            'X-Auth-Password': (els.authPassword && els.authPassword.value) || localStorage.getItem('editor_password')
-        };
+        const headers = { 'Content-Type': 'application/json' };
+        if (els.authPassword && els.authPassword.value) {
+            headers['X-Auth-Password'] = els.authPassword.value;
+        }
+        return headers;
     }
 
-    function showLoading(show) {
-        if (els.loading) els.loading.style.display = show ? 'flex' : 'none';
-    }
-
-    // --- Core Logic ---
     async function loadPosts() {
         showLoading(true);
         try {
-            const res = await fetch(`${API_BASE}/api/posts`, { headers: getHeaders() });
+            const res = await fetch(`${API_BASE}/api/posts`, {
+                headers: getHeaders() // Add auth to list request if needed
+            });
             if (res.status === 401) {
                 alert('密碼錯誤');
                 showLoading(false);
                 return;
             }
-            if (!res.ok) throw new Error('Failed to fetch');
-            
             allPosts = await res.json();
             renderList(allPosts);
         } catch (err) {
             console.error(err);
+            alert('無法載入文章列表');
         }
         showLoading(false);
     }
@@ -438,48 +415,59 @@ import Layout from '../layouts/Layout.astro';
         els.postList.innerHTML = posts.map(post => `
             <div class="post-item ${currentSlug === post.slug ? 'active' : ''}" onclick="selectPost('${post.slug}')">
                 <span class="post-title">${post.title}</span>
-                <span class="post-meta">${post.date || '--'}</span>
+                <span class="post-meta">${post.date || ''} · ${post.category || '未分類'}</span>
             </div>
         `).join('');
     }
 
-    window.selectPost = async function(slug) {
+    async function selectPost(slug) {
         currentSlug = slug;
-        showView('editor');
         showLoading(true);
         
+        // Update UI selection
+        const items = document.querySelectorAll('.post-item');
+        items.forEach(i => i.classList.remove('active'));
+        // Re-render list to highlight active (simple way)
+        renderList(allPosts);
+
         try {
-            const res = await fetch(`${API_BASE}/api/posts/${slug}`, { headers: getHeaders() });
+            const res = await fetch(`${API_BASE}/api/posts/${slug}`, {
+                headers: getHeaders()
+            });
             
             if (res.status === 401) {
-                alert('密碼錯誤或未輸入，請在上方重新輸入密碼。');
+                alert('密碼錯誤');
                 showLoading(false);
                 return;
             }
             
-            if (!res.ok) {
-                throw new Error(`API Error: ${res.status}`);
-            }
+            if (!res.ok) throw new Error(`API Error: ${res.status}`);
 
             const data = await res.json();
             
-            if (!data.slug || data.content === undefined) {
-                 throw new Error('Invalid Data format received');
+            // Populate Inputs & Editor
+            if (els.postTitle) {
+                els.postTitle.value = allPosts.find(p => p.slug === slug)?.title || slug;
+                els.postTitle.disabled = true; // Disable metadata editing for existing posts
             }
-            
-            if (els.postSlug) els.postSlug.value = data.slug;
+            if (els.postSlugInput) {
+                els.postSlugInput.value = data.slug;
+                els.postSlugInput.disabled = true;
+            }
+            if (els.postCategory) {
+                 const cat = allPosts.find(p => p.slug === slug)?.category;
+                 if (cat) els.postCategory.value = cat;
+                 els.postCategory.disabled = true;
+            }
+
             if (editor) {
-                // Ensure content is a string
                 editor.setMarkdown(String(data.content));
-                if (typeof editor.setScrollTop === 'function') {
-                    editor.setScrollTop(0);
-                } else if (typeof editor.scrollTop === 'function') {
-                    editor.scrollTop(0);
-                }
+                editor.setScrollTop(0);
             }
-            renderList(allPosts);
             
-             // Mobile check
+            showView('editor');
+            
+            // Mobile check
             if (window.innerWidth < 768 && els.sidebar) {
                 els.sidebar.classList.add('collapsed');
             }
@@ -494,93 +482,93 @@ import Layout from '../layouts/Layout.astro';
     function showView(viewName) {
         if (els.editorView) els.editorView.style.display = 'none';
         if (els.emptyState) els.emptyState.style.display = 'none';
-        if (els.newPostView) els.newPostView.style.display = 'none';
-        if (els.actionButtons) els.actionButtons.style.display = 'none';
         
         if (viewName === 'editor') {
             if (els.editorView) {
                 els.editorView.style.display = 'flex';
                 els.editorView.style.flexDirection = 'column';
                 els.editorView.style.flex = '1';
+                
+                // If currentSlug is null, it means NEW POST Mode
+                // Enable inputs
+                if (!currentSlug) {
+                    if (els.postTitle) { els.postTitle.value = ''; els.postTitle.disabled = false; }
+                    if (els.postSlugInput) { els.postSlugInput.value = ''; els.postSlugInput.disabled = false; }
+                    if (els.postCategory) { els.postCategory.disabled = false; } // Keep default selection
+                    if (editor) editor.setMarkdown('');
+                    
+                    if (els.deleteBtn) els.deleteBtn.style.display = 'none';
+                } else {
+                    if (els.deleteBtn) els.deleteBtn.style.display = 'flex';
+                }
             }
             if (els.actionButtons) els.actionButtons.style.display = 'flex';
         } else if (viewName === 'new') {
-            if (els.newPostView) els.newPostView.style.display = 'block';
             currentSlug = null;
-            renderList(allPosts);
+            showView('editor'); // Reuse editor view for new post
         } else {
             if (els.emptyState) els.emptyState.style.display = 'flex';
+            if (els.actionButtons) els.actionButtons.style.display = 'none'; // Hide buttons on empty state
             currentSlug = null;
-            renderList(allPosts);
         }
     }
 
     // --- Actions ---
     async function savePost() {
-        if (!currentSlug) return;
+        const content = editor.getMarkdown();
         showLoading(true);
-        try {
-            const content = editor.getMarkdown();
-            const res = await fetch(`${API_BASE}/api/posts/${currentSlug}`, {
-                method: 'PUT',
-                headers: getHeaders(),
-                body: JSON.stringify({ content })
-            });
-            const result = await res.json();
-            
-            if (result.success) {
-                const msg = result.deploying ? '儲存成功！正在自動部署...' : '儲存成功';
-                alert(msg);
-                loadPosts();
-            } else {
-                alert('失敗: ' + result.error);
-            }
-        } catch (err) {
-            alert('連線失敗');
-        }
-        showLoading(false);
-    }
 
-    async function textCreatePost() {
-        const title = els.newTitle.value.trim();
-        const category = els.newCategory.value;
-        const customSlug = els.newSlug.value.trim();
-        
-        if (!title) { alert('請輸入標題'); return; }
-        
-        showLoading(true);
         try {
-            // Generate a placeholder link (required by backend)
-            const tempSlug = customSlug || `draft-${Date.now()}`;
-            const link = `https://twopiggyhavefun.uk/posts/${tempSlug}`;
+            // Case 1: NEW POST (Create)
+            if (!currentSlug) {
+                const title = els.postTitle.value.trim();
+                const category = els.postCategory.value;
+                const customSlug = els.postSlugInput.value.trim();
+                
+                if (!title) { alert('請輸入文章標題'); showLoading(false); return; }
 
-            const payload = { 
-                title, 
-                category, 
-                slug: customSlug,
-                content: '\n\n在此開始撰寫您的文章...',
-                link: link
-            };
-            const res = await fetch(`${API_BASE}/api/posts`, {
-                method: 'POST',
-                headers: getHeaders(),
-                body: JSON.stringify(payload)
-            });
-            const result = await res.json();
-            
-            if (result.success) {
-                const msg = result.deploying ? '文章建立成功！正在自動部署...' : '文章建立成功';
-                alert(msg);
-                if (els.newTitle) els.newTitle.value = '';
-                if (els.newSlug) els.newSlug.value = '';
-                await loadPosts();
-                if (result.slug) {
-                    selectPost(result.slug);
+                // Generate temp link
+                const tempLink = `https://twopiggyhavefun.uk/posts/${customSlug || 'draft-' + Date.now()}`;
+                
+                const payload = {
+                    title,
+                    category,
+                    slug: customSlug,
+                    content: content || '\n', // Ensure content exists
+                    link: tempLink
+                };
+
+                const res = await fetch(`${API_BASE}/api/posts`, {
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify(payload)
+                });
+                const result = await res.json();
+                
+                if (result.success) {
+                    alert(result.deploying ? '文章建立成功！正在自動部署...' : '文章建立成功');
+                    await loadPosts();
+                    selectPost(result.slug); // Output from backend
                 } else {
-                    showView('empty');
+                    alert('建立失敗: ' + result.error);
                 }
-            } else {
-                alert('建立失敗: ' + result.error);
+
+            } 
+            // Case 2: EXISTING POST (Update)
+            else {
+                const res = await fetch(`${API_BASE}/api/posts/${currentSlug}`, {
+                    method: 'PUT',
+                    headers: getHeaders(),
+                    body: JSON.stringify({ content })
+                });
+                const result = await res.json();
+                
+                if (result.success) {
+                    alert(result.deploying ? '儲存成功！正在自動部署...' : '儲存成功');
+                    loadPosts(); // Refresh list to update dates/titles if changed (backend doesn't update metadata yet though)
+                } else {
+                    alert('失敗: ' + result.error);
+                }
             }
         } catch (err) {
             console.error(err);
