@@ -29,65 +29,85 @@ const GIT_REPO = 'HankHuang0516/twopiggyhavefun-blog';
 /**
  * 自動部署到 GitHub (使用 GitHub API)
  */
+/**
+ * 自動部署到 GitHub (使用 GitHub Contents API)
+ * 改用單檔操作，避免一次上傳過多檔案導致 "Input too large" 以及 API rate limit 問題
+ */
 async function autoDeploy(action, filename) {
     if (!GIT_TOKEN) {
         console.log('⚠️ GIT_TOKEN 未設定，跳過自動部署');
         return { skipped: true };
     }
 
+    const repoPath = `src/content/posts/${filename}`;
     const commitMsg = `[Auto] ${action}: ${filename}`;
+    const localFilePath = path.join(POSTS_DIR, filename);
 
-    console.log(`🚀 開始自動部署: ${action} ${filename}`);
+    console.log(`🚀 開始自動部署 (Contents API): ${action} ${filename}`);
 
     try {
-        const refData = await githubApi('GET', `/repos/${GIT_REPO}/git/ref/heads/main`);
-        const latestCommitSha = refData.object.sha;
-
-        // 2. 取得目前的 tree
-        const commitData = await githubApi('GET', `/repos/${GIT_REPO}/git/commits/${latestCommitSha}`);
-        const baseTreeSha = commitData.tree.sha;
-
-        // 3. 讀取所有 posts 檔案並建立新的 tree
-        const postsFiles = fs.readdirSync(POSTS_DIR).filter(f => f.endsWith('.md'));
-        const treeItems = postsFiles.map(file => {
-            const content = fs.readFileSync(path.join(POSTS_DIR, file), 'utf8');
-            return {
-                path: `src/content/posts/${file}`,
-                mode: '100644',
-                type: 'blob',
-                content: content
-            };
-        });
-
-        // 4. 建立新的 tree
-        const newTree = await githubApi('POST', `/repos/${GIT_REPO}/git/trees`, {
-            base_tree: baseTreeSha,
-            tree: treeItems
-        });
-
-        // 5. 建立新的 commit
-        const newCommit = await githubApi('POST', `/repos/${GIT_REPO}/git/commits`, {
-            message: commitMsg,
-            tree: newTree.sha,
-            parents: [latestCommitSha],
-            author: {
-                name: 'Railway Bot',
-                email: 'bot@railway.app',
-                date: new Date().toISOString()
+        // 1. 先取得該檔案在 GitHub 上的狀態 (為了拿到 sha)
+        // 如果是新檔案，GET 會回傳 404，這是正常的
+        let currentSha = null;
+        try {
+            const fileData = await githubApi('GET', `/repos/${GIT_REPO}/contents/${repoPath}`);
+            currentSha = fileData.sha;
+        } catch (e) {
+            // 404 代表檔案不存在，適合 Create
+            if (!e.message.includes('404')) {
+                throw e; // 其他錯誤則拋出
             }
-        });
+        }
 
-        // 6. 更新 ref 指向新的 commit
-        await githubApi('PATCH', `/repos/${GIT_REPO}/git/refs/heads/main`, {
-            sha: newCommit.sha
-        });
+        // 2. 根據動作執行 PUT (新增/修改) 或 DELETE
+        if (action === 'Delete') {
+            if (!currentSha) {
+                console.log(`⚠️ 檔案 ${filename} 在 GitHub 不存在，跳過刪除`);
+                return { skipped: true };
+            }
 
-        console.log(`✅ 自動部署成功: ${newCommit.sha.substring(0, 7)}`);
-        return { success: true, sha: newCommit.sha };
+            await githubApi('DELETE', `/repos/${GIT_REPO}/contents/${repoPath}`, {
+                message: commitMsg,
+                sha: currentSha,
+                committer: {
+                    name: 'Railway Bot',
+                    email: 'bot@railway.app'
+                }
+            });
+            console.log(`✅ 自動刪除成功: ${filename}`);
+
+        } else {
+            // Create or Update
+            // 讀取檔案內容並轉為 Base64
+            if (!fs.existsSync(localFilePath)) {
+                throw new Error(`找不到本地檔案: ${localFilePath}`);
+            }
+            const content = fs.readFileSync(localFilePath);
+            const contentBase64 = content.toString('base64');
+
+            const payload = {
+                message: commitMsg,
+                content: contentBase64,
+                committer: {
+                    name: 'Railway Bot',
+                    email: 'bot@railway.app'
+                }
+            };
+
+            // 如果是更新，必須帶上 sha
+            if (currentSha) {
+                payload.sha = currentSha;
+            }
+
+            await githubApi('PUT', `/repos/${GIT_REPO}/contents/${repoPath}`, payload);
+            console.log(`✅ 自動推送成功: ${filename}`);
+        }
+
+        return { success: true };
 
     } catch (err) {
-        console.error(`❌ 部署失敗: ${err.message}`);
-        throw err;
+        console.error(`❌ 部署失敗 (${action} ${filename}): ${err.message}`);
+        return { success: false, error: err.message }; // 不要 throw，避免中斷 API 回應
     }
 }
 
@@ -118,7 +138,9 @@ function githubApi(method, endpoint, data = null) {
                     if (res.statusCode >= 200 && res.statusCode < 300) {
                         resolve(json);
                     } else {
-                        reject(new Error(json.message || `GitHub API error: ${res.statusCode}`));
+                        // Include status code in error message for handling 404s
+                        const errMsg = json.message || `GitHub API error`;
+                        reject(new Error(`${res.statusCode} ${errMsg}`));
                     }
                 } catch (e) {
                     reject(new Error(`Failed to parse response: ${body}`));
