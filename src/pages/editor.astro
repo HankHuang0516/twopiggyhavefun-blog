@@ -435,7 +435,11 @@ import Layout from '../layouts/Layout.astro';
             if (editor) {
                 // Ensure content is a string
                 editor.setMarkdown(String(data.content));
-                editor.scrollTop(0);
+                if (typeof editor.setScrollTop === 'function') {
+                    editor.setScrollTop(0);
+                } else if (typeof editor.scrollTop === 'function') {
+                    editor.scrollTop(0);
+                }
             }
             renderList(allPosts);
             
