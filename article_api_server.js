@@ -231,7 +231,10 @@ app.get('/api/auth/callback', (req, res) => {
 app.get('/api/flickr/albums', (req, res) => {
     if (!oauthTokens.accessToken) return res.status(401).json({ error: '尚未授權 Flickr (需 OAuth)' });
 
-    const url = `https://api.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=${process.env.FLICKR_API_KEY}&user_id=${process.env.FLICKR_USER_ID}&format=json&nojsoncallback=1&primary_photo_extras=url_m`;
+    let url = `https://api.flickr.com/services/rest/?method=flickr.photosets.getList&api_key=${process.env.FLICKR_API_KEY}&format=json&nojsoncallback=1&primary_photo_extras=url_m`;
+    if (process.env.FLICKR_USER_ID) {
+        url += `&user_id=${process.env.FLICKR_USER_ID}`;
+    }
 
     console.log('[Proxy] Fetching Albums via OAuth...');
     oauth.get(url, oauthTokens.accessToken, oauthTokens.accessTokenSecret, (err, data) => {
@@ -254,7 +257,12 @@ app.get('/api/flickr/albums', (req, res) => {
 app.get('/api/flickr/recent', (req, res) => {
     if (!oauthTokens.accessToken) return res.status(401).json({ error: '尚未授權 Flickr (需 OAuth)' });
 
-    const url = `https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=${process.env.FLICKR_API_KEY}&user_id=${process.env.FLICKR_USER_ID}&format=json&nojsoncallback=1&extras=url_m,url_o,date_upload`;
+    let url = `https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=${process.env.FLICKR_API_KEY}&format=json&nojsoncallback=1&extras=url_m,url_o,date_upload`;
+
+    // Note: getPublicPhotos technically needs user_id, but if auth'd it might default to self.
+    // If not, we should error or try "me".
+    const userId = process.env.FLICKR_USER_ID || 'me';
+    url += `&user_id=${userId}`;
 
     oauth.get(url, oauthTokens.accessToken, oauthTokens.accessTokenSecret, (err, data) => {
         if (err) return res.status(500).json({ error: err });
@@ -273,7 +281,10 @@ app.get('/api/flickr/album/:id/photos', (req, res) => {
         return res.status(401).json({ error: '尚未授權 Flickr (需 OAuth)' });
     }
 
-    const url = `https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=${process.env.FLICKR_API_KEY}&user_id=${process.env.FLICKR_USER_ID}&photoset_id=${id}&extras=url_m,url_o,date_upload&format=json&nojsoncallback=1`;
+    let url = `https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=${process.env.FLICKR_API_KEY}&photoset_id=${id}&extras=url_m,url_o,date_upload&format=json&nojsoncallback=1`;
+    if (process.env.FLICKR_USER_ID) {
+        url += `&user_id=${process.env.FLICKR_USER_ID}`;
+    }
 
     oauth.get(url, oauthTokens.accessToken, oauthTokens.accessTokenSecret, (err, data) => {
         if (err) return res.status(500).json({ error: err });

@@ -21,6 +21,10 @@
     將上述兩個 Token 複製，貼到 Railway 的 Variables 設定中。
     Re-deploy 後即可永久生效。
 
+5.  **(選擇性)設定 User ID**:
+    建議也設定 `FLICKR_USER_ID`，這有助於某些 API 的運作。
+    如果不知道您的 ID，可以使用 [idGettr](https://idgettr.com/) 查詢。
+
 ## 為什麼需要這樣做？
 Flickr API 的 `flickr.photosets.getList` 對於完全公開的相簿有時也需要簽名權限才能列出，或者使用者的相簿權限其實是 "Friends/Family"。
 透過 OAuth，我們可以確保後端擁有與您登入時相同的讀取權限。
