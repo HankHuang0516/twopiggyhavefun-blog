@@ -27,6 +27,7 @@ This workflow automatically builds the project, runs the internal verification s
    > node tests/verify_regression.js
    > node tests/verify_titles.js
    > node tests/verify_layers.js
+   > node tests/verify_login_btn.js
 
 3. Sync with Remote (Crucial for Auto-Deploy)
    > git pull --rebase
