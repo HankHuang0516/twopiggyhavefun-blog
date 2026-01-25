@@ -525,7 +525,18 @@ const server = http.createServer(async (req, res) => {
             const { content } = await parseBody(req);
             if (!content) return sendJson(res, 400, { error: 'Content required' });
 
-            fs.writeFileSync(filepath, content, 'utf8');
+            // Read existing file to preserve Frontmatter
+            const existingContent = fs.readFileSync(filepath, 'utf8');
+            const frontmatterMatch = existingContent.match(/^---[\s\S]*?---/);
+            const frontmatter = frontmatterMatch ? frontmatterMatch[0] : '';
+
+            // Normalize new content (ensure logic doesn't duplicate newlines excessively)
+            const cleanBody = content.trim();
+
+            // Combine: Frontmatter + Newline + New Content
+            const newFileContent = `${frontmatter}\n\n${cleanBody}`;
+
+            fs.writeFileSync(filepath, newFileContent, 'utf8');
             console.log(`✅ 文章已更新: ${slug}.md`);
 
             // 自動部署
