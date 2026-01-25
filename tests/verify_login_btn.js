@@ -16,5 +16,11 @@ if (!content.includes('els.loginBtn.addEventListener(\'click\', handleLogin)')) 
     process.exit(1);
 }
 
+// 3. Check for dangerous top-level initialization
+if (content.match(/const\s+turndownService\s*=\s*new\s+TurndownService/)) {
+    console.error('❌ Failure: `const turndownService = new ...` found at top-level. This can break script execution if lib fails to load.');
+    process.exit(1);
+}
+
 console.log('✅ Login Button Verification Passed.');
 process.exit(0);
