@@ -344,6 +344,19 @@ import Layout from '../layouts/Layout.astro';
             }
         });
 
+        // 0. Helper: Insert content safely in both modes
+        function insertToEditor(content) {
+            if (editor.isWysiwygMode()) {
+                // In WYSIWYG mode, inserting HTML string directly via insertText treats it as literal text.
+                // We switch to Markdown mode to insert the raw HTML/Markdown, then switch back to render it.
+                editor.changeMode('markdown');
+                editor.insertText(content);
+                editor.changeMode('wysiwyg');
+            } else {
+                editor.insertText(content);
+            }
+        }
+
         // 3. Flickr Button Logic
         function createFlickrButton() {
             const button = document.createElement('button');
@@ -367,7 +380,7 @@ import Layout from '../layouts/Layout.astro';
         if (!url) return;
         
         if (url.trim().startsWith('<a data-flickr-embed')) {
-            editor.insertText(url);
+            insertToEditor(url);
             return;
         }
 
@@ -379,15 +392,15 @@ import Layout from '../layouts/Layout.astro';
             
             if (data.type === 'photo') {
                 const embedHtml = `<a href="${data.web_page}" title="${data.title}"><img src="${data.url}" width="${data.width || 'auto'}" height="${data.height || 'auto'}" alt="${data.title}"></a><br><small>Photo by <a href="${data.author_url}">${data.author_name}</a></small>`;
-                editor.insertText(embedHtml);
+                insertToEditor(embedHtml);
             } else {
                  const embedCode = `<a data-flickr-embed="true" href="${url}" title="Flickr Album">[Flickr Album]</a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"><\/script>`;
-                 editor.insertText(embedCode);
+                 insertToEditor(embedCode);
             }
         } catch (err) {
             console.error(err);
             alert('Flickr 轉換失敗，將插入原始連結。');
-             editor.insertText(url);
+             insertToEditor(url);
         } finally {
             showLoading(false);
         }
