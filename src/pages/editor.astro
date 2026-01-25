@@ -3,11 +3,13 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="文章編輯器 | TwoPiggyHaveFun">
-    <!-- Toast UI Editor CSS -->
-    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
-    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/theme/toastui-editor-dark.min.css" />
+    <!-- Jodit Editor CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jodit/3.24.2/jodit.es2018.min.css"/>
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Marked & Turndown for MD support -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://unpkg.com/turndown/dist/turndown.js"></script>
 
     <div id="loading" class="loading-overlay">
         <div>載入中...</div>
@@ -144,7 +146,7 @@ import Layout from '../layouts/Layout.astro';
                              </div>
                         </div>
 
-                        <div id="toast-editor-container" style="flex: 1 1 0%; margin-bottom: 1rem; height: 100%;"></div>
+                        <div id="jodit-container" class="jodit-react-container" style="flex: 1 1 0%; margin-bottom: 1rem; height: 100%;"></div>
                     </div>
                     
                     <!-- Empty State -->
@@ -312,8 +314,8 @@ import Layout from '../layouts/Layout.astro';
     #toast-editor-container { background: white; }
 </style>
 
-<!-- Toast UI Editor JS -->
-<script is:inline src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+<!-- Jodit Editor JS -->
+<script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/jodit/3.24.2/jodit.es2018.min.js"></script>
 
 <script is:inline>
     // --- Configuration ---
@@ -435,54 +437,40 @@ import Layout from '../layouts/Layout.astro';
             });
         }
         
-        // Initialize Editor
-        const Editor = toastui.Editor;
-        editor = new Editor({
-            el: document.querySelector('#toast-editor-container'),
+        // Initialize Jodit Editor
+        editor = new Jodit('#jodit-container', {
             height: '100%',
-            initialEditType: 'markdown',
-            previewStyle: 'vertical',
-            initialValue: '',
-            theme: 'dark',
-            toolbarItems: [
-                ['heading', 'bold', 'italic', 'strike'],
-                ['hr', 'quote'],
-                ['ul', 'ol', 'task'],
-                ['table', 'link'], // Removed 'image'
-                ['code', 'codeblock'],
-                [{
-                    el: createFlickrButton(),
+            theme: 'default', // Jodit doesn't have a built-in 'dark' theme like Toast UI, handle via CSS if needed or leave default
+            toolbarButtonSize: 'middle',
+            buttons: [
+                'source', '|',
+                'bold', 'strikethrough', 'underline', 'italic', '|',
+                'ul', 'ol', '|',
+                'outdent', 'indent',  '|',
+                'font', 'fontsize', 'brush', 'paragraph', '|',
+                'image', 'video', 'table', 'link', '|',
+                'align', 'undo', 'redo', '|',
+                'hr', 'eraser', 'copyformat', '|',
+                'symbol', 'fullsize', 'print', 'about',
+                {
+                    name: 'flickr',
+                    iconURL: 'https://cdn-icons-png.flaticon.com/512/3669/3669967.png', // Flickr icon
+                    exec: function (editor) {
+                        toggleFlickrModal(true);
+                    },
                     tooltip: '插入 Flickr 相片/相簿'
-                }]
-            ],
-            events: {
-                change: () => {
-                    // Auto-save draft to local storage? (Optional future feature)
                 }
-            }
+            ]
         });
 
-        // 0. Helper: Insert content safely in both modes
+        // 0. Helper: Insert content safely
         function insertToEditor(content) {
-            if (editor.isWysiwygMode()) {
-                editor.changeMode('markdown');
-                editor.insertText(content);
-                editor.changeMode('wysiwyg');
-            } else {
-                editor.insertText(content);
-            }
+            editor.selection.insertHTML(content);
         }
 
-        // 3. Flickr Button Logic
+        // 3. Flickr Button Logic (Handled in Jodit config)
         function createFlickrButton() {
-            const button = document.createElement('button');
-            button.className = 'image toastui-editor-toolbar-icons';
-            button.style.backgroundImage = 'none'; 
-            button.style.margin = '0';
-            button.innerHTML = '<i class="ph ph-image-square" style="font-size: 18px; color: #555;"></i>';
-            
-            button.addEventListener('click', () => toggleFlickrModal(true));
-            return button;
+           // No longer needed for Jodit custom button
         }
         
         // 4. Check Auth Status
@@ -741,8 +729,9 @@ import Layout from '../layouts/Layout.astro';
             }
 
             if (editor) {
-                editor.setMarkdown(String(data.content));
-                editor.setScrollTop(0);
+                // Convert Markdown to HTML for Jodit
+                editor.value = marked.parse(String(data.content));
+                // editor.setScrollTop(0); // Jodit might handle scroll differently
             }
             
             showView('editor');
@@ -775,7 +764,7 @@ import Layout from '../layouts/Layout.astro';
                     if (els.postTitle) { els.postTitle.value = ''; els.postTitle.disabled = false; }
                     if (els.postSlugInput) { els.postSlugInput.value = ''; els.postSlugInput.disabled = false; }
                     if (els.postCategory) { els.postCategory.disabled = false; } // Keep default selection
-                    if (editor) editor.setMarkdown('');
+                    if (editor) editor.value = '';
                     
                     if (els.deleteBtn) els.deleteBtn.style.display = 'none';
                 } else {
@@ -795,7 +784,8 @@ import Layout from '../layouts/Layout.astro';
 
     // --- Actions ---
     async function savePost() {
-        const content = editor.getMarkdown();
+        const turndownService = new TurndownService();
+        const content = turndownService.turndown(editor.value);
         showLoading(true);
 
         try {
