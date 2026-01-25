@@ -448,8 +448,8 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
-    // 新增文章 (Original endpoint)
-    if (url === '/api/article' && req.method === 'POST') {
+    // 新增文章
+    if (url === '/api/posts' && req.method === 'POST') {
         if (!checkAuth(req, res)) return;
         try {
             const data = await parseBody(req);
