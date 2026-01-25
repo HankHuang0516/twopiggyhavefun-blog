@@ -634,6 +634,12 @@ const server = http.createServer(async (req, res) => {
                 try {
                     console.log(`[Proxy] Response status: ${resp.statusCode}`);
                     const json = JSON.parse(data);
+
+                    // DEBUG: Log the full response for albums to debug "Empty List" issue
+                    if (targetUrl.includes('flickr.photosets.getList') || targetUrl.includes('flickr.people.getPublicPhotos')) {
+                        console.log(`[Proxy] Flickr Response Body (${targetUrl.includes('getList') ? 'Albums' : 'Recent'}):`, JSON.stringify(json, null, 2));
+                    }
+
                     // Check for Flickr API error
                     if (json.stat === 'fail') {
                         console.error(`[Proxy] Flickr API Error: ${json.message}`);
