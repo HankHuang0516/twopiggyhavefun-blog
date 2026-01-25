@@ -363,6 +363,47 @@ app.delete('/api/posts/:filename', async (req, res) => {
     }
 });
 
+// 讀取單一文章
+app.get('/api/posts/:slug', (req, res) => {
+    const { slug } = req.params;
+    // Client might send slug or filename (with .md). Handle both.
+    const filename = slug.endsWith('.md') ? slug : `${slug}.md`;
+    const filePath = path.join(POSTS_DIR, filename);
+
+    if (!fs.existsSync(filePath)) return res.status(404).json({ error: 'Post not found' });
+
+    try {
+        const fileContent = fs.readFileSync(filePath, 'utf8');
+
+        // Parse Frontmatter
+        const titleMatch = fileContent.match(/title:\s*"(.*?)"/);
+        const dateMatch = fileContent.match(/date:\s*(.*)/);
+        const categoryMatch = fileContent.match(/category:\s*"?([^"\n]*)"?/);
+        const imageMatch = fileContent.match(/image:\s*"(.*?)"/);
+
+        // Extract Content (everything after the second ---)
+        const contentParts = fileContent.split('---');
+        let content = '';
+        if (contentParts.length >= 3) {
+            content = contentParts.slice(2).join('---').trim();
+        } else {
+            content = fileContent; // Fallback
+        }
+
+        res.json({
+            slug: filename.replace('.md', ''),
+            title: titleMatch ? titleMatch[1] : slug,
+            date: dateMatch ? dateMatch[1] : '',
+            category: categoryMatch ? categoryMatch[1].trim() : 'Uncategorized',
+            image: imageMatch ? imageMatch[1] : null,
+            content: content
+        });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: 'Failed to read post' });
+    }
+});
+
 // 讀取文章 (List)
 app.get('/api/posts', (req, res) => {
     try {
