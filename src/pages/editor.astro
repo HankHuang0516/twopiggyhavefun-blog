@@ -201,9 +201,9 @@ import Layout from '../layouts/Layout.astro';
     .post-title { font-weight: 600; margin-bottom: 0.25rem; display: block; color: var(--text-main); }
     .post-meta { font-size: 0.8rem; color: var(--text-muted); }
     
-    .editor-area { flex: 1; display: flex; flex-direction: column; padding: 2rem; background: white; overflow-y: auto; position: relative; }
+    .editor-area { flex: 1; display: flex; flex-direction: column; padding: 0.5rem; background: white; overflow-y: hidden; position: relative; }
     
-    .editor-field { margin-bottom: 1rem; }
+    .editor-field { margin-bottom: 0.5rem; }
     .editor-field label { display: block; font-size: 0.875rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem; }
     
     .btn { padding: 0.5rem 1rem; border-radius: 4px; font-weight: 500; cursor: pointer; border: none; transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem;}
@@ -338,7 +338,7 @@ import Layout from '../layouts/Layout.astro';
 
         editor = new Editor({
             el: document.querySelector('#toast-editor-container'),
-            height: 'calc(100vh - 250px)',
+            height: '100%',
             initialEditType: 'markdown',
             previewStyle: 'vertical',
             language: 'zh-TW',
