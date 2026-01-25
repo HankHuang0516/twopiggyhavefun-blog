@@ -660,4 +660,10 @@ import Layout from '../layouts/Layout.astro';
         }
         showLoading(false);
     }
+    
+    // UI Helpers
+    function showLoading(show) {
+        const loader = document.getElementById('loading');
+        if (loader) loader.style.display = show ? 'flex' : 'none';
+    }
 </script>
