@@ -362,7 +362,7 @@ import Layout from '../layouts/Layout.astro';
         const url = prompt('請輸入 Flickr 相簿或相片網址:\n(例如: https://www.flickr.com/photos/user/albums/12345)');
         if (!url) return;
         const embedCode = `<a data-flickr-embed="true" href="${url}" title="Flickr Album (Click to view)">[Flickr Album]</a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"><\/script>`;
-        editor.exec('htmlBlock', { html: embedCode });
+        editor.insertText(embedCode);
     }
 
     // --- API Helpers ---
