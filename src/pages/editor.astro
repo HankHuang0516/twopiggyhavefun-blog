@@ -1,5 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { PIXNET_CATEGORY_HIERARCHY } from '../utils/categories';
 ---
 
 <Layout title="文章編輯器 | TwoPiggyHaveFun">
@@ -86,9 +88,16 @@ import Layout from '../layouts/Layout.astro';
 
             <div class="main-container">
                 <div id="sidebar" class="sidebar">
-                    <div class="sidebar-header" style="justify-content: space-between;">
-                        <input type="text" id="search-input" class="search-box" placeholder="搜尋標題..." style="flex:1; margin-right:0.5rem;">
-                         <button id="sidebar-close-btn" class="icon-btn-small" title="收合選單">
+                    <div class="sidebar-header">
+                        <div class="search-sort-row">
+                            <input type="text" id="search-input" class="search-box" placeholder="搜尋標題...">
+                            <select id="sort-select" class="sort-select">
+                                <option value="newest">最新優先</option>
+                                <option value="oldest">最舊優先</option>
+                                <option value="alphabetical">標題排序</option>
+                            </select>
+                        </div>
+                        <button id="sidebar-close-btn" class="sidebar-toggle-trigger" title="收合選單">
                             <i class="ph ph-caret-left"></i>
                         </button>
                     </div>
@@ -98,6 +107,11 @@ import Layout from '../layouts/Layout.astro';
                 </div>
 
                 <div class="editor-area">
+                    <!-- Sidebar Expand Button (Visible when sidebar collapsed) -->
+                    <button id="sidebar-open-btn" class="sidebar-open-trigger" style="display: none;">
+                        <i class="ph ph-caret-right"></i>
+                        <span>展開選單</span>
+                    </button>
                     <!-- Editor View -->
                     <div id="editor-view" style="display: none;">
                         
@@ -110,34 +124,14 @@ import Layout from '../layouts/Layout.astro';
                              <div style="flex: 1; min-width: 150px;">
                                 <label style="display:block; font-size:0.8rem; color:#666; margin-bottom:0.25rem;">分類 *</label>
                                 <select id="post-category-input" class="input-clean">
-                                    <optgroup label="台北">
-                                        <option value="taipei-food">台北美食</option>
-                                        <option value="taipei-attractions">台北景點</option>
-                                    </optgroup>
-                                    <optgroup label="新北">
-                                        <option value="newtaipei-food">新北美食</option>
-                                        <option value="newtaipei-attractions">新北景點</option>
-                                    </optgroup>
-                                    <optgroup label="桃園">
-                                        <option value="taoyuan-food">桃園美食</option>
-                                        <option value="taoyuan-attractions">桃園景點</option>
-                                    </optgroup>
-                                    <optgroup label="其他地區">
-                                        <option value="hsinchu-food">新竹美食</option>
-                                        <option value="hsinchu-attractions">新竹景點</option>
-                                        <option value="taichung-food">台中美食</option>
-                                        <option value="taichung-attractions">台中景點</option>
-                                        <option value="tainan-food">台南美食</option>
-                                        <option value="tainan-attractions">台南景點</option>
-                                        <option value="kaohsiung-food">高雄美食</option>
-                                        <option value="kaohsiung-attractions">高雄景點</option>
-                                        <option value="yilan-food">宜蘭美食</option>
-                                        <option value="yilan-attractions">宜蘭景點</option>
-                                    </optgroup>
-                                    <optgroup label="其他">
-                                        <option value="life">生活雜記</option>
-                                        <option value="uncategorized">未分類</option>
-                                    </optgroup>
+                                    {Object.entries(PIXNET_CATEGORY_HIERARCHY).map(([parentName, config]) => (
+                                        <optgroup label={parentName}>
+                                            <option value={parentName}>{parentName} (以此為主類別)</option>
+                                            {config.subcategories.map(sub => (
+                                                <option value={sub}>{sub}</option>
+                                            ))}
+                                        </optgroup>
+                                    ))}
                                 </select>
                              </div>
                              <div style="flex: 1; min-width: 150px;">
@@ -314,10 +308,24 @@ import Layout from '../layouts/Layout.astro';
     .input-clean { width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; outline: none; box-sizing: border-box; }
     .input-clean:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1); }
     
-    /* Jodit Customization to match Pixnet more closely */
-    .jodit-container { border: 1px solid var(--border) !important; border-radius: 6px; }
-    .jodit-toolbar__box { background: #f8f9fa; border-bottom: 1px solid #ddd; }
-    .jodit-wysiwyg { padding: 20px; min-height: 400px; }
+    /* Sidebar UX Improved */
+    .sidebar-header { padding: 0.75rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.5rem; position: relative; }
+    .search-sort-row { display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
+    .sort-select { padding: 4px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.75rem; background: #f8f9fa; cursor: pointer; }
+    
+    .sidebar-toggle-trigger { background: var(--border); border: none; width: 24px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 0 4px 4px 0; cursor: pointer; position: absolute; right: -24px; top: 50%; transform: translateY(-50%); color: var(--text-muted); transition: all 0.2s; z-index: 10; border: 1px solid var(--border); border-left: none; }
+    .sidebar-toggle-trigger:hover { background: var(--primary); color: white; right: -26px; width: 26px; }
+    
+    .sidebar-open-trigger { position: absolute; left: 0; top: 50%; transform: translateY(-50%); background: white; border: 1px solid var(--border); border-left: none; padding: 0.75rem 0.25rem; border-radius: 0 8px 8px 0; color: var(--primary); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; z-index: 20; box-shadow: 2px 0 8px rgba(0,0,0,0.05); }
+    .sidebar-open-trigger i { font-size: 1.25rem; }
+    .sidebar-open-trigger span { writing-mode: vertical-lr; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+    .sidebar-open-trigger:hover { background: #f1f5f9; padding-left: 0.5rem; }
+
+    .sidebar.collapsed + .editor-area .sidebar-open-trigger { display: flex !important; }
+    .sidebar.collapsed { width: 0 !important; min-width: 0 !important; padding: 0 !important; overflow: hidden; border: none !important; }
+
+    /* Fix Jodit Z-index issues with floating UI */
+    .jodit-container { z-index: 1 !important; }
 </style>
 
 <!-- Jodit JS -->
@@ -381,6 +389,8 @@ import Layout from '../layouts/Layout.astro';
             postTitle: document.getElementById('post-title-input'),
             postCategory: document.getElementById('post-category-input'),
             postSlugInput: document.getElementById('post-slug-input'),
+            sortSelect: document.getElementById('sort-select'),
+            sidebarOpenBtn: document.getElementById('sidebar-open-btn'),
         };
 
         // 2. Attach Event Listeners
@@ -425,11 +435,35 @@ import Layout from '../layouts/Layout.astro';
         if (els.deleteBtn) els.deleteBtn.addEventListener('click', deletePost);
 
         if (els.searchInput) {
-            els.searchInput.addEventListener('input', (e) => {
-                const term = e.target.value.toLowerCase();
-                const filtered = allPosts.filter(p => p.title.toLowerCase().includes(term));
-                renderList(filtered);
+            els.searchInput.addEventListener('input', () => filterAndRender());
+        }
+        
+        if (els.sortSelect) {
+            els.sortSelect.addEventListener('change', () => filterAndRender());
+        }
+        
+        if (els.sidebarOpenBtn) {
+            els.sidebarOpenBtn.addEventListener('click', () => {
+                isSidebarOpen = true;
+                toggleSidebar();
             });
+        }
+        
+        function filterAndRender() {
+            const term = els.searchInput.value.toLowerCase();
+            const sortBy = els.sortSelect.value;
+            
+            let filtered = allPosts.filter(p => p.title.toLowerCase().includes(term));
+            
+            if (sortBy === 'newest') {
+                filtered.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+            } else if (sortBy === 'oldest') {
+                filtered.sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
+            } else if (sortBy === 'alphabetical') {
+                filtered.sort((a, b) => a.title.localeCompare(b.title));
+            }
+            
+            renderList(filtered);
         }
         
 
@@ -684,12 +718,15 @@ import Layout from '../layouts/Layout.astro';
 
     function renderList(posts) {
         if (!els.postList) return;
-        els.postList.innerHTML = posts.map(post => `
-            <div class="post-item ${currentSlug === post.slug ? 'active' : ''}" onclick="selectPost('${post.slug}')">
-                <span class="post-title">${post.title}</span>
-                <span class="post-meta">${post.date || ''} · ${post.category || '未分類'}</span>
-            </div>
-        `).join('');
+        els.postList.innerHTML = posts.map(post => {
+            const slug = post.slug || (post.filename ? post.filename.replace('.md', '') : '');
+            return `
+                <div class="post-item ${currentSlug === slug ? 'active' : ''}" onclick="selectPost('${slug}')">
+                    <span class="post-title">${post.title}</span>
+                    <span class="post-meta">${post.date ? new Date(post.date).toLocaleDateString() : ''} · ${post.category || '未分類'}</span>
+                </div>
+            `;
+        }).join('');
     }
 
     window.selectPost = async function(slug) {
