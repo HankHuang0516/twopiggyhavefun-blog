@@ -151,7 +151,9 @@ function githubApi(method, endpoint, data = null) {
         req.on('error', reject);
 
         if (data) {
-            req.write(JSON.stringify(data));
+            const body = JSON.stringify(data);
+            console.log(`Debug GitHub API (${method} ${endpoint}): Body length ${body.length}`);
+            req.write(body);
         }
         req.end();
     });
