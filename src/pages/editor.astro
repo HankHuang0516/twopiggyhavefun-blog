@@ -456,9 +456,17 @@ import { PIXNET_CATEGORY_HIERARCHY } from '../utils/categories';
             let filtered = allPosts.filter(p => p.title.toLowerCase().includes(term));
             
             if (sortBy === 'newest') {
-                filtered.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+                filtered.sort((a, b) => {
+                    const da = a.date ? new Date(a.date) : new Date(0);
+                    const db = b.date ? new Date(b.date) : new Date(0);
+                    return db - da;
+                });
             } else if (sortBy === 'oldest') {
-                filtered.sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
+                filtered.sort((a, b) => {
+                    const da = a.date ? new Date(a.date) : new Date(0);
+                    const db = b.date ? new Date(b.date) : new Date(0);
+                    return da - db;
+                });
             } else if (sortBy === 'alphabetical') {
                 filtered.sort((a, b) => a.title.localeCompare(b.title));
             }
@@ -720,10 +728,18 @@ import { PIXNET_CATEGORY_HIERARCHY } from '../utils/categories';
         if (!els.postList) return;
         els.postList.innerHTML = posts.map(post => {
             const slug = post.slug || (post.filename ? post.filename.replace('.md', '') : '');
+            let dateStr = '無日期';
+            if (post.date) {
+                const d = new Date(post.date);
+                if (!isNaN(d)) {
+                    // Format as YYYY/MM/DD
+                    dateStr = d.toLocaleDateString();
+                }
+            }
             return `
                 <div class="post-item ${currentSlug === slug ? 'active' : ''}" onclick="selectPost('${slug}')">
                     <span class="post-title">${post.title}</span>
-                    <span class="post-meta">${post.date ? new Date(post.date).toLocaleDateString() : ''} · ${post.category || '未分類'}</span>
+                    <span class="post-meta">${dateStr} · ${post.category || '未分類'}</span>
                 </div>
             `;
         }).join('');

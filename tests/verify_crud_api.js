@@ -24,11 +24,14 @@ async function test() {
             const firstPost = posts[0];
 
             // 3. Read Post
-            const postData = await request(`/api/posts/${firstPost.slug}`);
+            const slug = firstPost.slug || firstPost.filename.replace('.md', '');
+            console.log(`ℹ️ Testing Read Post with slug: ${slug}`);
+            const postData = await request(`/api/posts/${slug}`);
             if (postData.content) {
                 console.log(`✅ Read Post: ${firstPost.slug} (Content length: ${postData.content.length})`);
             } else {
-                throw new Error('Post content is empty');
+                console.error('❌ Full response data:', JSON.stringify(postData, null, 2));
+                throw new Error(`Post content is empty for slug: ${firstPost.slug}`);
             }
 
             // 4. Update Post (Test with a temporary copy or just verify the logic)

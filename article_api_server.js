@@ -15,6 +15,7 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const { OAuth } = require('oauth');
+const matter = require('gray-matter');
 
 // 初始化 Express
 const app = express();
@@ -374,29 +375,15 @@ app.get('/api/posts/:slug', (req, res) => {
 
     try {
         const fileContent = fs.readFileSync(filePath, 'utf8');
-
-        // Parse Frontmatter
-        const titleMatch = fileContent.match(/title:\s*"(.*?)"/);
-        const dateMatch = fileContent.match(/date:\s*(.*)/);
-        const categoryMatch = fileContent.match(/category:\s*"?([^"\n]*)"?/);
-        const imageMatch = fileContent.match(/image:\s*"(.*?)"/);
-
-        // Extract Content (everything after the second ---)
-        const contentParts = fileContent.split('---');
-        let content = '';
-        if (contentParts.length >= 3) {
-            content = contentParts.slice(2).join('---').trim();
-        } else {
-            content = fileContent; // Fallback
-        }
+        const parsed = matter(fileContent);
 
         res.json({
             slug: filename.replace('.md', ''),
-            title: titleMatch ? titleMatch[1] : slug,
-            date: dateMatch ? dateMatch[1] : '',
-            category: categoryMatch ? categoryMatch[1].trim() : 'Uncategorized',
-            image: imageMatch ? imageMatch[1] : null,
-            content: content
+            title: parsed.data.title || slug,
+            date: parsed.data.date ? (parsed.data.date instanceof Date ? parsed.data.date.toISOString() : parsed.data.date) : '',
+            category: parsed.data.category || 'Uncategorized',
+            image: parsed.data.image || parsed.data.cover || null,
+            content: parsed.content.trim()
         });
     } catch (e) {
         console.error(e);
@@ -410,18 +397,24 @@ app.get('/api/posts', (req, res) => {
         if (!fs.existsSync(POSTS_DIR)) return res.json([]);
         const files = fs.readdirSync(POSTS_DIR).filter(f => f.endsWith('.md'));
         const posts = files.map(f => {
-            const content = fs.readFileSync(path.join(POSTS_DIR, f), 'utf8');
-            // 簡易解析 Frontmatter (不依賴 gray-matter 以減少依賴，或可之後加)
-            const titleMatch = content.match(/title:\s*"(.*?)"/);
-            const dateMatch = content.match(/date:\s*(.*)/);
+            const fileContent = fs.readFileSync(path.join(POSTS_DIR, f), 'utf8');
+            const { data } = matter(fileContent);
+
             return {
                 filename: f,
-                title: titleMatch ? titleMatch[1] : f,
-                date: dateMatch ? dateMatch[1] : ''
+                slug: f.replace('.md', ''),
+                title: data.title || f,
+                date: data.date ? (data.date instanceof Date ? data.date.toISOString() : data.date) : '',
+                category: data.category || '未分類'
             };
         });
-        // Sort by date desc
-        posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+        // Sort by date desc (consistent with index.astro)
+        posts.sort((a, b) => {
+            if (!a.date && !b.date) return 0;
+            if (!a.date) return 1;
+            if (!b.date) return -1;
+            return new Date(b.date).valueOf() - new Date(a.date).valueOf();
+        });
         res.json(posts);
     } catch (e) {
         res.json([]);
