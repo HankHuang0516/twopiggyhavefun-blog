@@ -15,6 +15,8 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
+const cheerio = require('cheerio');
+const TurndownService = require('turndown');
 
 // ============================================
 // 設定
@@ -144,71 +146,28 @@ function generateSlug(date) {
 function htmlToMarkdown(html) {
     if (!html) return '';
 
-    let md = html;
+    // 使用 Turndown 進行轉換
+    const turndownService = new TurndownService({
+        headingStyle: 'atx',
+        codeBlockStyle: 'fenced',
+        emDelimiter: '*'
+    });
 
-    // 處理圖片 - 保留原始 URL
-    md = md.replace(/<img[^>]*src=["']([^"']+)["'][^>]*alt=["']([^"']*)["'][^>]*>/gi,
-        (match, src, alt) => `![${alt || ''}](${src})\n\n`);
-    md = md.replace(/<img[^>]*alt=["']([^"']*)["'][^>]*src=["']([^"']+)["'][^>]*>/gi,
-        (match, alt, src) => `![${alt || ''}](${src})\n\n`);
-    md = md.replace(/<img[^>]*src=["']([^"']+)["'][^>]*>/gi,
-        (match, src) => `![](${src})\n\n`);
+    // 保留 iframe (如 YouTube)
+    turndownService.keep(['iframe']);
 
-    // 處理連結
-    md = md.replace(/<a[^>]*href=["']([^"']+)["'][^>]*>([^<]*)<\/a>/gi, '[$2]($1)');
+    // 清理無用標籤但保留內容 (如 div, span) - Turndown 預設會 unwrap 這些標籤
+    // 但如果有某些特定 class 需要保留，可以在這裡設定
 
-    // 處理標題
-    md = md.replace(/<h1[^>]*>([^<]*)<\/h1>/gi, '\n# $1\n\n');
-    md = md.replace(/<h2[^>]*>([^<]*)<\/h2>/gi, '\n## $1\n\n');
-    md = md.replace(/<h3[^>]*>([^<]*)<\/h3>/gi, '\n### $1\n\n');
-    md = md.replace(/<h4[^>]*>([^<]*)<\/h4>/gi, '\n#### $1\n\n');
+    let markdown = turndownService.turndown(html);
 
-    // 處理粗體和斜體
-    md = md.replace(/<strong[^>]*>([^<]*)<\/strong>/gi, '**$1**');
-    md = md.replace(/<b[^>]*>([^<]*)<\/b>/gi, '**$1**');
-    md = md.replace(/<em[^>]*>([^<]*)<\/em>/gi, '*$1*');
-    md = md.replace(/<i[^>]*>([^<]*)<\/i>/gi, '*$1*');
+    // 後處理：修復圖片連結格式 (如果有需要)
+    // Turndown 已經能很好處理 [![alt](src)](href)
 
-    // 處理換行和分隔線
-    md = md.replace(/<br\s*\/?>/gi, '\n');
-    md = md.replace(/<hr\s*\/?>/gi, '\n---\n\n');
+    // 移除多餘空行
+    markdown = markdown.replace(/\n{3,}/g, '\n\n');
 
-    // 處理段落
-    md = md.replace(/<p[^>]*>/gi, '\n');
-    md = md.replace(/<\/p>/gi, '\n\n');
-
-    // 處理列表
-    md = md.replace(/<li[^>]*>/gi, '- ');
-    md = md.replace(/<\/li>/gi, '\n');
-    md = md.replace(/<\/?ul[^>]*>/gi, '\n');
-    md = md.replace(/<\/?ol[^>]*>/gi, '\n');
-
-    // 處理區塊引用
-    md = md.replace(/<blockquote[^>]*>/gi, '\n> ');
-    md = md.replace(/<\/blockquote>/gi, '\n\n');
-
-    // 移除其他 HTML 標籤
-    md = md.replace(/<div[^>]*>/gi, '\n');
-    md = md.replace(/<\/div>/gi, '\n');
-    md = md.replace(/<span[^>]*>/gi, '');
-    md = md.replace(/<\/span>/gi, '');
-    md = md.replace(/<[^>]+>/g, '');
-
-    // HTML 實體解碼
-    md = md.replace(/&nbsp;/g, ' ');
-    md = md.replace(/&amp;/g, '&');
-    md = md.replace(/&lt;/g, '<');
-    md = md.replace(/&gt;/g, '>');
-    md = md.replace(/&quot;/g, '"');
-    md = md.replace(/&#39;/g, "'");
-    md = md.replace(/&#(\d+);/g, (match, code) => String.fromCharCode(code));
-
-    // 清理多餘空白和換行
-    md = md.replace(/\n{4,}/g, '\n\n\n');
-    md = md.replace(/[ \t]+$/gm, '');
-    md = md.trim();
-
-    return md;
+    return markdown.trim();
 }
 
 // ============================================
@@ -382,40 +341,52 @@ function parseArticleContent(html) {
         }
     }
 
-    // 5. 提取完整文章內容 (保留原始 HTML)
+    // 5. 提取完整文章內容 (使用 Cheerio 增強版)
     let contentHtml = '';
+    try {
+        const $ = cheerio.load(html, { decodeEntities: false }); // 不解碼實體，保留中文
 
-    // 優先使用 cheerio-like 選擇器：#article-content-inner 或 .article-content
-    const innerMatch = html.match(/<div[^>]*id="article-content-inner"[^>]*>([\s\S]*?)<\/div>\s*<div[^>]*class="[^"]*article/i);
-    if (innerMatch) {
-        contentHtml = innerMatch[1];
-    } else {
-        // 嘗試 class="article-content-inner"
-        // Handle cases where div has other attributes (like id)
-        const classMatch = html.match(/<div[^>]*class="[^"]*article-content-inner[^"]*"[^>]*>([\s\S]*?)<div[^>]*class="[^"]*article-footer[^"]*"[^>]*>/)
-            || html.match(/<div[^>]*class="[^"]*article-content-inner[^"]*"[^>]*>([\s\S]*?)<\/div>\s*<div[^>]*class="[^"]*article/i);
+        // 移除多餘的 meta/script/style
+        $('script').remove();
+        $('style').remove();
+        $('meta').remove(); // 移除 embedded meta tags (如 browser 看到的)
 
-        if (classMatch) {
-            contentHtml = classMatch[1];
-        } else {
-            // Fallback for ID article-content
-            const idMatch = html.match(/<div[^>]*id="article-content"[^>]*>([\s\S]*?)<\/div>/);
-            if (idMatch) {
-                contentHtml = idMatch[1];
-            } else {
-                // 最後嘗試：找 article-content-inner 到結尾
-                const simpleMatch = html.match(/<div[^>]*class="[^"]*article-content-inner[^"]*"[^>]*>([\s\S]*)/i);
-                if (simpleMatch) {
-                    let content = simpleMatch[1];
-                    const endPos = content.search(/<div[^>]*class="[^"]*(?:article-footer|article-keyword|tag-container)/i);
-                    if (endPos > 0) {
-                        content = content.substring(0, endPos);
-                    }
-                    contentHtml = content;
-                }
+        // 選擇器順序: #article-content-inner, .article-content-inner, .article-content, #article-content
+        const selectors = ['#article-content-inner', '.article-content-inner', '.article-content', '#article-content'];
+
+        for (const sel of selectors) {
+            if ($(sel).length > 0) {
+                // 處理 lazy-load 圖片 (如果有的話)
+                /* $(sel).find('img').each((i, el) => {
+                     const dataSrc = $(el).attr('data-src') || $(el).attr('data-original');
+                     if (dataSrc) $(el).attr('src', dataSrc);
+                }); */
+
+                contentHtml = $(sel).html();
+                break;
             }
         }
+
+    } catch (e) {
+        log(`Cheerio 解析內容失敗: ${e.message}`, 'WARN');
     }
+
+    // Fallback: 如果 Cheerio 失敗，嘗試 Regex
+    if (!contentHtml) {
+        // ... (Original Regex Fallback if needed, or just leave empty)
+        const innerMatch = html.match(/<div[^>]*id="article-content-inner"[^>]*>([\s\S]*?)<\/div>\s*<div[^>]*class="[^"]*article/i);
+        if (innerMatch) contentHtml = innerMatch[1];
+    }
+
+    result.contentHtml = contentHtml; // Update result
+
+    // Fallback: 如果 Cheerio 失敗，嘗試 Regex
+    if (!contentHtml) {
+        const innerMatch = html.match(/<div[^>]*id="article-content-inner"[^>]*>([\s\S]*?)<\/div>\s*<div[^>]*class="[^"]*article/i);
+        if (innerMatch) contentHtml = innerMatch[1];
+    }
+
+    result.contentHtml = contentHtml;
 
     // 6. 如果沒有封面圖，從內容中取第一張圖
     if (!result.cover && contentHtml) {

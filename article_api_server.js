@@ -447,6 +447,27 @@ app.get('/api/ghosts', async (req, res) => {
     }
 });
 
+app.delete('/api/ghosts/:slug', async (req, res) => {
+    if (!checkAuth(req, res)) return;
+
+    const { slug } = req.params;
+    const filename = slug.endsWith('.md') ? slug : `${slug}.md`;
+
+    try {
+        console.log(`[Ghost] Attempting to delete remote file: ${filename}`);
+        const result = await autoDeploy('Delete', filename);
+
+        if (result.success || result.skipped) {
+            res.json({ success: true, message: 'Remote delete triggered', result });
+        } else {
+            res.status(500).json({ error: result.error || 'Deploy failed' });
+        }
+    } catch (e) {
+        console.error('[Ghost] Delete Error:', e);
+        res.status(500).json({ error: e.message });
+    }
+});
+
 // 讀取文章 (List)
 app.get('/api/posts', (req, res) => {
     if (!checkAuth(req, res)) return;

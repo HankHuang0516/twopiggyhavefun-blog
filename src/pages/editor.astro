@@ -734,13 +734,47 @@ import { PIXNET_CATEGORY_HIERARCHY } from '../utils/categories';
                             <div style="font-weight: 600;">${g.title}</div>
                             <div style="font-size: 0.8rem; color: #666;">Slug: ${g.slug}</div>
                         </div>
-                        <a href="https://twopiggyhavefun.uk/blog/posts/${g.slug}" target="_blank" class="btn btn-secondary" style="font-size: 0.8rem;">
-                            查看 <i class="ph ph-arrow-square-out"></i>
-                        </a>
+                        <div style="display:flex; gap: 0.5rem;">
+                            <a href="https://twopiggyhavefun.uk/blog/posts/${g.slug}" target="_blank" class="btn btn-secondary" style="font-size: 0.8rem;">
+                                查看 <i class="ph ph-arrow-square-out"></i>
+                            </a>
+                            <button onclick="deleteGhost('${g.slug}')" class="btn btn-danger" style="font-size: 0.8rem;">
+                                移除 <i class="ph ph-trash"></i>
+                            </button>
+                        </div>
                     </div>
                 `).join('')}
             </div>
         `;
+    }
+
+    window.deleteGhost = async function(slug) {
+        if (!confirm(`確定要從遠端移除「${slug}」嗎？\n此動作無法復原！`)) return;
+        
+        const btn = event.target.closest('button');
+        if(btn) {
+            btn.disabled = true;
+            btn.textContent = '移除中...';
+        }
+
+        try {
+            const res = await fetch(`${API_BASE}/api/ghosts/${slug}`, {
+                method: 'DELETE',
+                headers: getHeaders()
+            });
+            const data = await res.json();
+            
+            if (data.error) throw new Error(data.error);
+            
+            alert('移除成功！');
+            checkGhosts(); // Refresh list
+        } catch (err) {
+            alert(`移除失敗: ${err.message}`);
+            if(btn) {
+                btn.disabled = false;
+                btn.textContent = '移除';
+            }
+        }
     }
 
     // --- Core Logic ---
