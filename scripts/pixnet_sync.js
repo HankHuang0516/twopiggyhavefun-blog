@@ -264,7 +264,14 @@ function parseArticleContent(html) {
         }
     }
 
-    return { category, contentPreview, address };
+    // Extract Tags from meta keywords
+    let tags = [];
+    const keywordsMatch = html.match(/<meta name="keywords" content="([^"]+)"/i);
+    if (keywordsMatch) {
+        tags = keywordsMatch[1].split(',').map(t => t.trim()).filter(t => t);
+    }
+
+    return { category, contentPreview, address, tags };
 }
 
 /**
@@ -390,6 +397,12 @@ async function syncArticles() {
                     await new Promise(r => setTimeout(r, 1200));
                     coords = await geocode(contentInfo.address);
                     if (coords) console.log(`  -> Lat: ${coords.lat}, Lng: ${coords.lng}`);
+                }
+
+                // Merge tags: prefer contentInfo.tags (from article page) over article.tags (from list page)
+                // The list page tags often include global site tags giving incorrect results
+                if (contentInfo.tags && contentInfo.tags.length > 0) {
+                    article.tags = contentInfo.tags;
                 }
 
                 // Generate and save markdown

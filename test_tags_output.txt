@@ -1,0 +1,12 @@
+Fetching https://lolwarden.pixnet.net/blog...
+TypeError: fetchUrl is not a function
+    at testTags (C:\Hank\Other\project\picture\scripts\test_tags.js:9:28)
+    at Object.<anonymous> (C:\Hank\Other\project\picture\scripts\test_tags.js:46:1)
+    at Module._compile (node:internal/modules/cjs/loader:1761:14)
+    at Object..js (node:internal/modules/cjs/loader:1893:10)
+    at Module.load (node:internal/modules/cjs/loader:1481:32)
+    at Module._load (node:internal/modules/cjs/loader:1300:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+    at node:internal/main/run_main_module:33:47
