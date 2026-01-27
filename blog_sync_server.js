@@ -390,6 +390,62 @@ function parseArticleContent(html) {
                 $clean('script').remove();
                 $clean('style').remove();
                 $clean('meta').remove();
+
+                // === TOC 重建邏輯 ===
+                // 1. 尋找 "文章目錄" 關鍵字
+                let tocFound = false;
+                $clean('strong, b, p').each((i, el) => {
+                    if (tocFound) return;
+                    if ($clean(el).text().includes('文章目錄')) {
+                        // 假設目錄在接下來的元素中，通常是 table 或連續的 p/div
+                        // 策略：尋找後續出現的標題文字，並建立連結
+
+                        // 這裡簡化處理：掃描整個文檔的 strong/h2/h3，如果是目錄中的項目，就加上 ID
+                        // 由於目錄結構不固定，我們反過來：
+                        // 如果看到有 "文章目錄"，我們嘗試自動為所有 h2, h3, 和特定的 strong 加上 id
+                        const headers = $clean('h2, h3, strong').toArray();
+                        const tocItems = [];
+
+                        // 找出所有可能的標題並加 id
+                        headers.forEach((header, index) => {
+                            const $header = $clean(header);
+                            const text = $header.text().trim();
+                            // 排除太短或像目錄本身的標題
+                            if (text.length > 2 && text !== '文章目錄' && !text.includes('文章目錄')) {
+                                const id = 'toc-' + index;
+
+                                // 如果已經有 id 就不覆蓋
+                                if (!$header.attr('id')) {
+                                    $header.attr('id', id);
+                                    // 嘗試在目錄區域找到這段文字並做連結 (比較困難，因為不知道目錄在哪)
+                                    // 但我們可以做一個通用的替換：
+                                    // 在 contentHtml 中，把純文字的標題名稱替換為連結 (這有點危險)
+
+                                    // 更好的方法：針對 Pixnet 常見結構 (Table 下的 td)
+                                    // 尋找包含此標題文字的 td，將其包在 a href 中
+                                    $clean('td').each((j, td) => {
+                                        const $td = $clean(td);
+                                        if ($td.text().trim() === text) {
+                                            $td.html(`<a href="#${id}">${$td.html()}</a>`);
+                                        }
+                                    });
+
+                                    // 針對非 Table 結構 (純文字段落)
+                                    // 尋找完全匹配的 p
+                                    $clean('p').each((k, p) => {
+                                        const $p = $clean(p);
+                                        if ($p.text().trim() === text && $p[0] !== header) {
+                                            $p.html(`<a href="#${id}">${$p.html()}</a>`);
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                        tocFound = true;
+                    }
+                });
+                // ===================
+
                 // 嘗試獲取 body 內容，如果沒有 body (片段)，則取 root
                 const cleaned = $clean('body').html() || $clean.html();
                 if (cleaned) contentHtml = cleaned;

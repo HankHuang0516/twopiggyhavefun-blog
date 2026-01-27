@@ -13,9 +13,15 @@ scripts.each((i, el) => {
         const json = JSON.parse($(el).html());
         if (json['@type'] === 'BlogPosting' && json.articleBody) {
             console.log('Found BlogPosting!');
-            console.log('articleBody length:', json.articleBody.length);
-            console.log('Start:', json.articleBody.substring(0, 100));
-            console.log('End:', json.articleBody.substring(json.articleBody.length - 100));
+            const body = json.articleBody;
+            const idx = body.indexOf('文章目錄');
+            if (idx !== -1) {
+                console.log('--- TOC Context ---');
+                console.log(body.substring(idx - 100, idx + 500));
+                console.log('-------------------');
+            } else {
+                console.log('TOC "文章目錄" not found in articleBody.');
+            }
             found = true;
         }
     } catch (e) {
