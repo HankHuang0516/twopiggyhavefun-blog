@@ -56,6 +56,25 @@ import { PIXNET_CATEGORY_HIERARCHY } from '../utils/categories';
         </div>
     </div>
 
+    <!-- Ghost Modal -->
+    <div id="ghost-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="max-height: 80vh;">
+            <div class="modal-header">
+                <h3>👻 Ghost Articles 檢測</h3>
+                <button id="close-ghost-modal" class="icon-btn"><i class="ph ph-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div id="ghost-list-container" style="padding: 1rem;">
+                    <!-- Results will load here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+               <span id="ghost-status" style="color: #666; font-size: 0.9rem;"></span>
+               <button class="btn btn-secondary" onclick="document.getElementById('ghost-modal').style.display='none'">關閉</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Main App (Hidden by default) -->
     <div id="app-container" style="display: none;">
         <div class="editor-wrapper">
@@ -82,6 +101,10 @@ import { PIXNET_CATEGORY_HIERARCHY } from '../utils/categories';
 
                     <button class="btn btn-secondary" id="logout-btn" title="登出">
                         <i class="ph ph-sign-out"></i>
+                    </button>
+                    <!-- Ghost Check Button -->
+                    <button class="btn btn-secondary" id="ghost-btn" title="檢查 Ghost Articles">
+                        <i class="ph ph-ghost"></i>
                     </button>
                 </div>
             </header>
@@ -391,6 +414,11 @@ import { PIXNET_CATEGORY_HIERARCHY } from '../utils/categories';
             postSlugInput: document.getElementById('post-slug-input'),
             sortSelect: document.getElementById('sort-select'),
             sidebarOpenBtn: document.getElementById('sidebar-open-btn'),
+            ghostBtn: document.getElementById('ghost-btn'),
+            ghostModal: document.getElementById('ghost-modal'),
+            closeGhostModal: document.getElementById('close-ghost-modal'),
+            ghostListContainer: document.getElementById('ghost-list-container'),
+            ghostStatus: document.getElementById('ghost-status'),
         };
 
         // 2. Attach Event Listeners
@@ -447,6 +475,15 @@ import { PIXNET_CATEGORY_HIERARCHY } from '../utils/categories';
                 isSidebarOpen = true;
                 toggleSidebar();
             });
+        }
+        
+        if (els.ghostBtn) {
+            els.ghostBtn.addEventListener('click', () => {
+                toggleGhostModal(true);
+            });
+        }
+        if (els.closeGhostModal) {
+            els.closeGhostModal.addEventListener('click', () => toggleGhostModal(false));
         }
         
         function filterAndRender() {
@@ -643,6 +680,67 @@ import { PIXNET_CATEGORY_HIERARCHY } from '../utils/categories';
              editor.selection.insertHTML(embedHtml);
          }
          toggleFlickrModal(false);
+    }
+
+    // --- Ghost Article Logic ---
+    function toggleGhostModal(show) {
+        if (els.ghostModal) els.ghostModal.style.display = show ? 'flex' : 'none';
+        if (show) {
+             checkGhosts();
+        }
+    }
+
+    async function checkGhosts() {
+        if (!els.ghostListContainer) return;
+        els.ghostListContainer.innerHTML = '<div style="padding:1rem;">正在掃描 Ghost Articles...</div>';
+        els.ghostStatus.textContent = '';
+
+        try {
+            const res = await fetch(`${API_BASE}/api/ghosts`, { headers: getHeaders() });
+            const data = await res.json();
+            
+            if (data.error) throw new Error(data.error);
+            const ghosts = data.ghosts || [];
+            
+            if (ghosts.length === 0) {
+                els.ghostListContainer.innerHTML = `
+                    <div style="text-align:center; padding: 2rem; color: green;">
+                        <i class="ph ph-check-circle" style="font-size: 3rem; margin-bottom: 0.5rem;"></i>
+                        <p>太棒了！沒有發現 Ghost Articles。</p>
+                        <p style="font-size: 0.9rem; color: #666;">本地與遠端同步正常。</p>
+                    </div>
+                `;
+                els.ghostStatus.textContent = '狀態: 良好';
+            } else {
+                renderGhosts(ghosts);
+                els.ghostStatus.textContent = `發現 ${ghosts.length} 篇異常文章`;
+            }
+
+        } catch (err) {
+            els.ghostListContainer.innerHTML = `<div style="color:red; margin:1rem;">檢測失敗: ${err.message}</div>`;
+        }
+    }
+
+    function renderGhosts(ghosts) {
+        els.ghostListContainer.innerHTML = `
+            <div style="margin-bottom: 1rem; padding: 1rem; background: #fff3cd; border-left: 4px solid #ffc107; color: #856404;">
+                <strong>注意：</strong> 以下文章存在於遠端網站 (search.json)，但在本地找不到。
+                <br>建議確認是否需要手動刪除遠端檔案，或重新推送部署。
+            </div>
+            <div style="display: grid; gap: 0.5rem;">
+                ${ghosts.map(g => `
+                    <div style="background: white; border: 1px solid #ddd; padding: 0.75rem; border-radius: 4px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-weight: 600;">${g.title}</div>
+                            <div style="font-size: 0.8rem; color: #666;">Slug: ${g.slug}</div>
+                        </div>
+                        <a href="https://twopiggyhavefun.uk/blog/posts/${g.slug}" target="_blank" class="btn btn-secondary" style="font-size: 0.8rem;">
+                            查看 <i class="ph ph-arrow-square-out"></i>
+                        </a>
+                    </div>
+                `).join('')}
+            </div>
+        `;
     }
 
     // --- Core Logic ---

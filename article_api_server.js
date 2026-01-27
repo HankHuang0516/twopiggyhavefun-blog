@@ -399,6 +399,54 @@ app.get('/api/posts/:slug', (req, res) => {
     }
 });
 
+// 檢測 Ghost Articles (Remote exists, Local missing)
+app.get('/api/ghosts', async (req, res) => {
+    if (!checkAuth(req, res)) return;
+
+    try {
+        // 1. Fetch Remote list
+        const remoteUrl = 'https://twopiggyhavefun.uk/search.json';
+        console.log(`[Ghost] Fetching ${remoteUrl}...`);
+
+        const fetchRemote = () => new Promise((resolve, reject) => {
+            https.get(remoteUrl, (resp) => {
+                let data = '';
+                resp.on('data', (chunk) => data += chunk);
+                resp.on('end', () => {
+                    try {
+                        resolve(JSON.parse(data));
+                    } catch (e) { reject(e); }
+                });
+            }).on('error', (err) => reject(err));
+        });
+
+        const remoteArticles = await fetchRemote(); // Array of { title, slug, ... }
+
+        // 2. Get Local list
+        if (!fs.existsSync(POSTS_DIR)) return res.json({ ghosts: [] });
+        const localFiles = fs.readdirSync(POSTS_DIR).filter(f => f.endsWith('.md'));
+        const localSlugs = new Set(localFiles.map(f => f.replace('.md', '')));
+
+        // 3. Compare
+        const ghosts = [];
+        remoteArticles.forEach(remote => {
+            // search.json might use different slug structure? 
+            // Usually it matches the filename base.
+            // Check if remote.slug exists in localSlugs
+            if (remote.slug && !localSlugs.has(remote.slug)) {
+                ghosts.push(remote);
+            }
+        });
+
+        console.log(`[Ghost] Found ${ghosts.length} ghost articles.`);
+        res.json({ ghosts });
+
+    } catch (e) {
+        console.error('[Ghost] Error:', e);
+        res.status(500).json({ error: e.message });
+    }
+});
+
 // 讀取文章 (List)
 app.get('/api/posts', (req, res) => {
     if (!checkAuth(req, res)) return;
