@@ -471,10 +471,9 @@ function parseArticleContent(html) {
 
 /**
  * 建立文章 Markdown 檔案
- * 格式參考 migrate_missing_posts.js
  */
 function createArticle(data) {
-    const { title, contentHtml, link, date, category, tags = [], cover = '', businessHours = null, address = null, lat = null, lng = null } = data;
+    const { id, title, contentHtml, link, date, category, tags = [], cover = '', businessHours = null, address = null, lat = null, lng = null } = data;
 
     if (!title || !link) {
         return { success: false, error: '缺少必填欄位' };
@@ -485,8 +484,19 @@ function createArticle(data) {
         : Array.isArray(tags) ? tags : [];
 
     const articleDate = date || new Date().toISOString().split('T')[0];
-    const slug = generateSlug(articleDate);
     const formattedDate = new Date(articleDate).toISOString();
+
+    // Deterministic filename for Pixnet sync
+    let filename;
+    let slug;
+
+    if (id) {
+        slug = id;
+        filename = `pixnet-${id}.md`;
+    } else {
+        slug = generateSlug(articleDate);
+        filename = `${slug}.md`;
+    }
 
     // 使用與 migrate_missing_posts.js 相同的 frontmatter 格式
     const frontmatter = [
@@ -501,23 +511,17 @@ function createArticle(data) {
         address ? `address: "${address}"` : null,
         lat ? `lat: ${lat}` : null,
         lng ? `lng: ${lng}` : null,
-    ].filter(Boolean); // Filter nulls
+        '---'
+    ].filter(Boolean).join('\n');
 
-    const frontmatterString = frontmatter.concat([
-        '---',
-        '',
-        '<div class="pixnet-article prose max-w-none">',
-        contentHtml || '',
-        '</div>'
-    ]).join('\n');
+    const fileContent = `${frontmatter}\n\n${contentHtml || ''}`;
 
     if (!fs.existsSync(CONFIG.postsDir)) {
         fs.mkdirSync(CONFIG.postsDir, { recursive: true });
     }
 
-    const filename = `${slug}.md`;
     const filepath = path.join(CONFIG.postsDir, filename);
-    fs.writeFileSync(filepath, frontmatterString, 'utf8');
+    fs.writeFileSync(filepath, fileContent, 'utf8');
 
     return { success: true, file: filename, path: filepath, slug, category, title };
 }
@@ -526,7 +530,7 @@ function createArticle(data) {
 // Pixnet 同步
 // ============================================
 
-async function syncPixnetArticles() {
+async function syncArticles() {
     log('開始同步 Pixnet 文章...', 'SYNC');
 
     const state = loadSyncState();
@@ -536,6 +540,9 @@ async function syncPixnetArticles() {
         const html = await fetchUrl(CONFIG.pixnetBlogUrl);
         const articles = parsePixnetArticles(html);
         log(`找到 ${articles.length} 篇文章`, 'INFO');
+        const ids = articles.map(a => a.id).join(', ');
+        console.log('Found IDs:', ids);
+        try { fs.writeFileSync('found_ids.txt', ids); } catch (e) { }
 
         const newArticles = articles.filter(a => !syncedIds.has(a.id));
         log(`新文章: ${newArticles.length} 篇`, 'INFO');
@@ -565,39 +572,35 @@ async function syncPixnetArticles() {
 
                 const contentInfo = parseArticleContent(articleHtml);
 
-                // 標籤: 優先使用文章頁面 (contentInfo.tags) 的標籤，因為列表頁 (article.tags) 可能包含不準確的全站標籤
+                // Merge tags
                 if (contentInfo.tags && contentInfo.tags.length > 0) {
                     article.tags = contentInfo.tags;
                 }
                 const finalTags = article.tags;
                 const finalCategory = contentInfo.category || article.category;
 
-                log(`  分類: ${finalCategory}`, 'INFO');
-                log(`  標籤: ${finalTags.length} 個 - ${finalTags.join(', ')}`, 'INFO');
-                log(`  封面: ${contentInfo.cover ? '有' : '無'}`, 'INFO');
-                log(`  圖片: ${contentInfo.images.length} 張`, 'INFO');
-
                 // Geocode
                 let coords = null;
                 if (contentInfo.address) {
-                    log(`  地址: ${contentInfo.address} (Geocoding...)`, 'INFO');
                     try {
-                        await new Promise(r => setTimeout(r, 1200)); // Rate limit
+                        await new Promise(r => setTimeout(r, 1200));
                         coords = await geocode(contentInfo.address);
-                        if (coords) log(`    -> 座標: ${coords.lat}, ${coords.lng}`, 'INFO');
                     } catch (e) { /* ignore */ }
                 }
 
+                // Convert HTML to Markdown
+                const markdownContent = htmlToMarkdown(contentInfo.contentHtml);
+
                 const result = createArticle({
+                    id: article.id, // Pass ID for filename
                     title: article.title,
-                    contentHtml: contentInfo.contentHtml,  // 使用原始 HTML
+                    contentHtml: markdownContent, // Pass MD instead of HTML
                     link: article.link,
                     date: article.date,
                     category: finalCategory,
                     tags: finalTags,
-                    tags: finalTags,
-                    cover: contentInfo.cover,              // 封面圖片
-                    businessHours: contentInfo.businessHours,  // 營業時間
+                    cover: contentInfo.cover,
+                    businessHours: contentInfo.businessHours,
                     address: contentInfo.address,
                     lat: coords ? coords.lat : null,
                     lng: coords ? coords.lng : null
@@ -662,7 +665,7 @@ function startScheduler() {
         const minutes = now.getMinutes();
 
         if (hours === CONFIG.scheduledHour && minutes === CONFIG.scheduledMinute) {
-            syncPixnetArticles().catch(err => log(`定時同步失敗: ${err.message}`, 'ERROR'));
+            syncArticles().catch(err => log(`定時同步失敗: ${err.message}`, 'ERROR'));
         }
     }, 60 * 1000);
 
@@ -671,7 +674,7 @@ function startScheduler() {
     // 也可以設定固定間隔同步
     if (CONFIG.syncIntervalMinutes > 0) {
         setInterval(() => {
-            syncPixnetArticles().catch(err => log(`定時同步失敗: ${err.message}`, 'ERROR'));
+            syncArticles().catch(err => log(`定時同步失敗: ${err.message}`, 'ERROR'));
         }, CONFIG.syncIntervalMinutes * 60 * 1000);
 
         log(`間隔同步: 每 ${CONFIG.syncIntervalMinutes} 分鐘`, 'INFO');
@@ -744,7 +747,7 @@ const server = http.createServer(async (req, res) => {
     // 手動觸發同步
     if (url === '/api/sync' && req.method === 'POST') {
         try {
-            const result = await syncPixnetArticles();
+            const result = await syncArticles();
             sendJson(res, 200, { success: true, ...result });
         } catch (err) {
             sendJson(res, 500, { success: false, error: err.message });
@@ -762,30 +765,52 @@ const server = http.createServer(async (req, res) => {
     sendJson(res, 404, { error: 'Not found' });
 });
 
+
 // ============================================
 // 啟動
 // ============================================
 
-server.listen(CONFIG.port, () => {
-    console.log('');
-    console.log('='.repeat(55));
-    console.log('🚀 Pixnet Blog Sync Server (Full Content Edition)');
-    console.log('='.repeat(55));
-    console.log(`📡 伺服器: http://localhost:${CONFIG.port}`);
-    console.log(`📁 文章目錄: ${CONFIG.postsDir}`);
-    console.log('');
-    console.log('可用 API:');
-    console.log(`  GET  /api/health   - 健康檢查`);
-    console.log(`  GET  /api/status   - 同步狀態`);
-    console.log(`  POST /api/article  - 手動新增文章`);
-    console.log(`  POST /api/sync     - 手動觸發同步`);
-    console.log('');
-    console.log('='.repeat(55));
+function startServer() {
+    server.listen(CONFIG.port, () => {
+        console.log('');
+        console.log('='.repeat(55));
+        console.log('🚀 Pixnet Blog Sync Server (Full Content Edition)');
+        console.log('='.repeat(55));
+        console.log(`📡 伺服器: http://localhost:${CONFIG.port}`);
+        console.log(`📁 文章目錄: ${CONFIG.postsDir}`);
+        console.log('');
+        console.log('可用 API:');
+        console.log(`  GET  /api/health   - 健康檢查`);
+        console.log(`  GET  /api/status   - 同步狀態`);
+        console.log(`  POST /api/article  - 手動新增文章`);
+        console.log(`  POST /api/sync     - 手動觸發同步`);
+        console.log('');
+        console.log('='.repeat(55));
 
-    // 啟動排程
-    startScheduler();
+        // 啟動排程
+        startScheduler();
 
-    // 啟動時立即執行一次同步
-    log('啟動時執行同步...', 'SYNC');
-    syncPixnetArticles().catch(err => log(`啟動同步失敗: ${err.message}`, 'ERROR'));
-});
+        // 啟動時立即執行一次同步
+        log('啟動時執行同步...', 'SYNC');
+        syncArticles().catch(err => log(`啟動同步失敗: ${err.message}`, 'ERROR'));
+    });
+}
+
+if (require.main === module) {
+    const args = process.argv.slice(2);
+    if (args.includes('sync')) {
+        syncArticles()
+            .then(result => {
+                console.log('Sync result:', result);
+                process.exit(0);
+            })
+            .catch(err => {
+                console.error('Sync failed:', err);
+                process.exit(1);
+            });
+    } else {
+        startServer();
+    }
+} else {
+    module.exports = { syncArticles, startServer };
+}
