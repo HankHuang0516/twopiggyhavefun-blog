@@ -413,14 +413,14 @@ function parseArticleContent(html) {
                             // 排除太短或像目錄本身的標題
                             if (text.length > 2 && text !== '文章目錄' && !text.includes('文章目錄')) {
                                 const id = 'toc-' + index;
-                                console.log(`[TOC DEBUG] Processing header ${index}: "${text}" (Tag: ${header.tagName})`);
+
 
                                 // 改用 span anchor, 因為 Turndown 可能會吃掉 ID
                                 // 只要前面沒有我們自家的 toc-anchor 就加上去
                                 if ($header.prev('span.toc-anchor').length === 0) {
-                                    console.log(`[TOC DEBUG]   Adding anchor #${id} to "${text}"`);
-                                    // 改用 span anchor, 因為 Turndown 可能會吃掉 ID
-                                    $header.before(`<span id="${id}" class="toc-anchor"></span>`);
+
+                                    // 改用 span anchor, 並加上零寬空格避免 Turndown 將其視為空標籤而移除
+                                    $header.before(`<span id="${id}" class="toc-anchor">&#x200B;</span>`);
 
                                     // 嘗試在目錄區域找到這段文字並做連結
                                     // 針對 Pixnet 常見結構 (Table 下的 td)
