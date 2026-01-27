@@ -346,26 +346,39 @@ function parseArticleContent(html) {
     try {
         const $ = cheerio.load(html, { decodeEntities: false }); // 不解碼實體，保留中文
 
-        // 移除多餘的 meta/script/style
-        $('script').remove();
-        $('style').remove();
-        $('meta').remove(); // 移除 embedded meta tags (如 browser 看到的)
+        // 優先嘗試 JSON-LD 解析 (針對 Next.js/SSR 隱藏內容)
+        $('script[type="application/ld+json"]').each((i, el) => {
+            if (contentHtml) return;
+            try {
+                const json = JSON.parse($(el).html());
+                if (json['@type'] === 'BlogPosting' && json.articleBody) {
+                    contentHtml = json.articleBody;
+                    console.log('成功從 JSON-LD 提取文章內容 (長度: ' + contentHtml.length + ')');
+                }
+            } catch (e) { /* ignore */ }
+        });
 
-        // 選擇器順序: #article-content-inner, .article-content-inner, .article-content, #article-content
-        const selectors = ['#article-content-inner', '.article-content-inner', '.article-content', '#article-content'];
+        if (!contentHtml) {
+            // 移除多餘的 meta/script/style
+            $('script').remove();
+            $('style').remove();
+            $('meta').remove(); // 移除 embedded meta tags (如 browser 看到的)
 
-        for (const sel of selectors) {
-            if ($(sel).length > 0) {
-                // 處理 lazy-load 圖片 (如果有的話)
-                // 處理 lazy-load 圖片
-                $(sel).find('img').each((i, el) => {
-                    const $img = $(el);
-                    const dataSrc = $img.attr('data-src') || $img.attr('data-original') || $img.attr('src');
-                    if (dataSrc) $img.attr('src', dataSrc);
-                });
+            // 選擇器順序: #article-content-inner, .article-content-inner, .article-content, #article-content
+            const selectors = ['#article-content-inner', '.article-content-inner', '.article-content', '#article-content'];
 
-                contentHtml = $(sel).html();
-                break;
+            for (const sel of selectors) {
+                if ($(sel).length > 0) {
+                    // 處理 lazy-load 圖片
+                    $(sel).find('img').each((i, el) => {
+                        const $img = $(el);
+                        const dataSrc = $img.attr('data-src') || $img.attr('data-original') || $img.attr('src');
+                        if (dataSrc) $img.attr('src', dataSrc);
+                    });
+
+                    contentHtml = $(sel).html();
+                    break;
+                }
             }
         }
 
