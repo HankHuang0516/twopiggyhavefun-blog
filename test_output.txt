@@ -1,0 +1,57 @@
+Fetching https://lolwarden.pixnet.net/blog/posts/855315645961059971...
+Fetched 234231 bytes.
+--- Category ---
+taoyuan-food
+--- Content Preview (First 500 chars) ---
+<p>
+
+
+    
+    
+    
+    
+    
+    
+    <br /></p>
+    <p>
+    
+    
+    
+    
+
+    <br /></p>
+    <p>
+    
+    
+    
+    
+    
+    WishlistAI 評測：AI 驅動的智慧許願清單管理平台 | 技術部落格
+    
+    </p>
+
+
+    <div>
+        <header>
+            <h1>WishlistAI 評測：用 AI 驅動的智慧許願清單管理平台</h1>
+            <div><a href="https://www.flickr.com/photos/158881690@N04/55060458500/in/dateposted/"></a></div>
+        </header>
+
+        <div>
+            在這個禮物交換、購物清單、生日願望越來越數位化的時代，我們需要的不只是一個簡單的記事本，而是一個真正智慧的願望清單管理系統。今天要介紹的 <strong>W
+--- Address ---
+null
+DEBUG: Found 'article-content-inner' at 199703. Surrounding:
+le-body"><div class="article-content"><div class="article-content-inner" id="article-content-inner"><p>
+
+
+    
+    
+    
+    
+    
+    
+    <br /></p>
+...
+DEBUG: Found 'article-footer' at 210555.
+PASS: Content extraction seems matched

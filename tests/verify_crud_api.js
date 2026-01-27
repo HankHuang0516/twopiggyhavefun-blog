@@ -57,7 +57,7 @@ function request(path, method = 'GET', body = null) {
             method: method,
             headers: {
                 'Content-Type': 'application/json',
-                'X-Auth-Password': 'asasas123'
+                'Authorization': 'Bearer asasas123'
             }
         };
 

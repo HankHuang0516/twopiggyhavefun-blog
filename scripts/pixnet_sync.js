@@ -236,21 +236,35 @@ function parseArticleContent(html) {
         }
     }
 
-            .substring(0, 500);
-}
+    // Extract content
+    // Handle cases where div has other attributes (like id)
+    let contentPreview = html.match(/<div[^>]*class="[^"]*article-content-inner[^"]*"[^>]*>([\s\S]*?)<div[^>]*class="[^"]*article-footer[^"]*"[^>]*>/)?.[1]
+        || html.match(/<div[^>]*id="article-content"[^>]*>([\s\S]*?)<\/div>/)?.[1]
+        || '';
 
-// Extract Address
-let address = null;
-const addressMatch = html.match(/(?:地址|店址|地點|位置|Add|Address)[：:]\s*([^<>\n\r]+)/i);
-if (addressMatch) {
-    address = cleanAddress(addressMatch[1]);
-    // Filter out IPs or too short/long
-    if (address.length < 3 || address.length > 100 || /^\d+\./.test(address)) {
-        address = null;
+    // Clean up content
+    contentPreview = contentPreview
+        .replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gm, '')
+        .replace(/<div class="author-profile"[\s\S]*?<\/div>/g, '')
+        .replace(/<div id="pixnet-ad-[^"]*">[\s\S]*?<\/div>/g, '')
+        .replace(/<iframe\b[^>]*>([\s\S]*?)<\/iframe>/gm, '')
+        .trim();
+
+    // Limit length for preview if needed, but we probably want full content for migration
+    // contentPreview = contentPreview.substring(0, 500);
+
+    // Extract Address
+    let address = null;
+    const addressMatch = html.match(/(?:地址|店址|地點|位置|Add|Address)[：:]\s*([^<>\n\r]+)/i);
+    if (addressMatch) {
+        address = cleanAddress(addressMatch[1]);
+        // Filter out IPs or too short/long
+        if (address.length < 3 || address.length > 100 || /^\d+\./.test(address)) {
+            address = null;
+        }
     }
-}
 
-return { category, contentPreview, address };
+    return { category, contentPreview, address };
 }
 
 /**

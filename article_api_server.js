@@ -145,6 +145,16 @@ function slugify(text) {
         .replace(/-+$/, '');
 }
 
+// Auth Helper
+function checkAuth(req, res) {
+    const authHeader = req.headers.authorization;
+    if (authHeader !== `Bearer ${AUTH_PASSWORD}`) {
+        res.status(401).json({ error: 'Unauthorized' });
+        return false;
+    }
+    return true;
+}
+
 // ==================== Flickr Auth Routes ====================
 
 // 檢查授權狀態
@@ -299,10 +309,7 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok', version: VERSION }
 
 // 建立/更新文章
 app.post('/api/article', async (req, res) => {
-    const authHeader = req.headers.authorization;
-    if (authHeader !== `Bearer ${AUTH_PASSWORD}`) {
-        return res.status(401).json({ error: 'Unauthorized' });
-    }
+    if (!checkAuth(req, res)) return;
 
     try {
         const { title, content, category, tags, slug: userSlug, date, coverImage } = req.body;
@@ -347,8 +354,7 @@ input_slug: "${slug}"`;
 
 // 刪除文章
 app.delete('/api/posts/:filename', async (req, res) => {
-    const authHeader = req.headers.authorization;
-    if (authHeader !== `Bearer ${AUTH_PASSWORD}`) return res.status(401).json({ error: 'Unauthorized' });
+    if (!checkAuth(req, res)) return;
 
     const { filename } = req.params;
     const filePath = path.join(POSTS_DIR, filename);
@@ -366,6 +372,8 @@ app.delete('/api/posts/:filename', async (req, res) => {
 
 // 讀取單一文章
 app.get('/api/posts/:slug', (req, res) => {
+    if (!checkAuth(req, res)) return;
+
     const { slug } = req.params;
     // Client might send slug or filename (with .md). Handle both.
     const filename = slug.endsWith('.md') ? slug : `${slug}.md`;
@@ -393,6 +401,8 @@ app.get('/api/posts/:slug', (req, res) => {
 
 // 讀取文章 (List)
 app.get('/api/posts', (req, res) => {
+    if (!checkAuth(req, res)) return;
+
     try {
         if (!fs.existsSync(POSTS_DIR)) return res.json([]);
         const files = fs.readdirSync(POSTS_DIR).filter(f => f.endsWith('.md'));
