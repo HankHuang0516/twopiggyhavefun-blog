@@ -312,7 +312,7 @@ date: '${article.date}'
 category: ${contentInfo.category}
 tags:
   - pixnet-sync
-  - auto-imported
+  - auto-imported${article.tags && article.tags.length > 0 ? '\n' + article.tags.map(t => `  - ${t}`).join('\n') : ''}
 originalUrl: ${article.link}`;
 
     if (coords) {
