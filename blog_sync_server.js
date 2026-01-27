@@ -424,7 +424,13 @@ function parseArticleContent(html) {
                                     $clean('td').each((j, td) => {
                                         const $td = $clean(td);
                                         if ($td.text().trim() === text) {
-                                            $td.html(`<a href="#${id}">${$td.html()}</a>`);
+                                            // 檢查是否已經有連結，如果有則更新 href，避免嵌套
+                                            const $existingLink = $td.find('a');
+                                            if ($existingLink.length > 0) {
+                                                $existingLink.attr('href', `#${id}`);
+                                            } else {
+                                                $td.html(`<a href="#${id}">${$td.html()}</a>`);
+                                            }
                                         }
                                     });
 
@@ -432,7 +438,13 @@ function parseArticleContent(html) {
                                     $clean('p').each((k, p) => {
                                         const $p = $clean(p);
                                         if ($p.text().trim() === text && $p[0] !== header) {
-                                            $p.html(`<a href="#${id}">${$p.html()}</a>`);
+                                            // 檢查是否已經有連結，如果有則更新 href，避免嵌套
+                                            const $existingLink = $p.find('a');
+                                            if ($existingLink.length > 0) {
+                                                $existingLink.attr('href', `#${id}`);
+                                            } else {
+                                                $p.html(`<a href="#${id}">${$p.html()}</a>`);
+                                            }
                                         }
                                     });
                                 }
@@ -541,7 +553,7 @@ function createArticle(data) {
 
     if (id) {
         slug = id;
-        filename = `pixnet-${id}.md`;
+        filename = `${id}.md`;
     } else {
         slug = generateSlug(articleDate);
         filename = `${slug}.md`;
