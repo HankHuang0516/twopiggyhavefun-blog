@@ -382,6 +382,22 @@ function parseArticleContent(html) {
             }
         }
 
+        // 統一清理提取出的內容 (特別是針對 JSON-LD 來源可能包含 style 標籤)
+        if (contentHtml) {
+            try {
+                // 使用新的 Cheerio 實例處理片段
+                const $clean = cheerio.load(contentHtml, { decodeEntities: false });
+                $clean('script').remove();
+                $clean('style').remove();
+                $clean('meta').remove();
+                // 嘗試獲取 body 內容，如果沒有 body (片段)，則取 root
+                const cleaned = $clean('body').html() || $clean.html();
+                if (cleaned) contentHtml = cleaned;
+            } catch (e) {
+                console.log('Cleanup failed, using original content');
+            }
+        }
+
     } catch (e) {
         log(`Cheerio 解析內容失敗: ${e.message}`, 'WARN');
     }
