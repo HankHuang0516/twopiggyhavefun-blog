@@ -414,8 +414,9 @@ function parseArticleContent(html) {
                             if (text.length > 2 && text !== '文章目錄' && !text.includes('文章目錄')) {
                                 const id = 'toc-' + index;
 
-                                // 如果已經有 id 就不覆蓋
-                                if (!$header.attr('id') && $header.prev('span.toc-anchor').length === 0) {
+                                // 改用 span anchor, 因為 Turndown 可能會吃掉 ID
+                                // 只要前面沒有我們自家的 toc-anchor 就加上去
+                                if ($header.prev('span.toc-anchor').length === 0) {
                                     // 改用 span anchor, 因為 Turndown 可能會吃掉 ID
                                     $header.before(`<span id="${id}" class="toc-anchor"></span>`);
 
