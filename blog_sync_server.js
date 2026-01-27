@@ -357,10 +357,12 @@ function parseArticleContent(html) {
         for (const sel of selectors) {
             if ($(sel).length > 0) {
                 // 處理 lazy-load 圖片 (如果有的話)
-                /* $(sel).find('img').each((i, el) => {
-                     const dataSrc = $(el).attr('data-src') || $(el).attr('data-original');
-                     if (dataSrc) $(el).attr('src', dataSrc);
-                }); */
+                // 處理 lazy-load 圖片
+                $(sel).find('img').each((i, el) => {
+                    const $img = $(el);
+                    const dataSrc = $img.attr('data-src') || $img.attr('data-original') || $img.attr('src');
+                    if (dataSrc) $img.attr('src', dataSrc);
+                });
 
                 contentHtml = $(sel).html();
                 break;
@@ -380,13 +382,7 @@ function parseArticleContent(html) {
 
     result.contentHtml = contentHtml; // Update result
 
-    // Fallback: 如果 Cheerio 失敗，嘗試 Regex
-    if (!contentHtml) {
-        const innerMatch = html.match(/<div[^>]*id="article-content-inner"[^>]*>([\s\S]*?)<\/div>\s*<div[^>]*class="[^"]*article/i);
-        if (innerMatch) contentHtml = innerMatch[1];
-    }
 
-    result.contentHtml = contentHtml;
 
     // 6. 如果沒有封面圖，從內容中取第一張圖
     if (!result.cover && contentHtml) {
