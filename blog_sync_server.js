@@ -391,19 +391,28 @@ function parseArticleContent(html) {
         contentHtml = innerMatch[1];
     } else {
         // 嘗試 class="article-content-inner"
-        const classMatch = html.match(/<div[^>]*class="[^"]*article-content-inner[^"]*"[^>]*>([\s\S]*?)<\/div>\s*<div[^>]*class="[^"]*article/i);
+        // Handle cases where div has other attributes (like id)
+        const classMatch = html.match(/<div[^>]*class="[^"]*article-content-inner[^"]*"[^>]*>([\s\S]*?)<div[^>]*class="[^"]*article-footer[^"]*"[^>]*>/)
+            || html.match(/<div[^>]*class="[^"]*article-content-inner[^"]*"[^>]*>([\s\S]*?)<\/div>\s*<div[^>]*class="[^"]*article/i);
+
         if (classMatch) {
             contentHtml = classMatch[1];
         } else {
-            // 最後嘗試：找 article-content-inner 到結尾
-            const simpleMatch = html.match(/<div[^>]*class="[^"]*article-content-inner[^"]*"[^>]*>([\s\S]*)/i);
-            if (simpleMatch) {
-                let content = simpleMatch[1];
-                const endPos = content.search(/<div[^>]*class="[^"]*(?:article-footer|article-keyword|tag-container)/i);
-                if (endPos > 0) {
-                    content = content.substring(0, endPos);
+            // Fallback for ID article-content
+            const idMatch = html.match(/<div[^>]*id="article-content"[^>]*>([\s\S]*?)<\/div>/);
+            if (idMatch) {
+                contentHtml = idMatch[1];
+            } else {
+                // 最後嘗試：找 article-content-inner 到結尾
+                const simpleMatch = html.match(/<div[^>]*class="[^"]*article-content-inner[^"]*"[^>]*>([\s\S]*)/i);
+                if (simpleMatch) {
+                    let content = simpleMatch[1];
+                    const endPos = content.search(/<div[^>]*class="[^"]*(?:article-footer|article-keyword|tag-container)/i);
+                    if (endPos > 0) {
+                        content = content.substring(0, endPos);
+                    }
+                    contentHtml = content;
                 }
-                contentHtml = content;
             }
         }
     }
@@ -435,12 +444,21 @@ function parseArticleContent(html) {
         result.businessHours = hoursMatch[1].trim();
     }
 
-    // 10. 提取地址 (New)
+    // 10. 提取地址
     const addressMatch = html.match(/(?:地址|店址|地點|位置|Add|Address)[：:]\s*([^<>\n\r]+)/i);
     if (addressMatch) {
         let addr = cleanAddress(addressMatch[1]);
         if (addr.length >= 3 && addr.length <= 100 && !/^\d+\./.test(addr)) {
             result.address = addr;
+        }
+    }
+
+    // Extract Tags from meta keywords (New Fix)
+    const keywordsMatch = html.match(/<meta name="keywords" content="([^"]+)"/i);
+    if (keywordsMatch) {
+        const metaTags = keywordsMatch[1].split(',').map(t => t.trim()).filter(t => t);
+        if (metaTags.length > 0) {
+            result.tags = metaTags;
         }
     }
 
@@ -547,8 +565,11 @@ async function syncPixnetArticles() {
 
                 const contentInfo = parseArticleContent(articleHtml);
 
-                // 標籤來自列表頁 JSON (article.tags)，分類優先使用文章頁面提取的
-                const finalTags = article.tags.length > 0 ? article.tags : contentInfo.tags;
+                // 標籤: 優先使用文章頁面 (contentInfo.tags) 的標籤，因為列表頁 (article.tags) 可能包含不準確的全站標籤
+                if (contentInfo.tags && contentInfo.tags.length > 0) {
+                    article.tags = contentInfo.tags;
+                }
+                const finalTags = article.tags;
                 const finalCategory = contentInfo.category || article.category;
 
                 log(`  分類: ${finalCategory}`, 'INFO');
