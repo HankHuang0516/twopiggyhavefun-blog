@@ -540,9 +540,6 @@ async function syncArticles() {
         const html = await fetchUrl(CONFIG.pixnetBlogUrl);
         const articles = parsePixnetArticles(html);
         log(`找到 ${articles.length} 篇文章`, 'INFO');
-        const ids = articles.map(a => a.id).join(', ');
-        console.log('Found IDs:', ids);
-        try { fs.writeFileSync('found_ids.txt', ids); } catch (e) { }
 
         const newArticles = articles.filter(a => !syncedIds.has(a.id));
         log(`新文章: ${newArticles.length} 篇`, 'INFO');
