@@ -153,8 +153,8 @@ function htmlToMarkdown(html) {
         emDelimiter: '*'
     });
 
-    // 保留 iframe (如 YouTube)
-    turndownService.keep(['iframe']);
+    // 保留 iframe (如 YouTube) 和 span (用於 TOC Anchor)
+    turndownService.keep(['iframe', 'span']);
 
     // 清理無用標籤但保留內容 (如 div, span) - Turndown 預設會 unwrap 這些標籤
     // 但如果有某些特定 class 需要保留，可以在這裡設定
@@ -415,14 +415,12 @@ function parseArticleContent(html) {
                                 const id = 'toc-' + index;
 
                                 // 如果已經有 id 就不覆蓋
-                                if (!$header.attr('id')) {
-                                    $header.attr('id', id);
-                                    // 嘗試在目錄區域找到這段文字並做連結 (比較困難，因為不知道目錄在哪)
-                                    // 但我們可以做一個通用的替換：
-                                    // 在 contentHtml 中，把純文字的標題名稱替換為連結 (這有點危險)
+                                if (!$header.attr('id') && $header.prev('span.toc-anchor').length === 0) {
+                                    // 改用 span anchor, 因為 Turndown 可能會吃掉 ID
+                                    $header.before(`<span id="${id}" class="toc-anchor"></span>`);
 
-                                    // 更好的方法：針對 Pixnet 常見結構 (Table 下的 td)
-                                    // 尋找包含此標題文字的 td，將其包在 a href 中
+                                    // 嘗試在目錄區域找到這段文字並做連結
+                                    // 針對 Pixnet 常見結構 (Table 下的 td)
                                     $clean('td').each((j, td) => {
                                         const $td = $clean(td);
                                         if ($td.text().trim() === text) {
@@ -431,7 +429,6 @@ function parseArticleContent(html) {
                                     });
 
                                     // 針對非 Table 結構 (純文字段落)
-                                    // 尋找完全匹配的 p
                                     $clean('p').each((k, p) => {
                                         const $p = $clean(p);
                                         if ($p.text().trim() === text && $p[0] !== header) {
