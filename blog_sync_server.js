@@ -413,10 +413,12 @@ function parseArticleContent(html) {
                             // 排除太短或像目錄本身的標題
                             if (text.length > 2 && text !== '文章目錄' && !text.includes('文章目錄')) {
                                 const id = 'toc-' + index;
+                                console.log(`[TOC DEBUG] Processing header ${index}: "${text}" (Tag: ${header.tagName})`);
 
                                 // 改用 span anchor, 因為 Turndown 可能會吃掉 ID
                                 // 只要前面沒有我們自家的 toc-anchor 就加上去
                                 if ($header.prev('span.toc-anchor').length === 0) {
+                                    console.log(`[TOC DEBUG]   Adding anchor #${id} to "${text}"`);
                                     // 改用 span anchor, 因為 Turndown 可能會吃掉 ID
                                     $header.before(`<span id="${id}" class="toc-anchor"></span>`);
 
