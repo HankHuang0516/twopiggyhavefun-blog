@@ -4,7 +4,7 @@ const https = require('https');
 
 // Configuration
 const POSTS_DIR = path.join(__dirname, '..', 'src', 'content', 'posts');
-const MAX_ARTICLES = 30;
+const MAX_ARTICLES = 9999; // Check all articles
 
 // Helper to fetch URL
 function fetchUrl(url) {
@@ -91,11 +91,11 @@ async function verifyTags() {
             // console.log(`Fetching ${meta.originalUrl}...`);
             const html = await fetchUrl(meta.originalUrl);
 
-            // Extract tags from Pixnet
+            // Extract tags from Pixnet (from data-tag attributes in tag__main div)
             let remoteTags = [];
-            const keywordsMatch = html.match(/<meta name="keywords" content="([^"]+)"/i);
-            if (keywordsMatch) {
-                remoteTags = keywordsMatch[1].split(',').map(t => t.trim()).filter(t => t);
+            const tagMatches = html.matchAll(/data-tag="([^"]+)"/g);
+            for (const match of tagMatches) {
+                remoteTags.push(match[1]);
             }
 
             // Compare
