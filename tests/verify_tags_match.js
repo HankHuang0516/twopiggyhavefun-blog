@@ -91,36 +91,32 @@ async function verifyTags() {
             // console.log(`Fetching ${meta.originalUrl}...`);
             const html = await fetchUrl(meta.originalUrl);
 
-            // Extract tags from Pixnet
+            // Extract tags from Pixnet (from data-tag attributes)
             let remoteTags = [];
-            const keywordsMatch = html.match(/<meta name="keywords" content="([^"]+)"/i);
-            if (keywordsMatch) {
-                remoteTags = keywordsMatch[1].split(',').map(t => t.trim()).filter(t => t);
+            const tagMatches = html.matchAll(/data-tag="([^"]+)"/g);
+            for (const match of tagMatches) {
+                if (!remoteTags.includes(match[1])) {
+                    remoteTags.push(match[1]);
+                }
             }
 
             // Compare
-            // Local tags include 'pixnet-sync', 'auto-imported' which are system tags. 
-            // We should filter them out for comparison, or check if remote tags are present in local tags.
             const systemTags = ['pixnet-sync', 'auto-imported', 'pixnet', 'unread'];
             const localContentTags = meta.tags.filter(t => !systemTags.includes(t));
-
-            // Normalize for comparison
             const localSet = new Set(localContentTags);
-            const remoteSet = new Set(remoteTags);
 
-            // Check if local tags match remote tags (order might differ)
-            // Strict check: Local content tags should be exactly Remote tags?
-            // Or Local should INCLUDE Remote tags? 
-            // Given the fix was "extract tags from meta keywords", they should be identical.
-
+            // Only check if Pixnet tags are present in local
+            // Extra local tags are allowed (they're manual SEO tags)
             const missingInLocal = remoteTags.filter(t => !localSet.has(t));
-            const extraInLocal = localContentTags.filter(t => !remoteSet.has(t));
 
-            if (missingInLocal.length > 0 || extraInLocal.length > 0) {
+            if (remoteTags.length === 0) {
+                // Pixnet has no tags - local SEO tags are OK
+                console.log(`[PASS] ${file.name} (Pixnet無標籤, 本地有${localContentTags.length}個SEO標籤)`);
+            } else if (missingInLocal.length > 0) {
+                // Pixnet has tags but local is missing some
                 console.log(`[FAIL] ${file.name}`);
                 console.log(`  Source: ${meta.originalUrl}`);
-                if (missingInLocal.length > 0) console.log(`  Missing in local: ${missingInLocal.join(', ')}`);
-                if (extraInLocal.length > 0) console.log(`  Extra in local: ${extraInLocal.join(', ')}`);
+                console.log(`  Missing in local: ${missingInLocal.join(', ')}`);
                 failureCount++;
             } else {
                 console.log(`[PASS] ${file.name}`);
