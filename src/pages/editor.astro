@@ -11,7 +11,7 @@ import { PIXNET_CATEGORY_HIERARCHY } from '../utils/categories';
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <!-- Marked (MD -> HTML) & Turndown (HTML -> MD) -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://unpkg.com/turndown/dist/turndown.js"></script>
+
 
     <div id="loading" class="loading-overlay">
         <div>載入中...</div>
@@ -354,7 +354,9 @@ import { PIXNET_CATEGORY_HIERARCHY } from '../utils/categories';
 <!-- Jodit JS -->
 <script is:inline src="//unpkg.com/jodit@4.2.27/es2021/jodit.min.js"></script>
 
-<script is:inline>
+<script>
+    import TurndownService from 'turndown';
+
     // --- Configuration ---
     const RAILWAY_API = 'https://twopiggyhavefun-blog-production.up.railway.app';
     const isLocalDev = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
@@ -993,19 +995,26 @@ import { PIXNET_CATEGORY_HIERARCHY } from '../utils/categories';
     // --- Actions ---
     async function savePost() {
         showLoading(true);
-        // Turn HTML back to Markdown
-        const html = editor.value;
-        const markdown = turndownService.turndown(html);
-        
-        const payload = {
-            title: els.postTitle.value,
-            category: els.postCategory.value,
-            slug: els.postSlugInput.value || currentSlug, // If editing, keep slug. If new, use input or auto.
-            content: markdown,
-            date: new Date().toISOString() // Or keep original? The API usually sets date.
-        };
-
         try {
+            // Turn HTML back to Markdown
+            const html = editor.value;
+            // Ensure TurndownService is available
+            if (!turndownService) {
+                turndownService = new TurndownService({
+                    headingStyle: 'atx',
+                    codeBlockStyle: 'fenced'
+                });
+            }
+            const markdown = turndownService.turndown(html);
+            
+            const payload = {
+                title: els.postTitle.value,
+                category: els.postCategory.value,
+                slug: els.postSlugInput.value || currentSlug, // If editing, keep slug. If new, use input or auto.
+                content: markdown,
+                date: new Date().toISOString()
+            };
+
             const res = await fetch(`${API_BASE}/api/article`, {
                 method: 'POST',
                 headers: getHeaders(),
@@ -1019,9 +1028,11 @@ import { PIXNET_CATEGORY_HIERARCHY } from '../utils/categories';
                 throw new Error(data.error);
             }
         } catch (err) {
+            console.error(err);
             alert(`儲存失敗: ${err.message}`);
+        } finally {
+            showLoading(false);
         }
-        showLoading(false);
     }
 
     async function deletePost() {
