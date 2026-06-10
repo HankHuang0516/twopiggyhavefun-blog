@@ -295,7 +295,7 @@ const parentOrder = [
         </div>
     </div>
 
-    <!-- Website Stats -->
+    <!-- Website Stats (counterapi.dev primary, busuanzi fallback) -->
     <div class="bg-white border border-gray-200 p-4">
         <h3 class="font-bold mb-2 text-red-600">網站人氣統計</h3>
         <div class="text-sm text-gray-600">
@@ -303,6 +303,41 @@ const parentOrder = [
             <p>累計人氣：<span class="font-medium" id="busuanzi_container_site_pv"><span id="busuanzi_value_site_pv">...</span></span></p>
         </div>
     </div>
+    <script is:inline>
+        (function siteStatsCounter(){
+            var NS = 'twopiggyhavefun';
+            var PV_KEY = 'site-pv';
+            var today = new Date();
+            var ymd = today.getFullYear() + ('0'+(today.getMonth()+1)).slice(-2) + ('0'+today.getDate()).slice(-2);
+            var UV_KEY = 'site-uv-' + ymd;
+            var base = 'https://api.counterapi.dev/v1/' + NS + '/';
+            function setText(id, val){
+                var el = document.getElementById(id);
+                if(el && typeof val === 'number') el.textContent = String(val);
+            }
+            function once(storageKey){
+                try {
+                    if (localStorage.getItem(storageKey) === '1') return false;
+                    localStorage.setItem(storageKey, '1');
+                    return true;
+                } catch(e) { return true; }
+            }
+            function fetchCounter(url){
+                return fetch(url, {cache:'no-store'})
+                    .then(function(r){ return r.ok ? r.json() : null; })
+                    .catch(function(){ return null; });
+            }
+            var pvUrl = base + PV_KEY + (once('pv_done_' + ymd) ? '/up' : '/');
+            var uvUrl = base + UV_KEY + (once('uv_done_' + ymd) ? '/up' : '/');
+            fetchCounter(pvUrl).then(function(j){
+                if (j && typeof j.count === 'number') setText('busuanzi_value_site_pv', j.count);
+            });
+            fetchCounter(uvUrl).then(function(j){
+                if (j && typeof j.count === 'number') setText('busuanzi_value_site_uv', j.count);
+            });
+            // busuanzi (loaded by BaseLayout) keeps populating same span IDs as fallback if counterapi fails
+        })();
+    </script>
 
     <!-- Recent Posts -->
     <div class="bg-white border border-gray-200 p-4">
