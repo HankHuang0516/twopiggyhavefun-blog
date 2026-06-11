@@ -6,9 +6,10 @@ interface Props {
     date: string;
     cover?: string;
     tags?: string[];
+    pinned?: boolean;
 }
 
-const { title, slug, date, cover, tags = [] } = Astro.props;
+const { title, slug, date, cover, tags = [], pinned = false } = Astro.props;
 import { formatDate } from '../utils/date';
 import { slugify } from '../utils/categories';
 const formattedDate = formatDate(date);
@@ -42,7 +43,12 @@ function fixImagePath(src: string | undefined): string {
     <div class="p-6">
         <!-- Title -->
         <h2 class="text-xl md:text-2xl font-bold mb-3">
-            <a href={`/posts/${slug}`} 
+            {pinned && (
+                <span class="inline-flex items-center gap-1 align-middle mr-2 px-2 py-0.5 text-xs font-semibold bg-red-100 text-red-700 rounded">
+                    📌 置頂
+                </span>
+            )}
+            <a href={`/posts/${slug}`}
                class="text-gray-900 hover:text-blue-600 transition">
                 {title}
             </a>

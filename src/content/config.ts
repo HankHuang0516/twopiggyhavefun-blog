@@ -13,6 +13,7 @@ const posts = defineCollection({
         lat: z.number().optional(),
         lng: z.number().optional(),
         address: z.string().optional(),
+        pinned: z.boolean().optional(),
     }),
 });
 

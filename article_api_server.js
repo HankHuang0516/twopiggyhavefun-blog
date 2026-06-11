@@ -352,6 +352,36 @@ input_slug: "${slug}"`;
     }
 });
 
+// 置頂/取消置頂文章（surgical frontmatter rewrite — only touches the `pinned` line）
+app.patch('/api/article/:slug/pin', async (req, res) => {
+    if (!checkAuth(req, res)) return;
+
+    const { slug } = req.params;
+    const filename = slug.endsWith('.md') ? slug : `${slug}.md`;
+    const filePath = path.join(POSTS_DIR, filename);
+    const pinned = req.body && req.body.pinned === true;
+
+    if (!fs.existsSync(filePath)) return res.status(404).json({ error: 'Post not found' });
+
+    try {
+        const raw = fs.readFileSync(filePath, 'utf8');
+        const fmMatch = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
+        if (!fmMatch) return res.status(400).json({ error: 'Frontmatter not found' });
+
+        const fmLines = fmMatch[1].split(/\r?\n/).filter(l => !/^pinned\s*:/i.test(l));
+        if (pinned) fmLines.push('pinned: true');
+        const next = `---\n${fmLines.join('\n')}\n---\n${fmMatch[2]}`;
+
+        fs.writeFileSync(filePath, next);
+        const deployResult = await autoDeploy('Update', filename);
+
+        res.json({ success: true, slug: filename.replace('.md', ''), pinned, deploy: deployResult });
+    } catch (e) {
+        console.error('[Pin] Error:', e);
+        res.status(500).json({ error: e.message });
+    }
+});
+
 // 刪除文章
 app.delete('/api/posts/:filename', async (req, res) => {
     if (!checkAuth(req, res)) return;
@@ -391,6 +421,7 @@ app.get('/api/posts/:slug', (req, res) => {
             date: parsed.data.date ? (parsed.data.date instanceof Date ? parsed.data.date.toISOString() : parsed.data.date) : '',
             category: parsed.data.category || 'Uncategorized',
             image: parsed.data.image || parsed.data.cover || null,
+            pinned: parsed.data.pinned === true,
             content: parsed.content.trim()
         });
     } catch (e) {
@@ -484,11 +515,13 @@ app.get('/api/posts', (req, res) => {
                 slug: f.replace('.md', ''),
                 title: data.title || f,
                 date: data.date ? (data.date instanceof Date ? data.date.toISOString() : data.date) : '',
-                category: data.category || '未分類'
+                category: data.category || '未分類',
+                pinned: data.pinned === true
             };
         });
-        // Sort by date desc (consistent with index.astro)
+        // Sort: pinned first, then date desc (consistent with index.astro)
         posts.sort((a, b) => {
+            if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
             if (!a.date && !b.date) return 0;
             if (!a.date) return 1;
             if (!b.date) return -1;

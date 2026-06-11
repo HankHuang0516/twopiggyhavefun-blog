@@ -12,8 +12,11 @@ const travelPosts = allPosts.filter(post => {
     return categories.includes('旅遊') || categories.includes('景點') || categories.includes('住宿') || categories.includes('美食');
 });
 
-// Sort by date
+// Sort: pinned first, then date desc
 travelPosts.sort((a, b) => {
+     const pa = a.data?.pinned ? 1 : 0;
+     const pb = b.data?.pinned ? 1 : 0;
+     if (pa !== pb) return pb - pa;
      if (!a.data?.date || !b.data?.date) return 0;
      return new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf();
 });
