@@ -17,8 +17,11 @@ function fixImagePath(src: string | undefined): string {
 
 // Get all posts
 const posts = (await getCollection('posts')).filter(p => p.data);
-// Sort by date desc
+// Sort: pinned first, then by date desc
 posts.sort((a, b) => {
+    const pa = a.data?.pinned ? 1 : 0;
+    const pb = b.data?.pinned ? 1 : 0;
+    if (pa !== pb) return pb - pa;
     if (!a.data?.date || !b.data?.date) return 0;
     return new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf();
 });
@@ -76,12 +79,13 @@ const recentPosts = posts.slice(0, 12);
             <!-- Main Column: Post List -->
             <div class="flex-1">
                 {recentPosts.map((post) => (
-                    <PostCard 
+                    <PostCard
                         title={post.data.title}
                         slug={post.slug}
                         date={post.data.date}
                         cover={post.data.cover}
                         tags={post.data.tags}
+                        pinned={post.data.pinned}
                     />
                 ))}
 

@@ -161,6 +161,12 @@ import { PIXNET_CATEGORY_HIERARCHY } from '../utils/categories';
                                  <label style="display:block; font-size:0.8rem; color:#666; margin-bottom:0.25rem;">自訂網址 (Slug)</label>
                                  <input type="text" id="post-slug-input" class="input-clean" placeholder="留空自動產生">
                              </div>
+                             <div style="flex: 0 0 auto; min-width: 130px; display: flex; align-items: flex-end;">
+                                 <label style="display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; color: #333; cursor: pointer; padding: 0.5rem 0.75rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px;">
+                                     <input type="checkbox" id="post-pinned-input" style="margin: 0; width: 16px; height: 16px; cursor: pointer;">
+                                     <span>📌 置頂文章</span>
+                                 </label>
+                             </div>
                         </div>
 
                         <!-- Jodit Editor Container -->
@@ -414,6 +420,7 @@ import { PIXNET_CATEGORY_HIERARCHY } from '../utils/categories';
             postTitle: document.getElementById('post-title-input'),
             postCategory: document.getElementById('post-category-input'),
             postSlugInput: document.getElementById('post-slug-input'),
+            postPinnedInput: document.getElementById('post-pinned-input'),
             sortSelect: document.getElementById('sort-select'),
             sidebarOpenBtn: document.getElementById('sidebar-open-btn'),
             ghostBtn: document.getElementById('ghost-btn'),
@@ -463,6 +470,7 @@ import { PIXNET_CATEGORY_HIERARCHY } from '../utils/categories';
         if (els.newPostBtn) els.newPostBtn.addEventListener('click', () => showView('new'));
         if (els.saveBtn) els.saveBtn.addEventListener('click', savePost);
         if (els.deleteBtn) els.deleteBtn.addEventListener('click', deletePost);
+        if (els.postPinnedInput) els.postPinnedInput.addEventListener('change', togglePinned);
 
         if (els.searchInput) {
             els.searchInput.addEventListener('input', () => filterAndRender());
@@ -870,9 +878,10 @@ import { PIXNET_CATEGORY_HIERARCHY } from '../utils/categories';
                     dateStr = d.toLocaleDateString();
                 }
             }
+            const pinBadge = post.pinned ? '<span style="display:inline-block;margin-right:4px;padding:1px 5px;font-size:10px;font-weight:600;background:#fee;color:#c00;border-radius:3px;">📌</span>' : '';
             return `
                 <div class="post-item ${currentSlug === slug ? 'active' : ''}" onclick="selectPost('${slug}')">
-                    <span class="post-title">${post.title}</span>
+                    <span class="post-title">${pinBadge}${post.title}</span>
                     <span class="post-meta">${dateStr} · ${post.category || '未分類'}</span>
                 </div>
             `;
@@ -941,6 +950,10 @@ import { PIXNET_CATEGORY_HIERARCHY } from '../utils/categories';
                  if (data.category) els.postCategory.value = data.category;
                  els.postCategory.disabled = true;
             }
+            if (els.postPinnedInput) {
+                els.postPinnedInput.checked = !!data.pinned;
+                els.postPinnedInput.disabled = false;
+            }
 
             if (editor) {
                 // Convert Markdown to HTML
@@ -974,6 +987,7 @@ import { PIXNET_CATEGORY_HIERARCHY } from '../utils/categories';
                     if (els.postTitle) { els.postTitle.value = ''; els.postTitle.disabled = false; }
                     if (els.postSlugInput) { els.postSlugInput.value = ''; els.postSlugInput.disabled = false; }
                     if (els.postCategory) { els.postCategory.disabled = false; }
+                    if (els.postPinnedInput) { els.postPinnedInput.checked = false; els.postPinnedInput.disabled = false; }
                     if (editor) editor.value = ''; // Clear
                     
                     if (els.deleteBtn) els.deleteBtn.style.display = 'none';
@@ -989,6 +1003,30 @@ import { PIXNET_CATEGORY_HIERARCHY } from '../utils/categories';
             if (els.emptyState) els.emptyState.style.display = 'flex';
             if (els.actionButtons) els.actionButtons.style.display = 'none';
             currentSlug = null;
+        }
+    }
+
+    async function togglePinned() {
+        if (!currentSlug || !els.postPinnedInput) return;
+        const pinned = els.postPinnedInput.checked;
+        els.postPinnedInput.disabled = true;
+        try {
+            const res = await fetch(`${API_BASE}/api/article/${currentSlug}/pin`, {
+                method: 'PATCH',
+                headers: { ...getHeaders(), 'Content-Type': 'application/json' },
+                body: JSON.stringify({ pinned })
+            });
+            const data = await res.json();
+            if (!res.ok || !data.success) throw new Error(data.error || `HTTP ${res.status}`);
+            const local = allPosts.find(p => (p.slug || p.filename?.replace('.md','')) === currentSlug);
+            if (local) local.pinned = pinned;
+            renderList(allPosts);
+        } catch (err) {
+            console.error(err);
+            alert(`置頂切換失敗: ${err.message}`);
+            els.postPinnedInput.checked = !pinned;
+        } finally {
+            els.postPinnedInput.disabled = false;
         }
     }
 
